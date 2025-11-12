@@ -39,11 +39,11 @@ public class UserBotService {
      * @param id id
      * @return list user bots
      */
-    public List<UserBot> getUserBotsByTgId(Long id) {
+    public List<UserBot> getUserBotsByTgId(String id) {
         List<UserBot> userBots = new ArrayList<>();
 
         userRepository.findByTgId(id).ifPresent(user -> {
-            userBotRepository.findAllByAifUserId(user.getId()).forEachRemaining(userBots::add);
+            userBots.addAll(userBotRepository.findAllByAifUserId(user.getId()));
 
             if (!userBots.isEmpty()) {
                 userBots.forEach(userBot -> {

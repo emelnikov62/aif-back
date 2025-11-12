@@ -19,6 +19,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @param id tg id
      * @return user data
      */
-    Optional<User> findByTgId(Long id);
+    Optional<User> findByTgId(String tgId);
 
 }

@@ -91,7 +91,7 @@ public class TgService {
             }
 
             if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU)) {
-                processUserBot(Long.valueOf(id), keyboard);
+                processUserBot(id, keyboard);
 
                 if (Objects.isNull(answer)) {
                     answer = BOTS_EMPTY_TITLE;
@@ -115,7 +115,7 @@ public class TgService {
      * @param id id
      * @param keyboard keyboard
      */
-    public void processUserBot(Long id, InlineKeyboardMarkup keyboard) {
+    public void processUserBot(String id, InlineKeyboardMarkup keyboard) {
         List<UserBot> userBots = userBotService.getUserBotsByTgId(id);
         if (!userBots.isEmpty()) {
             userBots.forEach(userBot -> {
