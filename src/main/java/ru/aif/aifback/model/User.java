@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -15,6 +16,7 @@ import lombok.ToString;
 @ToString
 @Data
 @Table("aif_users")
+@RequiredArgsConstructor
 public class User {
 
     @Id
