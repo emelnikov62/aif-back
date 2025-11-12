@@ -3,18 +3,18 @@ package ru.aif.aifback.services.tg;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
-import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_BUY_BOTS_MENU;
-import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MAIN_MENU;
-import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MY_BOTS_MENU;
-import static ru.aif.aifback.services.tg.TgButtons.BOTS_EMPTY_TITLE;
-import static ru.aif.aifback.services.tg.TgButtons.BOT_CREATE;
-import static ru.aif.aifback.services.tg.TgButtons.BOT_DELETE;
-import static ru.aif.aifback.services.tg.TgButtons.BOT_SELECT;
-import static ru.aif.aifback.services.tg.TgButtons.BUY_BOT;
-import static ru.aif.aifback.services.tg.TgButtons.MENU_TITLE;
-import static ru.aif.aifback.services.tg.TgButtons.MY_BOTS;
-import static ru.aif.aifback.services.tg.TgButtons.SELECT_BOT_TITLE;
-import static ru.aif.aifback.services.tg.TgButtons.createMainMenuKeyboard;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_BUY_BOTS_MENU;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_MY_BOTS_MENU;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BOTS_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_CREATE;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_DELETE;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_SELECT;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BUY_BOT;
+import static ru.aif.aifback.services.tg.TgAdminButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.TgAdminButtons.MY_BOTS;
+import static ru.aif.aifback.services.tg.TgAdminButtons.SELECT_BOT_TITLE;
+import static ru.aif.aifback.services.tg.TgAdminButtons.createMainMenuKeyboard;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.Bot;
 import ru.aif.aifback.model.UserBot;
-import ru.aif.aifback.model.WebhookAdminRequest;
+import ru.aif.aifback.model.WebhookRequest;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
@@ -42,7 +42,7 @@ import ru.aif.aifback.services.user.UserBotService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgService {
+public class TgAdminService {
 
     private final UserBotService userBotService;
     private final BotService botService;
@@ -61,7 +61,7 @@ public class TgService {
      * @param webhookAdminRequest webhookAdminRequest
      * @return true/false
      */
-    public Boolean process(WebhookAdminRequest webhookAdminRequest) {
+    public Boolean process(WebhookRequest webhookAdminRequest) {
         if (webhookAdminRequest.isCallback()) {
             processCallback(webhookAdminRequest.getChatId(), webhookAdminRequest.getText());
         } else {
@@ -89,13 +89,13 @@ public class TgService {
             if (text.contains(BOT_SELECT)) {
                 answer = MENU_TITLE;
                 processBotSelect(text, keyboard);
-                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
+                keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
             }
 
             if (Objects.equals(text, BUY_BOT) || Objects.equals(text, BACK_TO_BUY_BOTS_MENU)) {
                 answer = SELECT_BOT_TITLE;
                 processBuyBot(keyboard);
-                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
+                keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
             if (Objects.equals(text, MY_BOTS)
@@ -103,7 +103,7 @@ public class TgService {
                 || text.contains(BOT_DELETE)
                 || text.contains(BOT_CREATE)) {
                 answer = processUserBot(id, text, keyboard);
-                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
+                keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
             if (Objects.isNull(answer)) {
@@ -158,7 +158,7 @@ public class TgService {
      * @param id id
      */
     public void processNoCallback(String id) {
-        sendMessage(Long.valueOf(id), MENU_TITLE, TgButtons.createMainMenuKeyboard());
+        sendMessage(Long.valueOf(id), MENU_TITLE, TgAdminButtons.createMainMenuKeyboard());
     }
 
     /**
@@ -189,13 +189,13 @@ public class TgService {
         String userBotId = text.split(DELIMITER)[1];
         userBotService.getUserBot(Long.valueOf(userBotId)).ifPresent(entity -> {
             if (Objects.isNull(entity.getToken())) {
-                keyboard.addRow(TgButtons.createLinkBotButton(userBotId));
+                keyboard.addRow(TgAdminButtons.createLinkBotButton(userBotId));
             } else {
-                keyboard.addRow(TgButtons.createSelectedBotMenu(userBotId));
+                keyboard.addRow(TgAdminButtons.createSelectedBotMenu(userBotId));
             }
         });
 
-        keyboard.addRow(TgButtons.createDeleteBotButton(userBotId));
+        keyboard.addRow(TgAdminButtons.createDeleteBotButton(userBotId));
     }
 
     /**

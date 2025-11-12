@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- * Webhook admin request.
+ * Webhook request.
  * @author emelnikov
  */
 @Builder
 @ToString
 @Data
 @AllArgsConstructor
-public class WebhookAdminRequest {
+public class WebhookRequest {
 
     @JsonProperty("chat_id")
     private String chatId;

@@ -1,9 +1,9 @@
 package ru.aif.aifback.services.user;
 
-import static ru.aif.aifback.services.tg.TgButtons.CREATE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.TgButtons.CREATE_BOT_SUCCESS_ANSWER;
-import static ru.aif.aifback.services.tg.TgButtons.DELETE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.TgButtons.DELETE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.TgAdminButtons.CREATE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.TgAdminButtons.CREATE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.TgAdminButtons.DELETE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.TgAdminButtons.DELETE_BOT_SUCCESS_ANSWER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -115,6 +116,13 @@ public class UserBotService {
     public boolean linkBot(Long id, String token) {
         try {
             userBotRepository.linkBot(id, token);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getForObject(String.format(
+                                              "https://api.telegram.org/bot%s/setwebhook?url=https://n8n-agent-emelnikov62.amvera.io/webhook/aif/client/webhook?id=%s",
+                                              token,
+                                              id),
+                                      String.class);
             return Boolean.TRUE;
         } catch (Exception e) {
             return Boolean.FALSE;

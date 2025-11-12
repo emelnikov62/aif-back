@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
  * TG buttons.
  * @author emelnikov
  */
-public final class TgButtons {
+public final class TgAdminButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
     public static final String SELECT_BOT_TITLE = "✅ Выберите бота";
