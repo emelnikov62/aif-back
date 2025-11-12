@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: defaults
+  mail:
+    use-notification-service: false
+  datasource:
+    monitoring-query: true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dvcurs-00pgp001.innodev.local:5432/curs_db?currentSchema=defaults
+    username: dfbs_data_hub
+    password: 1qazXSW@3edc
+  liquibase:
+    change-log: classpath:/db/postgres/changelog.xml
+    url: jdbc:postgresql://dvcurs-00pgp001.innodev.local:5432/curs_db?currentSchema=defaults
+    user: dfbs_data_hub
+    password: 1qazXSW@3edc
+    contexts: prod,dev
+    database-change-log-table: DATABASECHANGELOG
+    database-change-log-lock-table: DATABASECHANGELOGLOCK
+  sql:
+    init:
+      mode: always
+      platform: postgres
+
+integration:
+  kafka:
+    crs:
+      enabled: false
+    drp:
+      enabled: false
+
+audit:
+  enabled: false
+  events:
+    prefix: DFBS
+  kafka:
+    bootstrap.server: localhost:9092
+    topic: audit
+    ssl:
+      enabled: false
+      truststore-type: 'PKCS12'
+      keystore-type: 'PKCS12'
+
+# Настройки трассировки
+ru:
+  vtb:
+    tstr:
+      client-starter:
+        enabled: false
+opentracing:
+  jaeger:
+    service-name: CURS.${spring.application.name}.ds1-genr01-curs-dev1
+    enable-b3-propagation: false
+    enabled: false
+
+# Сервис "CURS. Контроль данных"
+data-control:
+  enabled: false
+  rabbitmq:
+    host: dfcurs-rbc001lk.corp.dev.vtb
+    port: 5671

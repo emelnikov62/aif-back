@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+  compression:
+    enabled: true
+  shutdown: graceful
+
+spring:
+  main:
+    allow-circular-references: true
+    banner-mode: off
+  application:
+    name: aif-back
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+      file-size-threshold: 2KB
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    monitoring-query: true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_test
+    username: n8n_user
+    password: Mery1029384756$
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      pool-name: ${spring.application.name}-pool
+      login-timeout: 8000
+      connection-timeout: 20000
+      validation-timeout: 20000
+      connection-test-query: select 1
+      connection-init-sql: select 1
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog.xml
+    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_test
+    user: n8n_user
+    password: Mery1029384756$
+    contexts: prod,dev
+    database-change-log-table: DATABASECHANGELOG
+    database-change-log-lock-table: DATABASECHANGELOGLOCK
+  sql:
+    init:
+      mode: always
+      platform: postgres
+
+# Настройки логирования
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: INFO
+    ru.aif.aifback: INFO
+    liquibase.changelog: INFO
