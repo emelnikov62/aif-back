@@ -84,7 +84,11 @@ public class TgService {
             keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
         }
 
-        sendMessage(Long.valueOf(id), answer, keyboard);
+        if (Objects.isNull(answer)) {
+            sendMessage(Long.valueOf(id), answer);
+        } else {
+            sendMessage(Long.valueOf(id), answer, keyboard);
+        }
     }
 
     /**
