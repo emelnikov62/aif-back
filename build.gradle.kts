@@ -39,3 +39,9 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks {
+    bootJar {
+        archiveFileName.set("aif-back.jar")
+    }
+}
