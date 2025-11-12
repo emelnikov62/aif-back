@@ -92,7 +92,7 @@ public class TgService {
                 sendMessage(Long.valueOf(id), answer, keyboard);
             }
         } catch (Exception e) {
-            sendMessage(TG_LOG_ID, ExceptionUtils.getStackTrace(e));
+            sendMessage(TG_LOG_ID, e.getMessage());
         }
     }
 
