@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.UserBot;
 import ru.aif.aifback.repository.UserBotRepository;
+import ru.aif.aifback.repository.UserRepository;
 
 /**
  * User bot API service.
@@ -21,6 +22,7 @@ import ru.aif.aifback.repository.UserBotRepository;
 public class UserBotService {
 
     private final UserBotRepository userBotRepository;
+    private final UserRepository userRepository;
     private final BotService botService;
 
     /**
@@ -39,13 +41,16 @@ public class UserBotService {
      */
     public List<UserBot> getUserBotsByTgId(Long id) {
         List<UserBot> userBots = new ArrayList<>();
-        userBotRepository.findAllByTgId(id).forEachRemaining(userBots::add);
 
-        if (!userBots.isEmpty()) {
-            userBots.forEach(userBot -> {
-                botService.findById(userBot.getAifBotId()).ifPresent(userBot::setBot);
-            });
-        }
+        userRepository.findByTgId(id).ifPresent(user -> {
+            userBotRepository.findAllByAifUserId(user.getId()).forEachRemaining(userBots::add);
+
+            if (!userBots.isEmpty()) {
+                userBots.forEach(userBot -> {
+                    botService.findById(userBot.getAifBotId()).ifPresent(userBot::setBot);
+                });
+            }
+        });
 
         return userBots;
     }

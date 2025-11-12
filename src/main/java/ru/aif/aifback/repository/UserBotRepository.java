@@ -19,5 +19,5 @@ public interface UserBotRepository extends CrudRepository<UserBot, Long> {
      * @param id tg id
      * @return list user bots
      */
-    Iterator<UserBot> findAllByTgId(Long id);
+    Iterator<UserBot> findAllByAifUserId(Long id);
 }
