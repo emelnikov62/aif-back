@@ -36,8 +36,7 @@ public class UserService {
      */
     public Optional<User> createUser(String tgId) {
         try {
-            User user = new User();
-            user.setTgId(tgId);
+            User user = new User(tgId);
             userRepository.save(user);
 
             return Optional.of(user);

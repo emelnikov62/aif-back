@@ -22,4 +22,8 @@ public class User {
     private String tgId;
     private boolean active;
     private LocalDateTime created;
+
+    public User(String tgId) {
+        this.tgId = tgId;
+    }
 }
