@@ -87,9 +87,9 @@ public class UserBotService {
             Long userId = null;
 
             if (user.isEmpty()) {
-                Optional<User> saved = userService.createUser(tgId);
+                Optional<Long> saved = userService.createUser(tgId);
                 if (saved.isPresent()) {
-                    userId = saved.get().getId();
+                    userId = saved.get();
                 }
             } else {
                 userId = user.get().getId();
@@ -99,9 +99,7 @@ public class UserBotService {
                 throw new Exception(CREATE_BOT_ERROR_ANSWER);
             }
 
-            UserBot userBot = new UserBot(userId, botId);
-            userBotRepository.save(userBot);
-
+            userBotRepository.addUserBot(userId, botId);
             return CREATE_BOT_SUCCESS_ANSWER;
         } catch (Exception e) {
             return e.getMessage();//CREATE_BOT_ERROR_ANSWER;

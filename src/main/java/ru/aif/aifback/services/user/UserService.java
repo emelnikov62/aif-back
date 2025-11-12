@@ -34,12 +34,9 @@ public class UserService {
      * @param tgId tg id
      * @return user data
      */
-    public Optional<User> createUser(String tgId) {
+    public Optional<Long> createUser(String tgId) {
         try {
-            User user = new User(tgId);
-            userRepository.save(user);
-
-            return Optional.of(user);
+            return Optional.of(userRepository.addUser(tgId));
         } catch (Exception e) {
             return Optional.empty();
         }
