@@ -26,7 +26,7 @@ import ru.aif.aifback.services.tg.TgAdminService;
 @CrossOrigin(value = "*")
 public class AdminController {
 
-    private final TgAdminService tgService;
+    private final TgAdminService tgAdminService;
 
     /**
      * Admin bot webhook.
@@ -35,7 +35,7 @@ public class AdminController {
      */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> test(@RequestBody WebhookRequest webhookAdminRequest) {
-        return ResponseEntity.ok(tgService.process(webhookAdminRequest));
+        return ResponseEntity.ok(tgAdminService.process(webhookAdminRequest));
     }
 
     /**
@@ -60,6 +60,6 @@ public class AdminController {
      */
     @GetMapping(value = "/link-bot")
     public ResponseEntity<Boolean> linkBot(String id, String token) {
-        return ResponseEntity.ok(tgService.linkBot(id, token));
+        return ResponseEntity.ok(tgAdminService.linkBot(id, token));
     }
 }

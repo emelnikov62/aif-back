@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
 import ru.aif.aifback.model.WebhookRequest;
-import ru.aif.aifback.services.tg.TgAdminService;
+import ru.aif.aifback.services.tg.TgClientService;
 
 /**
  * Client controller.
@@ -25,7 +25,7 @@ import ru.aif.aifback.services.tg.TgAdminService;
 @CrossOrigin(value = "*")
 public class ClientController {
 
-    private final TgAdminService tgService;
+    private final TgClientService tgClientService;
 
     /**
      * Client bot webhook.
@@ -34,6 +34,6 @@ public class ClientController {
      */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> test(@RequestBody WebhookRequest webhookRequest) {
-        return ResponseEntity.ok(tgService.process(webhookRequest));
+        return ResponseEntity.ok(tgClientService.process(webhookRequest));
     }
 }

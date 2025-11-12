@@ -36,7 +36,7 @@ import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
 /**
- * TG API service.
+ * TG Admin API service.
  * @author emelnikov
  */
 @Slf4j
@@ -58,14 +58,14 @@ public class TgAdminService {
 
     /**
      * Webhook process.
-     * @param webhookAdminRequest webhookAdminRequest
+     * @param webhookRequest webhookAdminRequest
      * @return true/false
      */
-    public Boolean process(WebhookRequest webhookAdminRequest) {
-        if (webhookAdminRequest.isCallback()) {
-            processCallback(webhookAdminRequest.getChatId(), webhookAdminRequest.getText());
+    public Boolean process(WebhookRequest webhookRequest) {
+        if (webhookRequest.isCallback()) {
+            processCallback(webhookRequest.getChatId(), webhookRequest.getText());
         } else {
-            processNoCallback(webhookAdminRequest.getChatId());
+            processNoCallback(webhookRequest.getChatId());
         }
 
         return Boolean.TRUE;

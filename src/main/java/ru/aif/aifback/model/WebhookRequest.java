@@ -23,4 +23,6 @@ public class WebhookRequest {
 
     private boolean callback;
 
+    private String id;
+
 }
