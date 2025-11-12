@@ -5,6 +5,7 @@ import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,16 @@ public class TgService {
      */
     public void sendMessage(Long id, String text) {
         log.info("{}", bot.execute(new SendMessage(id, text)));
+    }
+
+    /**
+     * Send message with keyboard.
+     * @param id id
+     * @param text text
+     * @param keyboard keyboard
+     */
+    public void sendMessage(Long id, String text, Keyboard keyboard) {
+        log.info("{}", bot.execute(new SendMessage(id, text).replyMarkup(keyboard)));
     }
 
 }
