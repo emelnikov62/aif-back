@@ -1,6 +1,7 @@
 package ru.aif.aifback.services.tg;
 
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
+import static ru.aif.aifback.services.tg.TgButtons.MENU_TITLE;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.WebhookAdminRequest;
 
 /**
  * TG API service.
@@ -23,6 +25,30 @@ public class TgService {
     @PostConstruct
     void init() {
         bot = new TelegramBot(TG_TOKEN_ADMIN);
+    }
+
+    public Boolean process(WebhookAdminRequest webhookAdminRequest) {
+        if (webhookAdminRequest.isCallback()) {
+            processCallback();
+        } else {
+            processNoCallback(webhookAdminRequest.getChatId());
+        }
+
+        return Boolean.TRUE;
+    }
+
+    /**
+     * Callback process.
+     */
+    public void processCallback() {
+    }
+
+    /**
+     * No callback process.
+     * @param id id
+     */
+    public void processNoCallback(String id) {
+        sendMessage(Long.valueOf(id), MENU_TITLE, TgButtons.createMainMenuKeyboard());
     }
 
     /**
