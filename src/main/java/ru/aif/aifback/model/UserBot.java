@@ -27,7 +27,15 @@ public class UserBot {
     private boolean active;
     private String token;
     private LocalDateTime created;
-
     @Transient
     private Bot bot;
+
+    public UserBot(Long id, Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created) {
+        this.id = id;
+        this.aifUserId = aifUserId;
+        this.aifBotId = aifBotId;
+        this.active = active;
+        this.token = token;
+        this.created = created;
+    }
 }
