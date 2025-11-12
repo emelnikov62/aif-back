@@ -14,6 +14,7 @@ import static ru.aif.aifback.services.tg.TgButtons.createMainMenuKeyboard;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -64,30 +65,34 @@ public class TgService {
      * @param text text
      */
     public void processCallback(String id, String text) {
-        String answer = null;
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        try {
+            String answer = null;
+            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        if (Objects.equals(text, BACK_TO_MAIN_MENU)) {
-            answer = MENU_TITLE;
-            keyboard = createMainMenuKeyboard();
-        }
+            if (Objects.equals(text, BACK_TO_MAIN_MENU)) {
+                answer = MENU_TITLE;
+                keyboard = createMainMenuKeyboard();
+            }
 
-        if (text.contains(BOT_SELECT)) {
-            answer = MENU_TITLE;
-            processBotSelect(text, keyboard);
-            keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
-        }
+            if (text.contains(BOT_SELECT)) {
+                answer = MENU_TITLE;
+                processBotSelect(text, keyboard);
+                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
+            }
 
-        if (Objects.equals(text, BUY_BOT)) {
-            answer = SELECT_BOT_TITLE;
-            processBuyBot(keyboard);
-            keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
-        }
+            if (Objects.equals(text, BUY_BOT)) {
+                answer = SELECT_BOT_TITLE;
+                processBuyBot(keyboard);
+                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
+            }
 
-        if (Objects.isNull(answer)) {
-            sendMessage(Long.valueOf(id), MENU_TITLE);
-        } else {
-            sendMessage(Long.valueOf(id), answer, keyboard);
+            if (Objects.isNull(answer)) {
+                sendMessage(Long.valueOf(id), MENU_TITLE);
+            } else {
+                sendMessage(Long.valueOf(id), answer, keyboard);
+            }
+        } catch (Exception e) {
+            sendMessage(TG_LOG_ID, ExceptionUtils.getStackTrace(e));
         }
     }
 
