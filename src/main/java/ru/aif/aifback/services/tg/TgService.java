@@ -90,7 +90,7 @@ public class TgService {
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
-            if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU)) {
+            if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU) || text.contains(BOT_DELETE)) {
                 answer = processUserBot(id, text, keyboard);
 
                 if (Objects.isNull(answer)) {
