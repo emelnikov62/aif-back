@@ -19,6 +19,7 @@ public final class TgButtons {
     public static final String DELETE_BOT_TITLE = "⛔ Удалить";
     public static final String BOT_STATS_TITLE = "\uD83D\uDCCA Статистика";
     public static final String BOT_SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
+    public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
 
     public final static String BOT_SELECT = "bot_select";
     public final static String MY_BOTS = "my_bots";
@@ -28,6 +29,8 @@ public final class TgButtons {
     public final static String BOT_SETTINGS = "bot_settings";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
     public static final String BOT_CREATE = "bot_create";
+    public static final String BACK_TO_BUY_BOTS_MENU = "back_to_buy_bots_menu";
+    public static final String BACK_TO_MY_BOTS_MENU = "back_to_my_bots_menu";
 
     /**
      * Create main menu.

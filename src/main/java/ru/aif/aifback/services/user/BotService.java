@@ -2,6 +2,7 @@ package ru.aif.aifback.services.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,15 @@ public class BotService {
         botRepository.findAll().forEach(bots::add);
 
         return bots;
+    }
+
+    /**
+     * Get bot by id.
+     * @param id id
+     * @return bot data
+     */
+    public Optional<Bot> findById(Long id) {
+        return botRepository.findById(id);
     }
 
 }

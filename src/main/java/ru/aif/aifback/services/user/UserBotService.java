@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import ru.aif.aifback.repository.UserBotRepository;
 public class UserBotService {
 
     private final UserBotRepository userBotRepository;
+    private final BotService botService;
 
     /**
      * Get user bot by id.
@@ -27,6 +30,24 @@ public class UserBotService {
      */
     public Optional<UserBot> getUserBot(Long id) {
         return userBotRepository.findById(id);
+    }
+
+    /**
+     * Get user bots by tg id.
+     * @param id id
+     * @return list user bots
+     */
+    public List<UserBot> getUserBotsByTgId(Long id) {
+        List<UserBot> userBots = new ArrayList<>();
+        userBotRepository.findAllByTgId(id).forEachRemaining(userBots::add);
+
+        if (!userBots.isEmpty()) {
+            userBots.forEach(userBot -> {
+                botService.findById(userBot.getAifBotId()).ifPresent(userBot::setBot);
+            });
+        }
+
+        return userBots;
     }
 
 }

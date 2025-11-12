@@ -3,11 +3,15 @@ package ru.aif.aifback.services.tg;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
+import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_BUY_BOTS_MENU;
 import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MY_BOTS_MENU;
+import static ru.aif.aifback.services.tg.TgButtons.BOTS_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.TgButtons.BOT_CREATE;
 import static ru.aif.aifback.services.tg.TgButtons.BOT_SELECT;
 import static ru.aif.aifback.services.tg.TgButtons.BUY_BOT;
 import static ru.aif.aifback.services.tg.TgButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.TgButtons.MY_BOTS;
 import static ru.aif.aifback.services.tg.TgButtons.SELECT_BOT_TITLE;
 import static ru.aif.aifback.services.tg.TgButtons.createMainMenuKeyboard;
 
@@ -25,6 +29,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.Bot;
+import ru.aif.aifback.model.UserBot;
 import ru.aif.aifback.model.WebhookAdminRequest;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
@@ -76,12 +81,22 @@ public class TgService {
             if (text.contains(BOT_SELECT)) {
                 answer = MENU_TITLE;
                 processBotSelect(text, keyboard);
+                keyboard.addRow(TgButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
+            }
+
+            if (Objects.equals(text, BUY_BOT) || Objects.equals(text, BACK_TO_BUY_BOTS_MENU)) {
+                answer = SELECT_BOT_TITLE;
+                processBuyBot(keyboard);
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
-            if (Objects.equals(text, BUY_BOT)) {
-                answer = SELECT_BOT_TITLE;
-                processBuyBot(keyboard);
+            if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU)) {
+                processUserBot(Long.valueOf(id), keyboard);
+
+                if (Objects.isNull(answer)) {
+                    answer = BOTS_EMPTY_TITLE;
+                }
+
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
@@ -92,6 +107,24 @@ public class TgService {
             }
         } catch (Exception e) {
             sendMessage(TG_LOG_ID, e.getMessage());
+        }
+    }
+
+    /**
+     * Process user bots.
+     * @param id id
+     * @param keyboard keyboard
+     */
+    public void processUserBot(Long id, InlineKeyboardMarkup keyboard) {
+        List<UserBot> userBots = userBotService.getUserBotsByTgId(id);
+        if (!userBots.isEmpty()) {
+            userBots.forEach(userBot -> {
+                keyboard.addRow(new InlineKeyboardButton(
+                        String.format("%s %s (ID: %s)",
+                                      (userBot.isActive() && Objects.nonNull(userBot.getToken()) ? "✅" : "❌"),
+                                      userBot.getBot().getDescription(),
+                                      userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
+            });
         }
     }
 
