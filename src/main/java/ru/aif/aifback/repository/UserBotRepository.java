@@ -1,6 +1,5 @@
 package ru.aif.aifback.repository;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.data.jdbc.repository.query.Query;
@@ -21,6 +20,6 @@ public interface UserBotRepository extends CrudRepository<UserBot, Long> {
      * @param id tg id
      * @return list user bots
      */
-    @Query(value = "select * from aif_user_bots")
+    @Query(value = "select * from aif_user_bots b where b.aif_user_id = :id")
     List<UserBot> findAllByAifUserId(Long id);
 }
