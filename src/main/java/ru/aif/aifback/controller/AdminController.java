@@ -27,6 +27,11 @@ public class AdminController {
 
     private final TgService tgService;
 
+    /**
+     * Admin bot webhook.
+     * @param webhookAdminRequest request
+     * @return true/false
+     */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> test(@RequestBody WebhookAdminRequest webhookAdminRequest) {
         return ResponseEntity.ok(tgService.process(webhookAdminRequest));

@@ -23,8 +23,12 @@ public final class TgButtons {
      */
     public static Keyboard createMainMenuKeyboard() {
         return new InlineKeyboardMarkup(
-                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(MY_BOTS),
-                new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(BUY_BOT)
+                new InlineKeyboardButton[] {
+                        new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(MY_BOTS)
+                },
+                new InlineKeyboardButton[] {
+                        new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(BUY_BOT)
+                }
         );
     }
 }
