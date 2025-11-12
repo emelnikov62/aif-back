@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -14,7 +13,6 @@ import lombok.ToString;
  * @author emelnikov
  */
 @ToString
-@Builder
 @Data
 @Table("aif_users")
 public class User {
