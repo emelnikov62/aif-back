@@ -34,6 +34,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("com.github.pengrad:java-telegram-bot-api:9.2.0")
 }
 
 tasks.withType<Test> {
