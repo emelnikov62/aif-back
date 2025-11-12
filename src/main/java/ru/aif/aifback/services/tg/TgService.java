@@ -92,11 +92,6 @@ public class TgService {
 
             if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU) || text.contains(BOT_DELETE)) {
                 answer = processUserBot(id, text, keyboard);
-
-                if (Objects.isNull(answer)) {
-                    answer = BOTS_EMPTY_TITLE;
-                }
-
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
@@ -133,7 +128,8 @@ public class TgService {
                                       userBot.getBot().getDescription(),
                                       userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
             });
-
+        } else {
+            answer = BOTS_EMPTY_TITLE;
         }
 
         return answer;
