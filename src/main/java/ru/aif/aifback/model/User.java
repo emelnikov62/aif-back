@@ -2,6 +2,8 @@ package ru.aif.aifback.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -13,6 +15,7 @@ import lombok.ToString;
 @ToString
 @Builder
 @Data
+@Table("aif_users")
 public class User {
 
     private Long id;
