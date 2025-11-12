@@ -132,7 +132,6 @@ public class TgService {
 
         if (text.contains(BOT_CREATE)) {
             Long botId = Long.valueOf(text.split(DELIMITER)[1]);
-            sendMessage(TG_LOG_ID, text);
             answer = userBotService.createUserBot(id, botId);
         }
 
@@ -197,6 +196,16 @@ public class TgService {
         });
 
         keyboard.addRow(TgButtons.createDeleteBotButton(userBotId));
+    }
+
+    /**
+     * Link bot.
+     * @param id id
+     * @param token token
+     * @return true/false
+     */
+    public boolean linkBot(String id, String token) {
+        return userBotService.linkBot(Long.valueOf(id), token);
     }
 
     /**

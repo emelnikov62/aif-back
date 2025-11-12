@@ -63,7 +63,7 @@ public final class TgButtons {
      */
     public static InlineKeyboardButton createLinkBotButton(String id) {
         return new InlineKeyboardButton(LINK_TOKEN_TITLE)
-                .webApp(new WebAppInfo("https://aif-admin-emelnikov62.amvera.io/link-bot-form?id=" + id));
+                .webApp(new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot-form?id=" + id));
     }
 
     /**

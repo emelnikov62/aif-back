@@ -28,4 +28,8 @@ public interface UserBotRepository extends CrudRepository<UserBot, Long> {
     @Query(value = "insert into aif_user_bots(aif_user_id, aif_bot_id) values(:user_id, :bot_id)")
     @Modifying
     Long addUserBot(@Param("user_id") Long userId, @Param("bot_id") Long botId);
+
+    @Query(value = "update aif_user_bots set token = :token where id = :id")
+    @Modifying
+    void linkBot(@Param("id") Long id, @Param("token") String token);
 }

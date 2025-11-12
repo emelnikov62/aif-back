@@ -102,8 +102,22 @@ public class UserBotService {
             userBotRepository.addUserBot(userId, botId);
             return CREATE_BOT_SUCCESS_ANSWER;
         } catch (Exception e) {
-            return e.getMessage();//CREATE_BOT_ERROR_ANSWER;
+            return CREATE_BOT_ERROR_ANSWER;
         }
     }
 
+    /**
+     * Link bot.
+     * @param id id
+     * @param token token
+     * @return true/false
+     */
+    public boolean linkBot(Long id, String token) {
+        try {
+            userBotRepository.linkBot(id, token);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+    }
 }
