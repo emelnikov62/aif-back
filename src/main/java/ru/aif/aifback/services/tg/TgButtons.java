@@ -22,6 +22,8 @@ public final class TgButtons {
     public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
     public static final String DELETE_BOT_ERROR_ANSWER = "❌ Не удалось удалить бота. Попробуйте еще раз";
     public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
+    public static final String CREATE_BOT_ERROR_ANSWER = "❌ Не удалось создать бота. Попробуйте еще раз";
+    public static final String CREATE_BOT_SUCCESS_ANSWER = "✅ Бот создан";
 
     public final static String BOT_SELECT = "bot_select";
     public final static String MY_BOTS = "my_bots";

@@ -36,4 +36,9 @@ public class UserBot {
         this.token = token;
         this.created = created;
     }
+
+    public UserBot(Long aifUserId, Long aifBotId) {
+        this.aifUserId = aifUserId;
+        this.aifBotId = aifBotId;
+    }
 }

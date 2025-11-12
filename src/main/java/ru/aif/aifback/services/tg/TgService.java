@@ -48,11 +48,19 @@ public class TgService {
     private final BotService botService;
     private TelegramBot bot;
 
+    /**
+     * Post construct.
+     */
     @PostConstruct
     void init() {
         bot = new TelegramBot(TG_TOKEN_ADMIN);
     }
 
+    /**
+     * Webhook process.
+     * @param webhookAdminRequest webhookAdminRequest
+     * @return true/false
+     */
     public Boolean process(WebhookAdminRequest webhookAdminRequest) {
         if (webhookAdminRequest.isCallback()) {
             processCallback(webhookAdminRequest.getChatId(), webhookAdminRequest.getText());
@@ -90,7 +98,10 @@ public class TgService {
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
-            if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU) || text.contains(BOT_DELETE)) {
+            if (Objects.equals(text, MY_BOTS)
+                || Objects.equals(text, BACK_TO_MY_BOTS_MENU)
+                || text.contains(BOT_DELETE)
+                || text.contains(BOT_CREATE)) {
                 answer = processUserBot(id, text, keyboard);
                 keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
@@ -112,11 +123,16 @@ public class TgService {
      * @param keyboard keyboard
      */
     public String processUserBot(String id, String text, InlineKeyboardMarkup keyboard) {
-        String answer = MENU_TITLE;
+        String answer = null;
 
         if (text.contains(BOT_DELETE)) {
             Long userBotId = Long.valueOf(text.split(DELIMITER)[1]);
             answer = userBotService.deleteUserBot(userBotId);
+        }
+
+        if (text.contains(BOT_CREATE)) {
+            Long botId = Long.valueOf(text.split(DELIMITER)[1]);
+            answer = userBotService.createUserBot(id, botId);
         }
 
         List<UserBot> userBots = userBotService.getUserBotsByTgId(id);
@@ -128,8 +144,10 @@ public class TgService {
                                       userBot.getBot().getDescription(),
                                       userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
             });
+
+            answer = Objects.isNull(answer) ? MENU_TITLE : answer;
         } else {
-            answer = BOTS_EMPTY_TITLE;
+            answer = Objects.isNull(answer) ? BOTS_EMPTY_TITLE : answer;
         }
 
         return answer;
