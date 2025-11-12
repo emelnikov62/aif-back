@@ -1,8 +1,9 @@
 package ru.aif.aifback.services.user;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.assertj.core.util.Lists;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class BotService {
      * @return bots data
      */
     public List<Bot> getBots() {
-        return Lists.newArrayList(botRepository.findAll());
+        return IteratorUtils.toList((Iterator<? extends Bot>) botRepository.findAll());
     }
 
 }
