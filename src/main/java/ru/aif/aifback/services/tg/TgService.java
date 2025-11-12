@@ -14,7 +14,6 @@ import static ru.aif.aifback.services.tg.TgButtons.createMainMenuKeyboard;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -110,7 +109,6 @@ public class TgService {
      */
     public void processBuyBot(InlineKeyboardMarkup keyboard) {
         List<Bot> bots = botService.getBots();
-        sendMessage(TG_LOG_ID, bots.toString());
         if (bots.isEmpty()) {
             return;
         }
