@@ -1,6 +1,7 @@
 package ru.aif.aifback.services.tg;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.TgButtons.BOT_CREATE;
@@ -47,6 +48,7 @@ public class TgService {
     }
 
     public Boolean process(WebhookAdminRequest webhookAdminRequest) {
+        sendMessage(TG_LOG_ID, webhookAdminRequest.toString());
         if (webhookAdminRequest.isCallback()) {
             processCallback(webhookAdminRequest.getChatId(), webhookAdminRequest.getText());
         } else {
@@ -99,6 +101,7 @@ public class TgService {
      */
     public void processBuyBot(InlineKeyboardMarkup keyboard) {
         List<Bot> bots = botService.getBots();
+        sendMessage(TG_LOG_ID, bots.toString());
         if (bots.isEmpty()) {
             return;
         }
