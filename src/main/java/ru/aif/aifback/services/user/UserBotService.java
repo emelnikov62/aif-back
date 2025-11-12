@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static ru.aif.aifback.services.tg.TgButtons.DELETE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.TgButtons.DELETE_BOT_SUCCESS_ANSWER;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +56,20 @@ public class UserBotService {
         });
 
         return userBots;
+    }
+
+    /**
+     * Delete user bot.
+     * @param id id
+     * @return true/false
+     */
+    public String deleteUserBot(Long id) {
+        try {
+            userBotRepository.deleteById(id);
+            return DELETE_BOT_SUCCESS_ANSWER;
+        } catch (Exception e) {
+            return DELETE_BOT_ERROR_ANSWER;
+        }
     }
 
 }

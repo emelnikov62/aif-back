@@ -8,6 +8,7 @@ import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.TgButtons.BACK_TO_MY_BOTS_MENU;
 import static ru.aif.aifback.services.tg.TgButtons.BOTS_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.TgButtons.BOT_CREATE;
+import static ru.aif.aifback.services.tg.TgButtons.BOT_DELETE;
 import static ru.aif.aifback.services.tg.TgButtons.BOT_SELECT;
 import static ru.aif.aifback.services.tg.TgButtons.BUY_BOT;
 import static ru.aif.aifback.services.tg.TgButtons.MENU_TITLE;
@@ -53,7 +54,6 @@ public class TgService {
     }
 
     public Boolean process(WebhookAdminRequest webhookAdminRequest) {
-        sendMessage(TG_LOG_ID, webhookAdminRequest.toString());
         if (webhookAdminRequest.isCallback()) {
             processCallback(webhookAdminRequest.getChatId(), webhookAdminRequest.getText());
         } else {
@@ -91,7 +91,7 @@ public class TgService {
             }
 
             if (Objects.equals(text, MY_BOTS) || Objects.equals(text, BACK_TO_MY_BOTS_MENU)) {
-                processUserBot(answer, id, keyboard);
+                answer = processUserBot(id, text, keyboard);
 
                 if (Objects.isNull(answer)) {
                     answer = BOTS_EMPTY_TITLE;
@@ -113,12 +113,19 @@ public class TgService {
     /**
      * Process user bots.
      * @param id id
+     * @param text text
      * @param keyboard keyboard
      */
-    public void processUserBot(String answer, String id, InlineKeyboardMarkup keyboard) {
+    public String processUserBot(String id, String text, InlineKeyboardMarkup keyboard) {
+        String answer = MENU_TITLE;
+
+        if (text.contains(BOT_DELETE)) {
+            Long userBotId = Long.valueOf(text.split(DELIMITER)[1]);
+            answer = userBotService.deleteUserBot(userBotId);
+        }
+
         List<UserBot> userBots = userBotService.getUserBotsByTgId(id);
         if (!userBots.isEmpty()) {
-            answer = MENU_TITLE;
             userBots.forEach(userBot -> {
                 keyboard.addRow(new InlineKeyboardButton(
                         String.format("%s %s (ID: %s)",
@@ -126,7 +133,10 @@ public class TgService {
                                       userBot.getBot().getDescription(),
                                       userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
             });
+
         }
+
+        return answer;
     }
 
     /**

@@ -20,6 +20,8 @@ public final class TgButtons {
     public static final String BOT_STATS_TITLE = "\uD83D\uDCCA Статистика";
     public static final String BOT_SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
+    public static final String DELETE_BOT_ERROR_ANSWER = "❌ Не удалось удалить бота. Попробуйте еще раз";
+    public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
 
     public final static String BOT_SELECT = "bot_select";
     public final static String MY_BOTS = "my_bots";
