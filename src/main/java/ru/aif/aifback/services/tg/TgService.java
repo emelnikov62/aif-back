@@ -78,14 +78,14 @@ public class TgService {
             keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
         }
 
-        if (text.contains(BUY_BOT)) {
+        if (Objects.equals(text, BUY_BOT)) {
             answer = SELECT_BOT_TITLE;
             processBuyBot(keyboard);
             keyboard.addRow(TgButtons.createBackButton(BACK_TO_MAIN_MENU));
         }
 
         if (Objects.isNull(answer)) {
-            sendMessage(Long.valueOf(id), answer);
+            sendMessage(Long.valueOf(id), MENU_TITLE);
         } else {
             sendMessage(Long.valueOf(id), answer, keyboard);
         }
