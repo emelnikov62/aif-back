@@ -132,6 +132,7 @@ public class TgService {
 
         if (text.contains(BOT_CREATE)) {
             Long botId = Long.valueOf(text.split(DELIMITER)[1]);
+            sendMessage(TG_LOG_ID, text);
             answer = userBotService.createUserBot(id, botId);
         }
 

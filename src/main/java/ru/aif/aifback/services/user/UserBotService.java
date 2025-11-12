@@ -104,7 +104,7 @@ public class UserBotService {
 
             return CREATE_BOT_SUCCESS_ANSWER;
         } catch (Exception e) {
-            return CREATE_BOT_ERROR_ANSWER;
+            return e.getMessage();//CREATE_BOT_ERROR_ANSWER;
         }
     }
 
