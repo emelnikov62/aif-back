@@ -1,0 +1,694 @@
+@charset "UTF-8";
+
+@media only screen and (width < 1150px) {
+}
+
+@media only screen and (width < 1025px) {
+    .input-skin-price {
+        zoom: 2;
+    }
+
+    #link_button {
+        zoom: 2;
+    }
+
+    .case-items-game-container-few .case-item-game {
+        min-width: auto !important;
+    }
+
+    .source-deposit-content {
+        flex-direction: column;
+
+        div {
+            width: 100%;
+        }
+    }
+
+    .deposit-window {
+        min-height: auto;
+        max-height: 100%;
+    }
+
+    .upgrader .gaming-block {
+        height: auto;
+    }
+
+    .upgrader-quick-buttons {
+        height: auto !important;
+    }
+
+    .footer .rows {
+        width: 95%;
+    }
+
+    .content-inner {
+        width: 95%;
+        overflow: hidden;
+    }
+
+    .double-roulette-wheel {
+        zoom: 0.7 !important;
+        bottom: 15px !important;
+    }
+
+    .gaming-block {
+        height: 350px;
+    }
+
+    .game-progress {
+        height: 150px !important;
+    }
+}
+
+@media only screen and (width < 854px) {
+    .footer-right-image {
+        width: 250px;
+        right: 0;
+        opacity: 0.4;
+    }
+
+    .footer-down {
+        gap: 50px;
+    }
+
+    .market-items-window {
+        right: 20px !important;
+        top: 10px !important;
+        width: 95% !important;
+        height: 50% !important;
+    }
+
+    .logo {
+        width: 65px;
+        height: auto;
+    }
+
+    .langs-footer {
+        position: absolute;
+        right: 20px;
+    }
+
+    .footer-top-container a {
+        padding-left: 10px;
+        width: fit-content;
+    }
+
+    .lang-footer-menu-items {
+        right: 0px;
+    }
+
+    .games-blocks.block-size-large {
+        flex-wrap: wrap;
+        flex-direction: row;
+        height: auto;
+
+        div {
+            height: 90px;
+            flex: 1;
+            min-width: 45%;
+        }
+
+        .game-image .main {
+            font-size: 12px;
+        }
+
+        .game-image .count {
+            font-size: 12px;
+            height: auto !important;
+            min-width: auto !important;
+            flex: none !important;
+        }
+    }
+
+    .top-block,
+    .middle-block {
+        flex-direction: column;
+        width: 100%;
+
+        div {
+            width: -webkit-fill-available !important;
+            height: 200px;
+        }
+    }
+
+    .header {
+        height: 40px;
+    }
+
+    .auth-content {
+        .header {
+            height: 100px;
+        }
+
+        .content {
+            margin-top: 80px;
+        }
+
+        .header-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .header .lang-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+
+            .lang-menu-items {
+                right: 0px;
+            }
+        }
+
+        .header .header-container-right {
+            justify-content: center;
+            padding-right: 0px;
+            width: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .header-container-center {
+            width: 100% !important;
+            align-items: start;
+            justify-content: start !important;
+        }
+
+        .button.deposit {
+            flex: 1;
+        }
+    }
+
+    .header-container {
+        flex-wrap: wrap;
+        height: auto !important;
+    }
+
+    .header-container {
+        flex-wrap: wrap;
+        height: auto !important;
+    }
+
+    .header-container-left {
+        display: none;
+    }
+
+    .content {
+        margin-top: 40px;
+    }
+
+    .games-content .games-blocks .games,
+    .profile-content .games-blocks .games {
+        min-width: 150px;
+    }
+
+    .games-content .games-blocks,
+    .profile-content .games-blocks {
+        gap: 5px;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        overflow-x: scroll;
+        scrollbar-width: none;
+    }
+
+    .game-container {
+        flex-direction: column;
+    }
+
+    .game-container > div {
+        width: 100%;
+    }
+
+    .profile-general-container {
+        .general-top {
+            flex-direction: column;
+        }
+
+        .general-top > div {
+            width: 100%;
+            height: auto;
+        }
+
+        .general-top-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .general-top-container-top {
+            flex-direction: column;
+            gap: 10px;
+
+            div {
+                width: 100%;
+                justify-content: start;
+            }
+        }
+
+        .general-top-container-bottom {
+            flex-direction: column;
+            gap: 10px;
+
+            div {
+                width: 100%;
+                justify-content: start;
+            }
+
+            button {
+                width: 100%;
+                justify-content: start;
+            }
+
+            .trade-status {
+                justify-content: center !important;
+            }
+        }
+
+        .blocks {
+            flex-direction: column;
+            height: auto;
+
+            div {
+                height: 160px;
+            }
+        }
+    }
+
+    .profile-nav {
+        overflow: hidden;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        justify-content: start;
+
+        a {
+            min-width: 200px;
+        }
+    }
+
+    .edit-trade-link-window,
+    .other-items-window {
+        width: 95%;
+    }
+
+    .deposit-window {
+        width: 95%;
+        max-width: 95%;
+        min-width: 95%;
+
+        .source-deposit-content {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+
+    .profile-referral-top {
+        flex-direction: column;
+
+        .profile-referral-left {
+            width: 100%;
+            height: 220px;
+        }
+
+        .profile-referral-right {
+            width: 100%;
+        }
+    }
+
+    .profile-referral-right-bottom {
+        flex-wrap: wrap;
+        height: fit-content !important;
+
+        .bottom-block {
+            height: 100px;
+        }
+    }
+
+    .levels-table {
+        zoom: 0.7;
+    }
+
+    .bonuses-container {
+        flex-direction: column;
+
+        div {
+            width: 100%;
+        }
+    }
+
+    .operations-container,
+    .games-stats-history-container {
+        padding: 0;
+        gap: 20px;
+    }
+
+    .history-operations,
+    .games-stats-history {
+        padding: 0;
+    }
+
+    .games-stats-history-container-nav {
+        overflow: hidden;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        gap: 10px;
+
+        a {
+            min-width: 100px;
+        }
+    }
+
+    .profile-inventory-container {
+        .profile-inventory-container-inventory {
+            height: 600px;
+
+            .profile-inv-inv {
+                flex-direction: column-reverse !important;
+                gap: 10px;
+            }
+
+            .from-inventory,
+            .user-items-buttons {
+                width: 100% !important;
+            }
+        }
+
+        .profile-inventory-container-market {
+            height: 800px;
+
+            .profile-inv-market {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+
+            .market-buttons,
+            .root-buttons {
+                width: 100% !important;
+            }
+
+            .market-filter {
+                overflow: hidden;
+                overflow-x: scroll;
+                scrollbar-width: none;
+                justify-content: start;
+            }
+        }
+    }
+
+    .double-roulette-wheel {
+        zoom: 1 !important;
+        bottom: 25px !important;
+    }
+
+    .gaming-block {
+        height: 350px;
+    }
+
+    .footer-stats {
+        gap: 50px;
+        flex: 1;
+    }
+}
+
+@media only screen and (width < 541px) {
+    .battle-container {
+        .game-container {
+            flex-direction: row;
+        }
+
+        .battle-images {
+            flex-direction: column;
+        }
+    }
+
+    .battle-user-bets {
+        max-width: 100px;
+        flex-direction: column;
+
+        .battle-user-bet {
+            flex-direction: column;
+        }
+    }
+
+    .battle-password-window {
+        width: 90%;
+    }
+
+    .case-items-game-container-few {
+        zoom: 0.7;
+    }
+
+    .case-items-game-container-few {
+        .case-item-hide-data {
+            display: none;
+        }
+
+        .case-item-hide-data-price {
+            display: flex;
+        }
+    }
+
+    .case-items-game-container-root {
+        max-height: fit-content !important;
+        height: fit-content !important;
+    }
+
+    .case-game-btns {
+        flex-wrap: wrap;
+        flex-direction: column;
+        height: fit-content !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upgrader-my-item-container {
+        height: fit-content;
+    }
+
+    .upgrader-quick-buttons {
+        height: auto !important;
+    }
+
+    .upgrader-win-item {
+        width: auto;
+        height: 120px;
+
+        img {
+            height: 50px;
+        }
+    }
+
+    .upgrader-calc-image {
+        width: 150px !important;
+    }
+
+    .upgrader-item-block {
+        min-height: 150px !important;
+    }
+
+    .footer-down {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .footer-down div:first-child {
+        align-items: center !important;
+        justify-content: center;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .footer-top {
+        height: auto;
+    }
+
+    .footer-top .footer-top-container {
+        flex-direction: column;
+        gap: 10px;
+        align-items: normal;
+    }
+
+    .footer-stats {
+        flex-wrap: wrap;
+        gap: 0px;
+        justify-content: space-between;
+    }
+
+    .double-roulette-wheel {
+        zoom: 1 !important;
+        bottom: 15px !important;
+    }
+
+    .gaming-block {
+        height: 250px;
+    }
+
+    .double-bets {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .game-progress {
+        height: 100px !important;
+        zoom: 0.7;
+    }
+
+    .user-bet-container {
+        zoom: 0.6;
+    }
+
+    .market-items-window {
+        position: fixed;
+        right: 0px !important;
+        top: 0px !important;
+        bottom: 10px !important;
+        width: 100% !important;
+        min-height: 100% !important;
+        max-height: 100% !important;
+        height: 100% !important;
+    }
+
+    .items-container.market-with {
+        z-index: 100 !important;
+    }
+
+    .market-filter {
+        overflow: hidden;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        justify-content: start;
+    }
+
+    .footer-right-image {
+        width: 380px;
+        right: 0;
+    }
+
+    .upgrader-items-select .source-skin {
+        justify-content: center;
+
+        span {
+            display: none;
+        }
+    }
+
+    .upgrader-container {
+        flex-direction: column;
+    }
+
+    .upgrader .gaming-block {
+        height: auto;
+    }
+
+    .source-deposit-content div {
+        width: 100%;
+    }
+}
+
+@media only screen and (width < 431px) {
+    .promocode-name {
+        font-size: 10px;
+    }
+
+    .bet {
+        .title {
+            font-size: 12px !important;
+        }
+
+        .coin svg {
+            width: 12px !important;
+        }
+    }
+
+    .history-username.overflow-text {
+        max-width: 100px !important;
+    }
+
+    .case-href {
+        max-width: 100px !important;
+    }
+
+    .case-items-game-container-few {
+        zoom: 0.5;
+    }
+
+    .double-roulette-wheel {
+        bottom: 5px !important;
+    }
+
+    .game-progress {
+        height: 130px !important;
+        zoom: 0.7;
+    }
+
+    .round-stats {
+        & div {
+            gap: 5px;
+        }
+
+        .title {
+            font-size: 10px !important;
+        }
+
+        .main {
+            font-size: 10px !important;
+        }
+    }
+
+    .bet-status {
+        display: none;
+    }
+
+    .profile-inv-market {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .root-buttons {
+        width: 100%;
+    }
+}
+
+@media only screen and (width < 415px) {
+    .double-roulette-wheel {
+        bottom: 0px !important;
+    }
+
+    .footer-right-image {
+        width: 320px;
+        right: 0;
+    }
+
+    .ref-logo-right {
+        display: none;
+    }
+}
+
+@media only screen and (width < 391px) {
+}
+
+@media only screen and (width < 376px) {
+    .footer-right-image {
+        width: 300px;
+        right: 0;
+    }
+
+    .case-content .grid-case-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media only screen and (width < 361px) {
+    .footer-right-image {
+        width: 280px;
+        right: 0;
+    }
+
+    .source-deposit span {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (width < 345px) {
+    .win-item img {
+        height: 30px !important;
+    }
+}

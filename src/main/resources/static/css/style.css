@@ -917,6 +917,7 @@ body {
     color: white;
     font-size: 12px;
     font-weight: bold;
+    zoom: 2;
 }
 
 .title {
