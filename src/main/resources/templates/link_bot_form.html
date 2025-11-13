@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Привязка TOKEN бота</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/noty.css}" href="/static/css/noty.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/static/js/script.js" th:src="@{/js/script.js}"></script>
+</head>
+<body class="full-width">
+<div class="main gradient-bs full-width full-height flex flex-row align-items-center justify-center">
+    <div class="flex flex-column gap-10 width-80 align-items-center justify-center">
+        <div>
+            <span class="main orange fs-24">AIF - Привязка TOKEN бота</span>
+        </div>
+        <input type="text" class="input flex-1 back-static full-width input-skin-price height-40 border-radius-10" id="token"
+               placeholder="Введите TOKEN бота"/>
+        <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block full-width"
+             id="link_button">Привязать
+        </div>
+    </div>
+    <input type="hidden" th:value="${id}" id="bot_id"/>
+</div>
+</body>
+</html>

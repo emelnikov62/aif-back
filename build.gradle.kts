@@ -35,6 +35,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("com.github.pengrad:java-telegram-bot-api:9.2.0")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.5.7")
 }
 
 tasks.withType<Test> {

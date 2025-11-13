@@ -1,11 +1,12 @@
 server:
-  port: 80
+  port: 82
   error:
     whitelabel:
       enabled: false
   compression:
     enabled: true
   shutdown: graceful
+
 
 spring:
   main:
@@ -47,6 +48,9 @@ spring:
     init:
       mode: always
       platform: postgres
+  web:
+    resources:
+      add-mappings: true
 
 # Настройки логирования
 logging:

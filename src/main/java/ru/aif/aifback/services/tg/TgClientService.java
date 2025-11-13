@@ -5,8 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.Keyboard;
-import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.UserBot;
@@ -55,7 +53,7 @@ public class TgClientService {
      * @param bot bot
      */
     public void processCallback(String id, String text, TelegramBot bot) {
-        sendMessage(Long.valueOf(id), text, bot);
+        TgUtils.sendMessage(Long.valueOf(id), text, bot);
     }
 
     /**
@@ -65,28 +63,7 @@ public class TgClientService {
      * @param bot bot
      */
     public void processNoCallback(String id, String text, TelegramBot bot) {
-        sendMessage(Long.valueOf(id), text, bot);
-    }
-
-    /**
-     * Send message.
-     * @param id id
-     * @param text text
-     * @param bot bot
-     */
-    public void sendMessage(Long id, String text, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendMessage(id, text)));
-    }
-
-    /**
-     * Send message with keyboard.
-     * @param id id
-     * @param text text
-     * @param keyboard keyboard
-     * @param bot bot
-     */
-    public void sendMessage(Long id, String text, Keyboard keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendMessage(id, text).replyMarkup(keyboard)));
+        TgUtils.sendMessage(Long.valueOf(id), text, bot);
     }
 
 }

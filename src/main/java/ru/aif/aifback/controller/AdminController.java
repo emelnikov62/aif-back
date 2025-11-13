@@ -39,20 +39,6 @@ public class AdminController {
     }
 
     /**
-     * Admin link form.
-     * @param id id
-     * @return html
-     */
-    @GetMapping(value = "/link-bot-form")
-    public ResponseEntity<String> linkForm(String id) {
-        return ResponseEntity.ok(String.format("<form method=\"get\" action=\"https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot\">" +
-                                               "    <input type=\"text\" name=\"token\"/>" +
-                                               "    <input type=\"hidden\" name=\"id\" value=\"%s\"/>" +
-                                               "    <input type=\"submit\" value=\"Привязать\"/>" +
-                                               "</form>", id));
-    }
-
-    /**
      * Admin link bot.
      * @param id id
      * @param token token

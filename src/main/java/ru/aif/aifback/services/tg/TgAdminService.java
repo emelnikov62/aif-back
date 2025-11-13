@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.Keyboard;
-import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,12 +105,12 @@ public class TgAdminService {
             }
 
             if (Objects.isNull(answer)) {
-                sendMessage(Long.valueOf(id), MENU_TITLE);
+                TgUtils.sendMessage(Long.valueOf(id), MENU_TITLE, bot);
             } else {
-                sendMessage(Long.valueOf(id), answer, keyboard);
+                TgUtils.sendMessage(Long.valueOf(id), answer, keyboard, bot);
             }
         } catch (Exception e) {
-            sendMessage(TG_LOG_ID, e.getMessage());
+            TgUtils.sendMessage(TG_LOG_ID, e.getMessage(), bot);
         }
     }
 
@@ -158,7 +156,7 @@ public class TgAdminService {
      * @param id id
      */
     public void processNoCallback(String id) {
-        sendMessage(Long.valueOf(id), MENU_TITLE, TgAdminButtons.createMainMenuKeyboard());
+        TgUtils.sendMessage(Long.valueOf(id), MENU_TITLE, TgAdminButtons.createMainMenuKeyboard(), bot);
     }
 
     /**
@@ -206,25 +204,6 @@ public class TgAdminService {
      */
     public boolean linkBot(String id, String token) {
         return userBotService.linkBot(Long.valueOf(id), token);
-    }
-
-    /**
-     * Send message.
-     * @param id id
-     * @param text text
-     */
-    public void sendMessage(Long id, String text) {
-        log.info("{}", bot.execute(new SendMessage(id, text)));
-    }
-
-    /**
-     * Send message with keyboard.
-     * @param id id
-     * @param text text
-     * @param keyboard keyboard
-     */
-    public void sendMessage(Long id, String text, Keyboard keyboard) {
-        log.info("{}", bot.execute(new SendMessage(id, text).replyMarkup(keyboard)));
     }
 
 }
