@@ -5,11 +5,11 @@
 
 @media only screen and (width < 1025px) {
     .input-skin-price {
-        zoom: 2;
+        zoom: 1.5;
     }
 
     #link_button {
-        zoom: 2;
+        zoom: 1.5;
     }
 
     .case-items-game-container-few .case-item-game {
