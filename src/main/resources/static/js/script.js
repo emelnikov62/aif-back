@@ -11,8 +11,9 @@ $(document).ready(function () {
         $.get(`https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot?id=${id}&token=${token}`).done(function (data) {
             if (data) {
                 showAlert('success', 'TOKEN бота привязан');
-                document.close();
-                window.close();
+                setTimeout(() => {
+                    window.Telegram.WebApp.close();
+                }, 2000);
             } else {
                 showAlert('error', 'Произошла ошибка. Попробуйте позже');
             }
