@@ -1191,6 +1191,11 @@ svg {
     padding-right: 40px !important;
 }
 
+.padding-left-right-60 {
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+}
+
 .border-radius-10 {
     border-radius: 10px !important;
 }
@@ -1627,6 +1632,10 @@ svg {
     left: 10px;
 }
 
+.left-20 {
+    left: 20px;
+}
+
 .padding-left-40 {
     padding-left: 40px;
 }
@@ -1824,14 +1833,14 @@ svg {
     text-transform: uppercase
 }
 
-.name-item {
-    text-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
-    width: 100px;
-    display: block;
-}
+/*.name-item {*/
+/*    text-wrap: nowrap;*/
+/*    overflow: hidden;*/
+/*    text-overflow: ellipsis;*/
+/*    max-width: 100px;*/
+/*    width: 100px;*/
+/*    display: block;*/
+/*}*/
 
 .user-bet svg {
     width: 15px;
@@ -3063,4 +3072,8 @@ input[type="checkbox"]:checked::after {
     opacity: 1 !important;
     background: linear-gradient(to top left, #020030, #020030) !important;
     transition: 0.3s;
+}
+
+.hide-block {
+    display: none;
 }

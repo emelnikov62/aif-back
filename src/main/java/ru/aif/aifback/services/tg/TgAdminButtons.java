@@ -19,6 +19,7 @@ public final class TgAdminButtons {
     public static final String DELETE_BOT_TITLE = "⛔ Удалить";
     public static final String BOT_STATS_TITLE = "\uD83D\uDCCA Статистика";
     public static final String BOT_SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
+    public static final String BOT_ITEMS_TITLE = "\uD83D\uDCE6 Товары/Услуги";
     public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
     public static final String DELETE_BOT_ERROR_ANSWER = "❌ Не удалось удалить бота. Попробуйте еще раз";
     public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
@@ -83,7 +84,8 @@ public final class TgAdminButtons {
     public static InlineKeyboardButton[] createSelectedBotMenu(String id) {
         return new InlineKeyboardButton[] {
                 new InlineKeyboardButton(BOT_STATS_TITLE).callbackData(String.format("%s;%s", BOT_STATS, id)),
-                new InlineKeyboardButton(BOT_SETTINGS_TITLE).callbackData(String.format("%s;%s", BOT_SETTINGS, id))
+                new InlineKeyboardButton(BOT_ITEMS_TITLE).webApp(
+                        new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + id))
         };
     }
 }

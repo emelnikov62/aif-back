@@ -1,29 +1,3 @@
-$(document).ready(function () {
-    const data = JSON.stringify({allow_vertical_swipe: false});
-    window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
-
-    $('#link_button').click(function () {
-        var id = $('#bot_id').val();
-        var token = $('#token').val();
-
-        if (!id || !token) {
-            showAlert('error', 'Введите TOKEN бота');
-            return;
-        }
-
-        $.get(`https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot?id=${id}&token=${token}`).done(function (data) {
-            if (data) {
-                showAlert('success', 'TOKEN бота привязан');
-                setTimeout(() => {
-                    window.Telegram.WebApp.close();
-                }, 2000);
-            } else {
-                showAlert('error', 'Произошла ошибка. Попробуйте позже');
-            }
-        });
-    });
-});
-
 function showAlert(type, message) {
     let gradient = 'gradient-alert-error';
     let icon = '<svg fill="white" viewBox="0 0 36 36" version="1.1" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>error-line</title> <path class="clr-i-outline clr-i-outline-path-1" d="M18,6A12,12,0,1,0,30,18,12,12,0,0,0,18,6Zm0,22A10,10,0,1,1,28,18,10,10,0,0,1,18,28Z"></path><path class="clr-i-outline clr-i-outline-path-2" d="M18,20.07a1.3,1.3,0,0,1-1.3-1.3v-6a1.3,1.3,0,1,1,2.6,0v6A1.3,1.3,0,0,1,18,20.07Z"></path><circle class="clr-i-outline clr-i-outline-path-3" cx="17.95" cy="23.02" r="1.5"></circle> <rect x="0" y="0" width="36" height="36" fill-opacity="0"></rect> </g></svg>';

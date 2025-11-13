@@ -29,4 +29,16 @@ public class UiController {
         model.addAttribute("id", id);
         return "link_bot_form";
     }
+
+    /**
+     * Admin items bot form.
+     * @param id id
+     * @param model model
+     * @return true/false
+     */
+    @GetMapping(value = "/items-bot-form")
+    public String itemsForm(@RequestParam(name = "id") String id, Model model) {
+        model.addAttribute("id", id);
+        return "items_bot_form";
+    }
 }

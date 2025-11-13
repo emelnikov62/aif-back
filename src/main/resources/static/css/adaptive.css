@@ -1,6 +1,13 @@
 @charset "UTF-8";
 
 @media only screen and (width < 1150px) {
+    .times-block, .buttons-item {
+        flex-direction: column;
+    }
+
+    .buttons-item div {
+        width: 100%;
+    }
 }
 
 @media only screen and (width < 1025px) {
@@ -8,7 +15,7 @@
         zoom: 1.5;
     }
 
-    #link_button {
+    .button {
         zoom: 1.5;
     }
 
