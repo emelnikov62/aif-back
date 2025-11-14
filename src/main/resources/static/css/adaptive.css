@@ -11,13 +11,12 @@
 }
 
 @media only screen and (width < 1025px) {
-    .input-skin-price {
-        zoom: 1.5;
-    }
-
-    .button {
-        zoom: 1.5;
-    }
+    /*.input-skin-price {*/
+    /*    zoom: 1.5;*/
+    /*}*/
+    /*.button {*/
+    /*    zoom: 1.5;*/
+    /*}*/
 
     .case-items-game-container-few .case-item-game {
         min-width: auto !important;
