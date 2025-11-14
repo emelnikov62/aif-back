@@ -1,4 +1,4 @@
-package ru.aif.aifback.model;
+package ru.aif.aifback.model.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class WebhookRequest {
+public class TgWebhookRequest {
 
     @JsonProperty("chat_id")
     private String chatId;

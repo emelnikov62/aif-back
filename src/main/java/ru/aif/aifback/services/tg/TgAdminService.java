@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.Bot;
 import ru.aif.aifback.model.UserBot;
-import ru.aif.aifback.model.WebhookRequest;
+import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
@@ -59,7 +59,7 @@ public class TgAdminService {
      * @param webhookRequest webhookAdminRequest
      * @return true/false
      */
-    public Boolean process(WebhookRequest webhookRequest) {
+    public Boolean process(TgWebhookRequest webhookRequest) {
         if (webhookRequest.isCallback()) {
             processCallback(webhookRequest.getChatId(), webhookRequest.getText());
         } else {

@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.UserBot;
-import ru.aif.aifback.model.WebhookRequest;
+import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
@@ -29,7 +29,7 @@ public class TgClientService {
      * @param webhookRequest webhookAdminRequest
      * @return true/false
      */
-    public Boolean process(WebhookRequest webhookRequest) {
+    public Boolean process(TgWebhookRequest webhookRequest) {
         Optional<UserBot> userBot = userBotService.getUserBot(Long.valueOf(webhookRequest.getId()));
         if (userBot.isEmpty()) {
             return Boolean.FALSE;

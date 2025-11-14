@@ -12,28 +12,28 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body class="full-width">
-<div class="main gradient-bs full-width full-height flex flex-row align-items-start justify-center">
-    <div class="flex flex-column gap-10 width-80 align-items-start justify-center padding-10">
-        <div class="add-item-btn button gap-5 full-width flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block">
+<div class="main gradient-bs full-width full-height flex gap-10 flex-column align-items-center justify-start padding-20">
+    <div class="flex flex-column gap-10 full-width align-items-start justify-center">
+        <div class="add-item-btn button gap-5 full-width flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-fresh-block">
             Добавить
         </div>
         <div class="item-form hide-block flex flex-column gap-10 padding-10 full-width align-items-center justify-center back block back-static opacity-full">
             <div class="flex flex-row full-width align-items-center justify-center main fs-20">
                 Добавление товара/услуги
             </div>
-            <input type="text" class="input flex-1 back-static full-width input-skin-price height-40 border-radius-10 name-item"
+            <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 name-item"
                    placeholder="Наименование"/>
             <div class="flex flex-row gap-10 full-width align-items-center justify-center times-block">
                 <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">
                     <input type="number" placeholder="Продолжительность"
-                           class="hours-item input flex-1 full-width back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
+                           class="hours-item input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
                     <div class="absolute left-10">
                         часов
                     </div>
                 </div>
                 <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">
                     <input type="number" placeholder="Продолжительность"
-                           class="mins-item input flex-1 full-width back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
+                           class="mins-item input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
                     <div class="absolute left-10">
                         минут
                     </div>
@@ -41,20 +41,22 @@
             </div>
             <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">
                 <input type="number" placeholder="Стоимость"
-                       class="amount-item input flex-1 full-width back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
+                       class="amount-item input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>
                 <div class="absolute left-10">
                     рубли
                 </div>
             </div>
             <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
-                <div class="save-btn button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-main-block">
+                <div class="save-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
                     Сохранить
                 </div>
-                <div class="cancel-btn button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-r">
+                <div class="cancel-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
                     Отменить
                 </div>
             </div>
         </div>
+    </div>
+    <div class="user-items-list flex flex-column gap-10 align-items-center justify-start full-width overflow-y">
     </div>
     <input type="hidden" th:value="${id}" id="bot_id"/>
 </div>

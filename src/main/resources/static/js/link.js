@@ -11,7 +11,7 @@ $(document).ready(function () {
             return;
         }
 
-        $.get(`https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot?id=${id}&token=${token}`).done(function (data) {
+        $.get(`/aif/admin/link-bot?id=${id}&token=${token}`).done(function (data) {
             if (data) {
                 showAlert('success', 'TOKEN бота привязан');
                 setTimeout(() => {
