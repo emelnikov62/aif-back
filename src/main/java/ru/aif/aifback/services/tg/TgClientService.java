@@ -10,6 +10,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.Bot;
 import ru.aif.aifback.model.UserBot;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.user.BotService;
@@ -38,6 +39,12 @@ public class TgClientService {
             return Boolean.FALSE;
         }
 
+        Optional<Bot> botType = botService.findById(userBot.get().getAifBotId());
+        if (botType.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        userBot.get().setBot(botType.get());
         TelegramBot bot = new TelegramBot(userBot.get().getToken());
 
         if (webhookRequest.isCallback()) {
