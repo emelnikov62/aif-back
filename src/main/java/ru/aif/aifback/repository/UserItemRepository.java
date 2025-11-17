@@ -24,7 +24,7 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
      * @param hours hours
      * @param mins mins
      * @param amount amount
-     * @param aifUserBotId user bot id
+     * @param aifUserItemGroupId user item group id
      * @param fileData file data
      * @return id
      */
@@ -49,7 +49,7 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
                    "       a.mins," +
                    "       a.amount," +
                    "       a.active," +
-                   "       convert_from(a.file_data, 'UTF-8') file_data," +
+                   "       convert_from(a.file_data, 'UTF-8') as file_data," +
                    "       a.created" +
                    "  from aif_user_items a" +
                    " where a.aif_user_item_group_id = :group_id")

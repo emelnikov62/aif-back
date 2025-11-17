@@ -3,13 +3,16 @@ package ru.aif.aifback.services.tg.client;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.client.TgClientButtons.BACK_TO_GROUPS_MENU;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_GROUP;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_HISTORY;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ITEMS;
+import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ITEM_ADDITIONAL;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_SETTINGS;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.client.TgClientButtons.formatTime;
 
 import java.util.List;
 import java.util.Objects;
@@ -103,7 +106,7 @@ public class TgClientService implements TgService {
                 keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_MAIN_MENU));
             }
 
-            if (Objects.equals(webhookRequest.getText(), BOT_GROUP)) {
+            if (Objects.equals(webhookRequest.getText(), BOT_GROUP) || Objects.equals(webhookRequest.getText(), BACK_TO_GROUPS_MENU)) {
                 answer = MENU_TITLE;
                 if (!processBotGroups(userBot, keyboard)) {
                     answer = GROUP_EMPTY_TITLE;
@@ -114,9 +117,27 @@ public class TgClientService implements TgService {
             if (webhookRequest.getText().contains(BOT_ITEMS)) {
                 answer = MENU_TITLE;
                 String groupId = webhookRequest.getText().split(DELIMITER)[1];
-                if (!processBotGroupItems(userBot, Long.valueOf(groupId), keyboard)) {
+                if (!processBotGroupItems(Long.valueOf(groupId), keyboard)) {
                     answer = GROUP_EMPTY_TITLE;
                 }
+                keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
+            }
+
+            if (webhookRequest.getText().contains(BOT_ITEM_ADDITIONAL)) {
+                answer = GROUP_EMPTY_TITLE;
+                String itemId = webhookRequest.getText().split(DELIMITER)[1];
+
+                Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
+                if (userItem.isPresent()) {
+                    Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
+                    if (group.isPresent()) {
+                        answer = "\uD83D\uDD38 <b>Группа:</<b> " + group.get().getName();
+                        answer += "\uD83D\uDCC3 <b>Наименование:</<b> " + userItem.get().getName();
+                        answer += "\uD83D\uDD5B <b>Продолжительность:</<b> " + formatTime(userItem.get().getHours().toString(), userItem.get().getMins().toString());
+                        answer += "\uD83D\uDCB5 <b>Стоимость:</<b> " + String.format("%s руб.", userItem.get().getAmount());
+                    }
+                }
+
                 keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
             }
 
@@ -170,7 +191,7 @@ public class TgClientService implements TgService {
      * @param keyboard keyboard
      * @return true/false
      */
-    public boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
+    private boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
         List<UserItemGroup> groups = userItemService.getUserItemGroups(userBot.getId());
         if (groups.isEmpty()) {
             return Boolean.FALSE;
@@ -183,12 +204,11 @@ public class TgClientService implements TgService {
 
     /**
      * Process bot group items button.
-     * @param userBot user bot
      * @param groupId group id
      * @param keyboard keyboard
      * @return true/false
      */
-    public boolean processBotGroupItems(UserBot userBot, Long groupId, InlineKeyboardMarkup keyboard) {
+    private boolean processBotGroupItems(Long groupId, InlineKeyboardMarkup keyboard) {
         List<UserItem> items = userItemService.getUserItemsByGroupId(groupId);
         if (items.isEmpty()) {
             return Boolean.FALSE;

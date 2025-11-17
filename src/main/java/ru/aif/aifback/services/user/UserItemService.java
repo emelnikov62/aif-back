@@ -3,6 +3,7 @@ package ru.aif.aifback.services.user;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,24 @@ public class UserItemService {
 
     private final UserItemRepository userItemRepository;
     private final UserItemGroupRepository userItemGroupRepository;
+
+    /**
+     * Find user item by id.
+     * @param id id
+     * @return user item
+     */
+    public Optional<UserItem> findUserItemById(Long id) {
+        return userItemRepository.findById(id);
+    }
+
+    /**
+     * Find user item group by item id.
+     * @param id id
+     * @return user item group
+     */
+    public Optional<UserItemGroup> findUserItemGroupByItemId(Long id) {
+        return userItemGroupRepository.findById(id);
+    }
 
     /**
      * Add user item.

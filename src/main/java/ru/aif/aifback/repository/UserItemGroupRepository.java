@@ -51,4 +51,5 @@ public interface UserItemGroupRepository extends CrudRepository<UserItemGroup, L
     @Query(value = "update aif_user_item_groups set active = :active where id = :id")
     @Modifying
     void updateUserItemGroupActive(@Param("active") boolean active, @Param("id") Long id);
+
 }

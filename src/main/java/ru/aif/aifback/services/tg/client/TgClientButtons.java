@@ -15,6 +15,7 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 public final class TgClientButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
+    public static final String SERVICE_TITLE = "✅ Товар/Услуга";
     public static final String ACTIVE_TITLE = "✅ Активные записи";
     public static final String HISTORY_TITLE = "\uD83D\uDD5C История записей";
     public static final String SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
