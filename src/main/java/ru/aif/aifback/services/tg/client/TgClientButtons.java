@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import ru.aif.aifback.model.UserItem;
 import ru.aif.aifback.model.UserItemGroup;
 import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 
@@ -21,13 +22,16 @@ public final class TgClientButtons {
     public static final String BACK_BUTTON_TITLE = "⬅ Назад";
     public static final String GROUP_EMPTY_TITLE = "✅ Товаров/Услуг пока нет";
     public static final String GROUP_TITLE = "\uD83D\uDD38 %s";
+    public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
 
     public final static String BOT_ACTIVE = "bot_active";
     public final static String BOT_HISTORY = "bot_history";
     public final static String BOT_SETTINGS = "bot_settings";
     public final static String BOT_GROUP = "bot_group";
     public final static String BOT_ITEMS = "bot_items";
+    public final static String BOT_ITEM_ADDITIONAL = "bot_item_additional";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
+    public static final String BACK_TO_GROUPS_MENU = "back_to_groups_menu";
 
     /**
      * Create main menu.
@@ -65,4 +69,28 @@ public final class TgClientButtons {
                 new InlineKeyboardButton(String.format(GROUP_TITLE, group.getName())).callbackData(String.format("%s;%s", BOT_ITEMS, group.getId()))
         };
     }
+
+    /**
+     * Create group items bot menu.
+     * @param item item
+     * @return group items bot menu
+     */
+    public static InlineKeyboardButton[] createGroupItemsBotMenu(UserItem item) {
+        return new InlineKeyboardButton[] {
+                new InlineKeyboardButton(String.format(ITEM_TITLE, item.getName(), item.getAmount(),
+                                                       formatTime(item.getHours().toString(), item.getMins().toString())))
+                        .callbackData(String.format("%s;%s", BOT_ITEM_ADDITIONAL, item.getId()))
+        };
+    }
+
+    /**
+     * Format time.
+     * @param hours hours
+     * @param mins mins
+     * @return time
+     */
+    public static String formatTime(String hours, String mins) {
+        return String.format("%s:%s", hours.length() < 2 ? "0" + hours : hours, mins.length() < 2 ? "0" + mins : mins);
+    }
+
 }

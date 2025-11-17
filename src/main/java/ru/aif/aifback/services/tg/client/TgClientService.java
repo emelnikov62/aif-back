@@ -1,10 +1,12 @@
 package ru.aif.aifback.services.tg.client;
 
+import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_GROUP;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_HISTORY;
+import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ITEMS;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_SETTINGS;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.MENU_TITLE;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.Bot;
 import ru.aif.aifback.model.UserBot;
+import ru.aif.aifback.model.UserItem;
 import ru.aif.aifback.model.UserItemGroup;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.tg.TgService;
@@ -59,6 +62,11 @@ public class TgClientService implements TgService {
         return Boolean.TRUE;
     }
 
+    /**
+     * Get user bot by id.
+     * @param id id
+     * @return user bot
+     */
     private Optional<UserBot> getUserBot(String id) {
         Optional<UserBot> userBot = userBotService.getUserBot(Long.valueOf(id));
         if (userBot.isEmpty()) {
@@ -101,6 +109,15 @@ public class TgClientService implements TgService {
                     answer = GROUP_EMPTY_TITLE;
                 }
                 keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_MAIN_MENU));
+            }
+
+            if (webhookRequest.getText().contains(BOT_ITEMS)) {
+                answer = MENU_TITLE;
+                String groupId = webhookRequest.getText().split(DELIMITER)[1];
+                if (!processBotGroupItems(userBot, Long.valueOf(groupId), keyboard)) {
+                    answer = GROUP_EMPTY_TITLE;
+                }
+                keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
@@ -160,6 +177,24 @@ public class TgClientService implements TgService {
         }
 
         groups.forEach(group -> keyboard.addRow(TgClientButtons.createGroupsBotMenu(group)));
+
+        return Boolean.TRUE;
+    }
+
+    /**
+     * Process bot group items button.
+     * @param userBot user bot
+     * @param groupId group id
+     * @param keyboard keyboard
+     * @return true/false
+     */
+    public boolean processBotGroupItems(UserBot userBot, Long groupId, InlineKeyboardMarkup keyboard) {
+        List<UserItem> items = userItemService.getUserItemsByGroupId(groupId);
+        if (items.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        items.forEach(item -> keyboard.addRow(TgClientButtons.createGroupItemsBotMenu(item)));
 
         return Boolean.TRUE;
     }
