@@ -22,7 +22,7 @@ public final class TgUtils {
      * @param bot bot
      */
     public static void sendPhoto(Long id, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendPhoto(id, file).caption(caption).replyMarkup(keyboard).parseMode(ParseMode.HTML)));
+        log.info("{}", bot.execute(new SendPhoto(id, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard)));
     }
 
     /**
