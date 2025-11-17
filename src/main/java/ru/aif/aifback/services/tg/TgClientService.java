@@ -1,6 +1,7 @@
 package ru.aif.aifback.services.tg;
 
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
+import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.TgClientButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.TgClientButtons.BOT_GROUP;
 import static ru.aif.aifback.services.tg.TgClientButtons.BOT_HISTORY;
@@ -100,6 +101,11 @@ public class TgClientService {
             if (Objects.equals(text, BOT_SETTINGS)) {
                 answer = MENU_TITLE;
                 keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_MAIN_MENU));
+            }
+
+            if (Objects.equals(text, BACK_TO_MAIN_MENU)) {
+                answer = MENU_TITLE;
+                keyboard = TgClientButtons.createMainMenuKeyboard(userBot.getBot().getType());
             }
 
             if (Objects.isNull(answer)) {
