@@ -110,6 +110,7 @@ public class TgAdminService {
                 TgUtils.sendMessage(Long.valueOf(id), answer, keyboard, bot);
             }
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             TgUtils.sendMessage(TG_LOG_ID, e.getMessage(), bot);
         }
     }
