@@ -14,6 +14,7 @@ import static ru.aif.aifback.services.tg.client.TgClientButtons.GROUP_EMPTY_TITL
 import static ru.aif.aifback.services.tg.client.TgClientButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.formatTime;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -136,10 +137,16 @@ public class TgClientService implements TgService {
                         answer += String.format("\uD83D\uDD5B <b>Продолжительность:</<b> %s \n\n", formatTime(userItem.get().getHours().toString(),
                                                                                                               userItem.get().getMins().toString()));
                         answer += String.format("\uD83D\uDCB5 <b>Стоимость:</<b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+                        keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
+
+                        TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
+                                          Base64.getDecoder().decode(userItem.get().getFileData()),
+                                          answer,
+                                          keyboard,
+                                          bot);
+                        return;
                     }
                 }
-
-                keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
