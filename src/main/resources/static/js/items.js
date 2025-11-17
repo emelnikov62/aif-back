@@ -98,7 +98,7 @@ function getUserItems(id) {
                     `            <div class="flex flex-column gap-0 align-items-start justify-center full-width">` +
                     `                <div class="main orange">Время</div>` +
                     `                <div class="flex flex-row gap-5 align-items-center justify-center full-width">` +
-                    `                    <span class="main">${item.hours.toString().length < 2 ? '0' + item.hours.toString() : item.hours}:${item.mins.toString() < 2 ? '0' + item.mins.toString() : item.mins}</span>` +
+                    `                    <span class="main">${item.hours.toString().length < 2 ? '0' + item.hours.toString() : item.hours}:${item.mins.toString().length < 2 ? '0' + item.mins.toString() : item.mins}</span>` +
                     `                </div>` +
                     `            </div>` +
                     `        </div>` +
