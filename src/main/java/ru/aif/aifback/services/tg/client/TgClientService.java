@@ -132,11 +132,11 @@ public class TgClientService implements TgService {
                 if (userItem.isPresent()) {
                     Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
                     if (group.isPresent()) {
-                        answer = String.format("\uD83D\uDD38 <b>Группа:</<b> %s \n\n", group.get().getName());
-                        answer += String.format("\uD83D\uDCC3 <b>Наименование:</<b> %s \n\n", userItem.get().getName());
-                        answer += String.format("\uD83D\uDD5B <b>Продолжительность:</<b> %s \n\n", formatTime(userItem.get().getHours().toString(),
+                        answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName());
+                        answer += String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName());
+                        answer += String.format("\uD83D\uDD5B <b>Продолжительность:</b> %s \n\n", formatTime(userItem.get().getHours().toString(),
                                                                                                               userItem.get().getMins().toString()));
-                        answer += String.format("\uD83D\uDCB5 <b>Стоимость:</<b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+                        answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
                         keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
 
                         TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
