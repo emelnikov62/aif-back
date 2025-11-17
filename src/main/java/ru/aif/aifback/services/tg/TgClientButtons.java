@@ -35,12 +35,12 @@ public final class TgClientButtons {
      */
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
         if (Objects.equals(typeBot, TgClientTypeBot.BOT_RECORD.getType())) {
-            return new InlineKeyboardMarkup(
-                    new InlineKeyboardButton(ACTIVE_TITLE).callbackData(BOT_ACTIVE),
-                    new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_GROUP),
-                    new InlineKeyboardButton(HISTORY_TITLE).callbackData(BOT_HISTORY),
-                    new InlineKeyboardButton(SETTINGS_TITLE).callbackData(BOT_SETTINGS)
-            );
+            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+            keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE).callbackData(BOT_ACTIVE));
+            keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_GROUP));
+            keyboard.addRow(new InlineKeyboardButton(HISTORY_TITLE).callbackData(BOT_HISTORY));
+            keyboard.addRow(new InlineKeyboardButton(SETTINGS_TITLE).callbackData(BOT_SETTINGS));
+            return keyboard;
         }
 
         return null;
