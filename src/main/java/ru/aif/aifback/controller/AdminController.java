@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
-import ru.aif.aifback.services.tg.TgAdminService;
+import ru.aif.aifback.services.tg.admin.TgAdminService;
 
 /**
  * Admin controller.
@@ -34,7 +34,7 @@ public class AdminController {
      * @return true/false
      */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> test(@RequestBody TgWebhookRequest webhookAdminRequest) {
+    public ResponseEntity<Boolean> webhook(@RequestBody TgWebhookRequest webhookAdminRequest) {
         return ResponseEntity.ok(tgAdminService.process(webhookAdminRequest));
     }
 

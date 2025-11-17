@@ -1,4 +1,4 @@
-package ru.aif.aifback.services.tg;
+package ru.aif.aifback.services.tg.admin;
 
 import com.pengrad.telegrambot.model.WebAppInfo;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;

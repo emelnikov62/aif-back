@@ -1,4 +1,4 @@
-package ru.aif.aifback.services.tg;
+package ru.aif.aifback.services.tg.client;
 
 import java.util.Objects;
 

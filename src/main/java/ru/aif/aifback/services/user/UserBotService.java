@@ -1,9 +1,9 @@
 package ru.aif.aifback.services.user;
 
-import static ru.aif.aifback.services.tg.TgAdminButtons.CREATE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.TgAdminButtons.CREATE_BOT_SUCCESS_ANSWER;
-import static ru.aif.aifback.services.tg.TgAdminButtons.DELETE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.TgAdminButtons.DELETE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.CREATE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.CREATE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.DELETE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.DELETE_BOT_SUCCESS_ANSWER;
 
 import java.util.ArrayList;
 import java.util.List;

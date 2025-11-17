@@ -1,20 +1,20 @@
-package ru.aif.aifback.services.tg;
+package ru.aif.aifback.services.tg.admin;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_BUY_BOTS_MENU;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_MAIN_MENU;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BACK_TO_MY_BOTS_MENU;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BOTS_EMPTY_TITLE;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_CREATE;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_DELETE;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BOT_SELECT;
-import static ru.aif.aifback.services.tg.TgAdminButtons.BUY_BOT;
-import static ru.aif.aifback.services.tg.TgAdminButtons.MENU_TITLE;
-import static ru.aif.aifback.services.tg.TgAdminButtons.MY_BOTS;
-import static ru.aif.aifback.services.tg.TgAdminButtons.SELECT_BOT_TITLE;
-import static ru.aif.aifback.services.tg.TgAdminButtons.createMainMenuKeyboard;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_BUY_BOTS_MENU;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MY_BOTS_MENU;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BOTS_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BOT_CREATE;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BOT_DELETE;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BOT_SELECT;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BUY_BOT;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.MY_BOTS;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.SELECT_BOT_TITLE;
+import static ru.aif.aifback.services.tg.admin.TgAdminButtons.createMainMenuKeyboard;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.Bot;
 import ru.aif.aifback.model.UserBot;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
+import ru.aif.aifback.services.tg.TgService;
+import ru.aif.aifback.services.tg.TgUtils;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
@@ -40,7 +42,7 @@ import ru.aif.aifback.services.user.UserBotService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgAdminService {
+public class TgAdminService implements TgService {
 
     private final UserBotService userBotService;
     private final BotService botService;
@@ -59,11 +61,12 @@ public class TgAdminService {
      * @param webhookRequest webhookAdminRequest
      * @return true/false
      */
+    @Override
     public Boolean process(TgWebhookRequest webhookRequest) {
         if (webhookRequest.isCallback()) {
-            processCallback(webhookRequest.getChatId(), webhookRequest.getText());
+            processCallback(webhookRequest);
         } else {
-            processNoCallback(webhookRequest.getChatId());
+            processNoCallback(webhookRequest);
         }
 
         return Boolean.TRUE;
@@ -71,43 +74,43 @@ public class TgAdminService {
 
     /**
      * Callback process.
-     * @param id id
-     * @param text text
+     * @param webhookRequest webhook request
      */
-    public void processCallback(String id, String text) {
+    @Override
+    public void processCallback(TgWebhookRequest webhookRequest) {
         try {
             String answer = null;
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-            if (Objects.equals(text, BACK_TO_MAIN_MENU)) {
+            if (Objects.equals(webhookRequest.getText(), BACK_TO_MAIN_MENU)) {
                 answer = MENU_TITLE;
                 keyboard = createMainMenuKeyboard();
             }
 
-            if (text.contains(BOT_SELECT)) {
+            if (webhookRequest.getText().contains(BOT_SELECT)) {
                 answer = MENU_TITLE;
-                processBotSelect(text, keyboard);
+                processBotSelect(webhookRequest.getText(), keyboard);
                 keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
             }
 
-            if (Objects.equals(text, BUY_BOT) || Objects.equals(text, BACK_TO_BUY_BOTS_MENU)) {
+            if (Objects.equals(webhookRequest.getText(), BUY_BOT) || Objects.equals(webhookRequest.getText(), BACK_TO_BUY_BOTS_MENU)) {
                 answer = SELECT_BOT_TITLE;
                 processBuyBot(keyboard);
                 keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
-            if (Objects.equals(text, MY_BOTS)
-                || Objects.equals(text, BACK_TO_MY_BOTS_MENU)
-                || text.contains(BOT_DELETE)
-                || text.contains(BOT_CREATE)) {
-                answer = processUserBot(id, text, keyboard);
+            if (Objects.equals(webhookRequest.getText(), MY_BOTS)
+                || Objects.equals(webhookRequest.getText(), BACK_TO_MY_BOTS_MENU)
+                || webhookRequest.getText().contains(BOT_DELETE)
+                || webhookRequest.getText().contains(BOT_CREATE)) {
+                answer = processUserBot(webhookRequest.getChatId(), webhookRequest.getText(), keyboard);
                 keyboard.addRow(TgAdminButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
             if (Objects.isNull(answer)) {
-                TgUtils.sendMessage(Long.valueOf(id), MENU_TITLE, bot);
+                TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, bot);
             } else {
-                TgUtils.sendMessage(Long.valueOf(id), answer, keyboard, bot);
+                TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -121,7 +124,7 @@ public class TgAdminService {
      * @param text text
      * @param keyboard keyboard
      */
-    public String processUserBot(String id, String text, InlineKeyboardMarkup keyboard) {
+    private String processUserBot(String id, String text, InlineKeyboardMarkup keyboard) {
         String answer = null;
 
         if (text.contains(BOT_DELETE)) {
@@ -154,17 +157,18 @@ public class TgAdminService {
 
     /**
      * No callback process.
-     * @param id id
+     * @param webhookRequest webhook request
      */
-    public void processNoCallback(String id) {
-        TgUtils.sendMessage(Long.valueOf(id), MENU_TITLE, TgAdminButtons.createMainMenuKeyboard(), bot);
+    @Override
+    public void processNoCallback(TgWebhookRequest webhookRequest) {
+        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, TgAdminButtons.createMainMenuKeyboard(), bot);
     }
 
     /**
      * Process buy bot.
      * @param keyboard keyboard
      */
-    public void processBuyBot(InlineKeyboardMarkup keyboard) {
+    private void processBuyBot(InlineKeyboardMarkup keyboard) {
         List<Bot> bots = botService.getBots();
         if (bots.isEmpty()) {
             return;
@@ -180,7 +184,7 @@ public class TgAdminService {
      * @param text text
      * @param keyboard keyboard
      */
-    public void processBotSelect(String text, InlineKeyboardMarkup keyboard) {
+    private void processBotSelect(String text, InlineKeyboardMarkup keyboard) {
         if (!text.contains(DELIMITER)) {
             return;
         }
