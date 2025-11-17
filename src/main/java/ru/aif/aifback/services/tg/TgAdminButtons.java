@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 /**
- * TG buttons.
+ * TG admin buttons.
  * @author emelnikov
  */
 public final class TgAdminButtons {

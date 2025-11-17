@@ -1,10 +1,13 @@
 package ru.aif.aifback.services.tg;
 
+import static ru.aif.aifback.services.tg.TgClientButtons.MENU_TITLE;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.UserBot;
@@ -40,7 +43,7 @@ public class TgClientService {
         if (webhookRequest.isCallback()) {
             processCallback(webhookRequest.getChatId(), webhookRequest.getText(), bot);
         } else {
-            processNoCallback(webhookRequest.getChatId(), webhookRequest.getText(), bot);
+            processNoCallback(webhookRequest.getChatId(), MENU_TITLE, TgClientButtons.createMainMenuKeyboard(userBot.get().getBot().getType()), bot);
         }
 
         return Boolean.TRUE;
@@ -60,10 +63,11 @@ public class TgClientService {
      * No callback process.
      * @param id id
      * @param text text
+     * @param keyboard
      * @param bot bot
      */
-    public void processNoCallback(String id, String text, TelegramBot bot) {
-        TgUtils.sendMessage(Long.valueOf(id), text, bot);
+    public void processNoCallback(String id, String text, InlineKeyboardMarkup keyboard, TelegramBot bot) {
+        TgUtils.sendMessage(Long.valueOf(id), text, keyboard, bot);
     }
 
 }

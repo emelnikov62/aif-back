@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const data = JSON.stringify({allow_vertical_swipe: false});
-    // window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
+    window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
 
     getUserItemGroups($('#bot_id').val());
 
