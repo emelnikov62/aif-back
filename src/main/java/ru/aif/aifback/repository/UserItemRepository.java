@@ -51,7 +51,8 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
                    "       a.amount," +
                    "       a.active," +
                    "       convert_from(a.file_data, 'UTF-8') as file_data," +
-                   "       a.created" +
+                   "       a.created," +
+                   "       a.aif_user_item_group_id" +
                    "  from aif_user_items a" +
                    " where a.aif_user_item_group_id = :group_id")
     List<UserItem> findAllByGroupId(@Param("group_id") Long groupId);
@@ -88,7 +89,8 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
                    "       a.amount," +
                    "       a.active," +
                    "       convert_from(a.file_data, 'UTF-8') as file_data," +
-                   "       a.created" +
+                   "       a.created," +
+                   "       a.aif_user_item_group_id" +
                    "  from aif_user_items a" +
                    " where a.id = :id")
     Optional<UserItem> findUserItemById(@Param("id") Long id);
