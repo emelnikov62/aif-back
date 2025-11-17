@@ -13,9 +13,15 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 public final class TgClientButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
+    public static final String ACTIVE_TITLE = "✅ Активные записи";
+    public static final String HISTORY_TITLE = "\uD83D\uDD5C История записей";
+    public static final String SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String ITEMS_TITLE = "\uD83D\uDCE6 Товары/Услуги";
     public static final String BACK_BUTTON_TITLE = "⬅ Назад";
 
+    public final static String BOT_ACTIVE = "bot_active";
+    public final static String BOT_HISTORY = "bot_history";
+    public final static String BOT_SETTINGS = "bot_settings";
     public final static String BOT_ITEMS = "bot_items";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
 
@@ -26,7 +32,10 @@ public final class TgClientButtons {
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
         if (Objects.equals(typeBot, TgClientTypeBot.BOT_RECORD.getType())) {
             return new InlineKeyboardMarkup(
-                    new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_ITEMS)
+                    new InlineKeyboardButton(ACTIVE_TITLE).callbackData(BOT_ACTIVE),
+                    new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_ITEMS),
+                    new InlineKeyboardButton(HISTORY_TITLE).callbackData(BOT_HISTORY),
+                    new InlineKeyboardButton(SETTINGS_TITLE).callbackData(BOT_SETTINGS)
             );
         }
 
