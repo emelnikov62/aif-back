@@ -33,7 +33,7 @@ public class UserItemService {
      * @return user item
      */
     public Optional<UserItem> findUserItemById(Long id) {
-        return userItemRepository.findById(id);
+        return userItemRepository.findUserItemById(id);
     }
 
     /**

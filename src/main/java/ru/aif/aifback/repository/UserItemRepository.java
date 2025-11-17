@@ -2,6 +2,7 @@ package ru.aif.aifback.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -79,4 +80,16 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
     @Query(value = "update aif_user_items set active = :active where id = :id")
     @Modifying
     void updateUserItemActive(@Param("active") boolean active, @Param("id") Long id);
+
+    @Query(value = "select a.id, " +
+                   "       a.name," +
+                   "       a.hours," +
+                   "       a.mins," +
+                   "       a.amount," +
+                   "       a.active," +
+                   "       convert_from(a.file_data, 'UTF-8') as file_data," +
+                   "       a.created" +
+                   "  from aif_user_items a" +
+                   " where a.id = :id")
+    Optional<UserItem> findUserItemById(@Param("id") Long id);
 }
