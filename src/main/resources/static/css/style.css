@@ -1196,6 +1196,11 @@ svg {
     padding-right: 60px !important;
 }
 
+.padding-left-right-80 {
+    padding-left: 80px !important;
+    padding-right: 80px !important;
+}
+
 .border-radius-10 {
     border-radius: 10px !important;
 }

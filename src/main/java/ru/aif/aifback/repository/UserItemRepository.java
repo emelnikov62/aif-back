@@ -25,24 +25,35 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
      * @param mins mins
      * @param amount amount
      * @param aifUserBotId user bot id
+     * @param fileData file data
      * @return id
      */
-    @Query(value = "insert into aif_user_items(name, hours, mins, amount, aif_user_bot_id) " +
-                   "values(:name, :hours, :mins, :amount, :aif_user_bot_id)")
+    @Query(value = "insert into aif_user_items(name, hours, mins, amount, aif_user_item_group_id, file_data) " +
+                   "values(:name, :hours, :mins, :amount, :aif_user_item_group_id, :file_data)")
     @Modifying
     Long addUserItem(@Param("name") String name,
                      @Param("hours") Long hours,
                      @Param("mins") Long mins,
                      @Param("amount") BigDecimal amount,
-                     @Param("aif_user_bot_id") Long aifUserBotId);
+                     @Param("aif_user_item_group_id") Long aifUserItemGroupId,
+                     @Param("file_data") byte[] fileData);
 
     /**
-     * Find all user items by user bot id.
-     * @param aifUserBotId user bot id
+     * Find all user items by group id.
+     * @param groupId group id
      * @return list user items
      */
-    @Query(value = "select * from aif_user_items a where a.aif_user_bot_id = :aif_user_bot_id")
-    List<UserItem> findAllByUserBotId(@Param("aif_user_bot_id") Long aifUserBotId);
+    @Query(value = "select a.id, " +
+                   "       a.name," +
+                   "       a.hours," +
+                   "       a.mins," +
+                   "       a.amount," +
+                   "       a.active," +
+                   "       convert_from(a.file_data, 'UTF-8') file_data," +
+                   "       a.created" +
+                   "  from aif_user_items a" +
+                   " where a.aif_user_item_group_id = :group_id")
+    List<UserItem> findAllByGroupId(@Param("group_id") Long groupId);
 
     /**
      * Delete user item.
@@ -51,4 +62,21 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
     @Query(value = "delete from aif_user_items where id = :id")
     @Modifying
     void deleteUserItem(@Param("id") Long id);
+
+    /**
+     * Delete user items by group.
+     * @param id group id
+     */
+    @Query(value = "delete from aif_user_items where aif_user_item_group_id = :group_id")
+    @Modifying
+    void deleteUserItemsByGroupId(@Param("group_id") Long id);
+
+    /**
+     * Update user item active.
+     * @param active active
+     * @param id id
+     */
+    @Query(value = "update aif_user_items set active = :active where id = :id")
+    @Modifying
+    void updateUserItemActive(@Param("active") boolean active, @Param("id") Long id);
 }

@@ -1,5 +1,6 @@
 package ru.aif.aifback.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
-import ru.aif.aifback.model.UserItem;
+import ru.aif.aifback.model.UserItemGroup;
 import ru.aif.aifback.model.requests.UserItemRequest;
 import ru.aif.aifback.services.user.UserItemService;
 
@@ -57,12 +60,29 @@ public class UiController {
 
     /**
      * Add user item.
-     * @param userItemRequest userItemRequest
+     * @param file file
+     * @param name name
+     * @param id id
+     * @param hours hours
+     * @param mins mins
+     * @param amount amount
      * @return true/false
      */
-    @PostMapping(value = "/add-user-item", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> addItem(@RequestBody UserItemRequest userItemRequest) {
-        return ResponseEntity.ok(userItemService.addItem(userItemRequest));
+    @PostMapping(value = "/add-user-item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Boolean> addItem(@RequestPart(value = "service_file", required = false) MultipartFile file,
+                                           @RequestParam("name") String name,
+                                           @RequestParam("id") Long id,
+                                           @RequestParam("hours") Long hours,
+                                           @RequestParam("mins") Long mins,
+                                           @RequestParam("amount") BigDecimal amount) {
+        return ResponseEntity.ok(userItemService.addItem(UserItemRequest.builder()
+                                                                        .id(id)
+                                                                        .name(name)
+                                                                        .hours(hours)
+                                                                        .mins(mins)
+                                                                        .amount(amount)
+                                                                        .file(file)
+                                                                        .build()));
     }
 
     /**
@@ -70,9 +90,9 @@ public class UiController {
      * @param userBotId user bot id
      * @return list user items
      */
-    @GetMapping(value = "/list-user-items", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserItem>> getUserItems(@RequestParam(name = "id") Long userBotId) {
-        return ResponseEntity.ok(userItemService.getUserItems(userBotId));
+    @GetMapping(value = "/list-user-item-groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserItemGroup>> getUserItemGroups(@RequestParam(name = "id") Long userBotId) {
+        return ResponseEntity.ok(userItemService.getUserItemGroups(userBotId));
     }
 
     /**
@@ -83,5 +103,45 @@ public class UiController {
     @GetMapping(value = "/user-item-delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> deleteUserItem(@RequestParam(name = "id") Long id) {
         return ResponseEntity.ok(userItemService.deleteUserItem(id));
+    }
+
+    /**
+     * Delete user group item.
+     * @param id user group item id
+     * @return true/false
+     */
+    @GetMapping(value = "/user-item-group-delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteUserItemGroup(@RequestParam(name = "id") Long id) {
+        return ResponseEntity.ok(userItemService.deleteUserItemGroup(id));
+    }
+
+    /**
+     * Update user item active.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/update-user-item-active", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateUserItemActive(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userItemService.updateUserItemActive(userItemRequest.getId(), userItemRequest.getActive()));
+    }
+
+    /**
+     * Update user item group active.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/update-user-item-group-active", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateUserItemGroupActive(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userItemService.updateUserItemGroupActive(userItemRequest.getId(), userItemRequest.getActive()));
+    }
+
+    /**
+     * Add user group item.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/add-user-group-item", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> addUserGroupItem(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userItemService.addUserGroupItem(userItemRequest));
     }
 }

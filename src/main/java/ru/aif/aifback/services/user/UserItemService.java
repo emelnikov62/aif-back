@@ -1,5 +1,6 @@
 package ru.aif.aifback.services.user;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.UserItem;
+import ru.aif.aifback.model.UserItemGroup;
 import ru.aif.aifback.model.requests.UserItemRequest;
+import ru.aif.aifback.repository.UserItemGroupRepository;
 import ru.aif.aifback.repository.UserItemRepository;
 
 /**
@@ -21,6 +24,7 @@ import ru.aif.aifback.repository.UserItemRepository;
 public class UserItemService {
 
     private final UserItemRepository userItemRepository;
+    private final UserItemGroupRepository userItemGroupRepository;
 
     /**
      * Add user item.
@@ -29,11 +33,17 @@ public class UserItemService {
      */
     public Boolean addItem(UserItemRequest userItemRequest) {
         try {
+            byte[] fileData = null;
+            if (Objects.nonNull(userItemRequest.getFile())) {
+                fileData = Base64.getEncoder().encode(userItemRequest.getFile().getBytes());
+            }
+
             Long id = userItemRepository.addUserItem(userItemRequest.getName(),
                                                      userItemRequest.getHours(),
                                                      userItemRequest.getMins(),
                                                      userItemRequest.getAmount(),
-                                                     userItemRequest.getId());
+                                                     userItemRequest.getId(),
+                                                     fileData);
             return Objects.isNull(id) ? Boolean.FALSE : Boolean.TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -42,12 +52,25 @@ public class UserItemService {
     }
 
     /**
-     * Find all user items by user bot id.
-     * @param id user bot id
+     * Find all user items by group id.
+     * @param groupId group id
      * @return list user items
      */
-    public List<UserItem> getUserItems(Long id) {
-        return userItemRepository.findAllByUserBotId(id);
+    public List<UserItem> getUserItemsByGroupId(Long groupId) {
+        return userItemRepository.findAllByGroupId(groupId);
+    }
+
+    /**
+     * Find all user item groups by user bot id.
+     * @param id user bot id
+     * @return list user item groups
+     */
+    public List<UserItemGroup> getUserItemGroups(Long id) {
+        List<UserItemGroup> groups = userItemGroupRepository.findAllByBotId(id);
+        groups.forEach(group -> {
+            group.setItems(getUserItemsByGroupId(group.getId()));
+        });
+        return groups;
     }
 
     /**
@@ -59,6 +82,69 @@ public class UserItemService {
         try {
             userItemRepository.deleteUserItem(id);
             return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Delete user group item.
+     * @param id id
+     * @return true/false
+     */
+    public Boolean deleteUserItemGroup(Long id) {
+        try {
+            userItemRepository.deleteUserItemsByGroupId(id);
+            userItemGroupRepository.deleteUserItemGroup(id);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Update user item active.
+     * @param id id
+     * @param active active
+     * @return true/false
+     */
+    public Boolean updateUserItemActive(Long id, boolean active) {
+        try {
+            userItemRepository.updateUserItemActive(active, id);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Update user item group active.
+     * @param id id
+     * @param active active
+     * @return true/false
+     */
+    public Boolean updateUserItemGroupActive(Long id, boolean active) {
+        try {
+            userItemGroupRepository.updateUserItemGroupActive(active, id);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Add user group item.
+     * @param userItemRequest user group item data
+     * @return true/false
+     */
+    public Boolean addUserGroupItem(UserItemRequest userItemRequest) {
+        try {
+            Long id = userItemGroupRepository.addUserGroupItem(userItemRequest.getName(), userItemRequest.getId());
+            return Objects.isNull(id) ? Boolean.FALSE : Boolean.TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Boolean.FALSE;

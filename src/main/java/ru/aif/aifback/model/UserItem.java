@@ -22,11 +22,12 @@ public class UserItem {
 
     @Id
     private Long id;
-    private Long aifUserBotId;
+    private Long aifUserItemGroupId;
     private String name;
     private Long hours;
     private Long mins;
     private BigDecimal amount;
+    private String fileData;
     private boolean active;
     private LocalDateTime created;
 

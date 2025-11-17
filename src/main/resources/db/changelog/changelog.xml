@@ -18,6 +18,10 @@
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_bots.sql" stripComments="true"/>
     </changeSet>
 
+    <changeSet author="emelnikov" id="create_table_aif_user_item_groups" context="prod" dbms="postgresql" runOnChange="true">
+        <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_item_groups.sql" stripComments="true"/>
+    </changeSet>
+
     <changeSet author="emelnikov" id="create_table_aif_user_items" context="prod" dbms="postgresql" runOnChange="true">
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_items.sql" stripComments="true"/>
     </changeSet>

@@ -14,12 +14,16 @@
 <body class="full-width">
 <div class="main gradient-bs full-width full-height flex gap-10 flex-column align-items-center justify-start padding-20">
     <div class="flex flex-column gap-10 full-width align-items-start justify-center">
-        <div class="add-item-btn button gap-5 full-width flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-fresh-block">
-            Добавить
+        <div class="flex flex-row align-items-center justify-space-between full-width">
+            <div class="add-group-item-btn button gap-5 full-width flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-fresh-block">
+                Добавить группу
+            </div>
         </div>
         <div class="item-form hide-block flex flex-column gap-10 padding-10 full-width align-items-center justify-center back block back-static opacity-full">
-            <div class="flex flex-row full-width align-items-center justify-center main fs-20">
-                Добавление товара/услуги
+            <div>
+                <div class="flex flex-row full-width align-items-center justify-center main fs-20">
+                    Добавление товара/услуги в группу&nbsp;<span class="group-name orange"></span>
+                </div>
             </div>
             <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 name-item"
                    placeholder="Наименование"/>
@@ -46,17 +50,42 @@
                     рубли
                 </div>
             </div>
-            <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
-                <div class="save-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
-                    Сохранить
+            <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">
+                <input type="file" placeholder="Картинка услуги" name="service_file" id="service_file"
+                       class="input flex-1 full-width fs-16 back-static padding-left-right-80 input-skin-price height-40 border-radius-10"/>
+                <div class="absolute left-10">
+                    картинка
                 </div>
-                <div class="cancel-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
+            </div>
+            <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
+                <input type="hidden" class="group-id"/>
+                <div class="save-item-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
+                    Добавить
+                </div>
+                <div class="cancel-item-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
+                    Отменить
+                </div>
+            </div>
+        </div>
+        <div class="group-item-form hide-block flex flex-column gap-10 padding-10 full-width align-items-center justify-center back block back-static opacity-full">
+            <div>
+                <div class="flex flex-row full-width align-items-center justify-center main fs-20">
+                    Добавление группы
+                </div>
+            </div>
+            <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 name-group"
+                   placeholder="Наименование"/>
+            <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
+                <div class="save-group-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
+                    Добавить
+                </div>
+                <div class="cancel-group-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
                     Отменить
                 </div>
             </div>
         </div>
     </div>
-    <div class="user-items-list flex flex-column gap-10 align-items-center justify-start full-width overflow-y">
+    <div class="user-groups-list flex flex-column gap-10 align-items-center justify-start full-width overflow-y">
     </div>
     <input type="hidden" th:value="${id}" id="bot_id"/>
 </div>
