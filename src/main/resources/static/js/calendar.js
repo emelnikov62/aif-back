@@ -44,13 +44,13 @@ $(document).ready(function () {
     });
 });
 
-function fillCalendar(today) {
-    changeCurrentDate(today);
-    fillMonthCalendar(today.getMonth(), today.getFullYear());
+function fillCalendar(date) {
+    changeCurrentDate(date);
+    fillMonthCalendar(date.getMonth(), date.getFullYear());
 }
 
-function changeCurrentDate(today) {
-    $('.current-date').text(`${monthNames[today.getMonth()]} ${today.getFullYear()}`);
+function changeCurrentDate(date) {
+    $('.current-date').text(`${monthNames[date.getMonth()]} ${date.getFullYear()}`);
 }
 
 function fillMonthCalendar(month, year) {
