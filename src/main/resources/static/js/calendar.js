@@ -2,11 +2,11 @@ var today = new Date();
 var selected = [];
 
 $(document).ready(function () {
-    const data = JSON.stringify({allow_vertical_swipe: false});
-    window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
+    //const data = JSON.stringify({allow_vertical_swipe: false});
+    //window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
 
     $('#close_button').click(function () {
-        window.Telegram.WebApp.close();
+        //window.Telegram.WebApp.close();
     });
 
     alert(today);
@@ -28,9 +28,10 @@ $(document).ready(function () {
         $('#cancel_select_button').removeClass('hide-block');
         selected = [];
         $('.day-container').each((elem) => {
-            if ($($('.day-container')[elem]).attr('data-day')) {
-                $($('.day-container')[elem]).addClass('selected-day');
-                selected.push($($('.day-container')[elem]).attr('data-day'));
+            var dc = $($('.day-container')[elem]);
+            if (dc.attr('data-day')) {
+                dc.addClass('selected-day');
+                selected.push(dc.attr('data-day'));
             }
         });
     });
@@ -61,25 +62,27 @@ function fillMonthCalendar(month, year) {
     var i = 0;
     var week = 1;
     var day = date.getDay();
-    while (date.getMonth() == month) {
-        day = date.getDay() == 0 ? 7 : date.getDay();
+    while (date.getMonth() === month) {
+        day = date.getDay() === 0 ? 7 : date.getDay();
         $(`.week-${week} .day-${day}`).text(date.getDate());
-        $(`.week-${week} .day-container-${day}`).removeClass('disabled-back');
-        $(`.week-${week} .day-container-${day}`).attr('data-day', date.getDate());
 
-        $(`.week-${week} .day-container-${day}`).click((elem) => {
+        var weekElem = $(`.week-${week} .day-container-${day}`);
+        weekElem.removeClass('disabled-back');
+        weekElem.attr('data-day', date.getDate());
+
+        weekElem.click((elem) => {
             if ($(elem.target).attr('data-day')) {
                 var selectedDay = $(elem.target).attr('data-day');
 
                 if ($(elem.target).hasClass('selected-day')) {
                     $(elem.target).removeClass('selected-day');
-                    selected.splice(selected.findIndex((sel) => sel == selectedDay), 1);
+                    selected.splice(selected.findIndex((sel) => sel === selectedDay), 1);
                 } else {
                     $(elem.target).addClass('selected-day');
                     selected.push(selectedDay);
                 }
 
-                if (selected.length == 0) {
+                if (selected.length === 0) {
                     $('#cancel_select_button').addClass('hide-block');
                     $('#save_button').addClass('hide-block');
                 } else {
@@ -89,7 +92,7 @@ function fillMonthCalendar(month, year) {
             }
         });
 
-        if (day == 7) {
+        if (day === 7) {
             week = week + 1;
         }
 
