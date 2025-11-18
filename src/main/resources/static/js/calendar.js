@@ -5,7 +5,7 @@ $(document).ready(function () {
     const data = JSON.stringify({allow_vertical_swipe: false});
     window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
 
-    $('#cancel_button').click(function () {
+    $('#close_button').click(function () {
         window.Telegram.WebApp.close();
     });
 
