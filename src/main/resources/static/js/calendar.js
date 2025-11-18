@@ -10,8 +10,6 @@ $(document).ready(function () {
         //window.Telegram.WebApp.close();
     });
 
-    alert(today);
-
     fillCalendar(today);
 
     $('.prev-btn').click(() => {
@@ -51,17 +49,13 @@ function fillCalendar(date) {
 }
 
 function changeCurrentDate(date) {
-    alert(date);
-    alert(monthNames);
     $('.current-date').text(`${monthNames[date.getMonth()]} ${date.getFullYear()}`);
 }
 
 function fillMonthCalendar(month, year) {
-    alert(`${month}-${year}-${monthNames}`);
     $('.days').text('');
     $('.day-container').addClass('disabled-back');
     var date = new Date(year, month);
-    alert(date);
     date.setDate(1);
 
     var i = 0;
