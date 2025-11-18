@@ -1,5 +1,6 @@
 var today = new Date();
 var selected = [];
+var monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
 $(document).ready(function () {
     //const data = JSON.stringify({allow_vertical_swipe: false});
@@ -50,6 +51,8 @@ function fillCalendar(date) {
 }
 
 function changeCurrentDate(date) {
+    alert(date);
+    alert(monthNames);
     $('.current-date').text(`${monthNames[date.getMonth()]} ${date.getFullYear()}`);
 }
 
