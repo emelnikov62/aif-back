@@ -1196,6 +1196,14 @@ svg {
     padding-right: 60px !important;
 }
 
+.disabled-back {
+    opacity: 0.2 !important;
+}
+
+.selected-day {
+    border: #62a0f8 2px dashed;
+}
+
 .padding-left-right-80 {
     padding-left: 80px !important;
     padding-right: 80px !important;

@@ -47,6 +47,18 @@ public class UiController {
     }
 
     /**
+     * Admin calendar bot form.
+     * @param id id
+     * @param model model
+     * @return true/false
+     */
+    @GetMapping(value = "/calendar-bot-form")
+    public String calendarBotForm(@RequestParam(name = "id") String id, Model model) {
+        model.addAttribute("id", id);
+        return "calendar_bot_form";
+    }
+
+    /**
      * Admin items bot form.
      * @param id id
      * @param model model

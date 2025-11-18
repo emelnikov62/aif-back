@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Настройка календаря</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/adaptive.css}" href="/static/css/adaptive.css">
+    <link rel="stylesheet" th:href="@{/css/noty.css}" href="/static/css/noty.css">
+    <script src="/static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <script src="/static/js/script.js" th:src="@{/js/script.js}"></script>
+    <script src="/static/js/calendar.js" th:src="@{/js/calendar.js}"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="full-width">
+<div class="main gradient-bs full-width full-height flex flex-row align-items-start justify-center padding-20">
+    <div class="flex flex-column gap-10 full-width align-items-center justify-center">
+        <div class="flex flex-column gap-10 full-width align-items-center justify-center">
+            <span class="main orange fs-24 text-center">AIF</span>
+            <span class="main fs-20 text-center">Настройка календаря записи</span>
+        </div>
+        <div class="flex flex-row full-width back back-static block gradient-ig calendar-content opacity-full">
+            <div class="flex flex-column gap-10 full-width padding-5">
+                <div class="flex flex-row gap-10 full-width align-items-center justify-space-between opacity-full">
+                    <div class="prev-btn block back back-static padding-10 flex flex-row align-items-center justify-center cursor border-dashed"
+                         style="transform: rotate(90deg)">
+                        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                            </g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
+                                      stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="current-date orange border-dashed back-static back-static block opacity-full padding-10"></div>
+                    <div class="next-btn block back back-static padding-10 flex flex-row align-items-center justify-center cursor border-dashed"
+                         style="transform: rotate(-90deg)">
+                        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                            </g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
+                                      stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="calendar-days flex flex-column gap-10 full-width back back-static gradient-empty block opacity-full padding-10">
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-1">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-2">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-3">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-4">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-5">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-6">
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пн</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-1 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-2">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-2 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-3">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Ср</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-3 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-4">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Чт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-4 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-5">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Пт</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-5 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-6">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Сб</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-6 days"></div>
+                            </div>
+                        </div>
+                        <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-alert-error disabled-back day-container day-container-7">
+                            <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
+                                <div class="flex flex-row align-items-center justify-center padding-5 orange border-dashed fs-16">Вс</div>
+                                <div class="flex flex-row align-items-center justify-center padding-5 border-dashed fs-16 day-7 days"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row align-items-center justify-space-between full-width">
+            <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
+                 id="save_button">Сохранить
+            </div>
+            <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-cv"
+                 id="all_select_button">Выбрать все
+            </div>
+            <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-empty"
+                 id="cancel_select_button">Снять выделение
+            </div>
+            <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-main-block"
+                 id="close_button">Закрыть
+            </div>
+        </div>
+    </div>
+    <input type="hidden" th:value="${id}" id="bot_id"/>
+</div>
+</body>
+</html>
