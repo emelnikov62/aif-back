@@ -20,6 +20,7 @@ public final class TgAdminButtons {
     public static final String BOT_STATS_TITLE = "\uD83D\uDCCA Статистика";
     public static final String BOT_SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String BOT_ITEMS_TITLE = "\uD83D\uDCE6 Товары/Услуги";
+    public static final String BOT_CALENDAR_TITLE = "\uD83D\uDCC5 Настройка календаря";
     public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
     public static final String DELETE_BOT_ERROR_ANSWER = "❌ Не удалось удалить бота. Попробуйте еще раз";
     public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
@@ -87,5 +88,15 @@ public final class TgAdminButtons {
                 new InlineKeyboardButton(BOT_ITEMS_TITLE).webApp(
                         new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + id))
         };
+    }
+
+    /**
+     * Create calendar bot button.
+     * @param id id
+     * @return calendar bot button
+     */
+    public static InlineKeyboardButton createCalendarBotButton(String id) {
+        return new InlineKeyboardButton(BOT_CALENDAR_TITLE).webApp(
+                new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/calendar-bot-form?id=" + id));
     }
 }

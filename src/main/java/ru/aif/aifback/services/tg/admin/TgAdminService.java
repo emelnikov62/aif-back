@@ -195,6 +195,7 @@ public class TgAdminService implements TgService {
                 keyboard.addRow(TgAdminButtons.createLinkBotButton(userBotId));
             } else {
                 keyboard.addRow(TgAdminButtons.createSelectedBotMenu(userBotId));
+                keyboard.addRow(TgAdminButtons.createCalendarBotButton(userBotId));
             }
         });
 
