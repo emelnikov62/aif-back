@@ -9,6 +9,8 @@ $(document).ready(function () {
         window.Telegram.WebApp.close();
     });
 
+    alert(today);
+
     fillCalendar(today);
 
     $('.prev-btn').click(() => {
