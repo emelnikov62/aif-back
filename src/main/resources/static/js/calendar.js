@@ -54,9 +54,11 @@ function changeCurrentDate(today) {
 }
 
 function fillMonthCalendar(month, year) {
+    alert(`${month}-${year}-${monthNames}`);
     $('.days').text('');
     $('.day-container').addClass('disabled-back');
     var date = new Date(year, month);
+    alert(date);
     date.setDate(1);
 
     var i = 0;
