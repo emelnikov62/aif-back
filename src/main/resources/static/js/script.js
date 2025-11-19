@@ -45,7 +45,7 @@ function showModal(caption, container, top, left, right) {
         `                </svg>` +
         `            </div>` +
         `        </div>` +
-        `        <div class="flex flex-row align-items-center justify-center full-width full-height gradient-msg back back-static opacity-full border-radius-content padding-10">` +
+        `        <div class="flex flex-row align-items-center justify-center full-width full-height gradient-msg back back-static opacity-full border-radius-content padding-10 flex-1">` +
         `            ${container}` +
         `        </div>` +
         `    </div>` +

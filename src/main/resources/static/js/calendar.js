@@ -67,7 +67,7 @@ $(document).ready(function () {
 
 function confirmWithoutSavedDialog(back) {
     var dlgCnt = `` +
-        `<div class="flex flex-column align-items-center justify-center full-width full-height padding-5 gradient-bs block">` +
+        `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
         `    <div class="flex flex-column flex-1 align-items-center justify-start padding-10 fs-16">Данные на текущем месяце не сохранены! Продолжить?</div>` +
         `    <div class="flex flex-row gap-10 align-items-end justify-space-between full-width">` +
         `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-fresh-block" onclick="confirmWithoutSaved(${back})">Подтвердить</div>` +
