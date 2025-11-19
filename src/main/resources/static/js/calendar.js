@@ -3,6 +3,9 @@ var selected = [];
 var monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
 $(document).ready(function () {
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+
     $('#close_button').click(function () {
         window.Telegram.WebApp.close();
     });

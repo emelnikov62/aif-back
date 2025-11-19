@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+
     $('#link_button').click(function () {
         var id = $('#bot_id').val();
         var token = $('#token').val();

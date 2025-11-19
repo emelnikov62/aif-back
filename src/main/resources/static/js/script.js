@@ -61,6 +61,3 @@ function closeModal() {
     $('body').css({'overflow': 'auto'});
     $('.layout-modal').remove();
 }
-
-let tg = window.Telegram.WebApp;
-tg.expand();

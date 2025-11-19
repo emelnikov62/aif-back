@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+
     getUserItemGroups($('#bot_id').val());
 
     $('.add-group-item-btn').click(function () {
