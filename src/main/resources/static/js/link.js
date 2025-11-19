@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    const data = JSON.stringify({allow_vertical_swipe: false});
-    window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
-
     $('#link_button').click(function () {
         var id = $('#bot_id').val();
         var token = $('#token').val();

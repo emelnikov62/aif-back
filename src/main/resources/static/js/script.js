@@ -53,12 +53,14 @@ function showModal(caption, container, top, left, right) {
         `</div>`;
 
     $('body').css({'overflow': 'hidden'});
-    $('.main').append(dlg);
+    $('.main-root').append(dlg);
     $('.layout-modal').addClass('active');
 }
 
 function closeModal() {
-    $('.layout-modal').removeClass('active');
     $('body').css({'overflow': 'auto'});
-    $('.main').remove($('.layout-modal'));
+    $('.layout-modal').remove();
 }
+
+let tg = window.Telegram.WebApp;
+tg.expand();
