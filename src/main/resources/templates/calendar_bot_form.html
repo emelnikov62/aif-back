@@ -4,6 +4,7 @@
     <title>Настройка календаря</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/modal.css}" href="/static/css/modal.css">
     <link rel="stylesheet" th:href="@{/css/adaptive.css}" href="/static/css/adaptive.css">
     <link rel="stylesheet" th:href="@{/css/noty.css}" href="/static/css/noty.css">
     <script src="/static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
@@ -318,17 +319,24 @@
             </div>
         </div>
         <div class="flex flex-row align-items-center justify-space-between full-width">
-            <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
-                 id="save_button">Сохранить
+            <div class="flex flex-row gap-10 align-items-center justify-center">
+                <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
+                     id="work_select_button">Будни
+                </div>
+                <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-cv"
+                     id="all_select_button">Выбрать все
+                </div>
+                <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-empty"
+                     id="cancel_select_button">Снять выделение
+                </div>
             </div>
-            <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-cv"
-                 id="all_select_button">Выбрать все
-            </div>
-            <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-empty"
-                 id="cancel_select_button">Снять выделение
-            </div>
-            <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-main-block"
-                 id="close_button">Закрыть
+            <div class="flex flex-row gap-10 align-items-center justify-center">
+                <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
+                     id="save_button">Сохранить
+                </div>
+                <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-main-block"
+                     id="close_button">Закрыть
+                </div>
             </div>
         </div>
     </div>

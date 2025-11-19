@@ -13,13 +13,21 @@ $(document).ready(function () {
     fillCalendar(today);
 
     $('.prev-btn').click(() => {
-        today.setMonth(today.getMonth() - 1);
-        fillCalendar(today);
+        if (selected.length === 0) {
+            today.setMonth(today.getMonth() - 1);
+            fillCalendar(today);
+        } else {
+            confirmWithoutSavedDialog(true);
+        }
     });
 
     $('.next-btn').click(() => {
-        today.setMonth(today.getMonth() + 1);
-        fillCalendar(today);
+        if (selected.length === 0) {
+            today.setMonth(today.getMonth() + 1);
+            fillCalendar(today);
+        } else {
+            confirmWithoutSavedDialog(false);
+        }
     });
 
     $('#all_select_button').click(() => {
@@ -35,6 +43,20 @@ $(document).ready(function () {
         });
     });
 
+    $('#work_select_button').click(() => {
+        $('#save_button').removeClass('hide-block');
+        $('#cancel_select_button').removeClass('hide-block');
+        $('.day-container').removeClass('selected-day');
+        selected = [];
+        $('.day-container').each((elem) => {
+            var dc = $($('.day-container')[elem]);
+            if (dc.attr('data-day') && dc.attr('work-day') === 'true') {
+                dc.addClass('selected-day');
+                selected.push(dc.attr('data-day'));
+            }
+        });
+    });
+
     $('#cancel_select_button').click(() => {
         $('.day-container').removeClass('selected-day');
         selected = [];
@@ -42,6 +64,34 @@ $(document).ready(function () {
         $('#save_button').addClass('hide-block');
     });
 });
+
+function confirmWithoutSavedDialog(back) {
+    var dlgCnt = `` +
+        `<div class="flex flex-column align-items-center justify-center full-width full-height padding-5 gradient-bs block">` +
+        `    <div class="flex flex-column flex-1 align-items-center justify-start padding-10 fs-16">Данные на текущем месяце не сохранены! Продолжить?</div>` +
+        `    <div class="flex flex-row gap-10 align-items-end justify-space-between full-width">` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-fresh-block" onclick="confirmWithoutSaved(${back})">Подтвердить</div>` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
+        `    </div>` +
+        `</div>`;
+    showModal('Cообщение', dlgCnt, null, null, null);
+}
+
+function confirmWithoutSaved(back) {
+    closeModal();
+    $('.day-container').removeClass('selected-day');
+    selected = [];
+    $('#cancel_select_button').addClass('hide-block');
+    $('#save_button').addClass('hide-block');
+
+    if (back) {
+        today.setMonth(today.getMonth() - 1);
+    } else {
+        today.setMonth(today.getMonth() + 1);
+    }
+
+    fillCalendar(today);
+}
 
 function fillCalendar(date) {
     changeCurrentDate(date);
@@ -55,6 +105,7 @@ function changeCurrentDate(date) {
 function fillMonthCalendar(month, year) {
     $('.days').text('');
     $('.day-container').addClass('disabled-back');
+    $('.day-container').off('click');
     var date = new Date(year, month);
     date.setDate(1);
 
@@ -68,6 +119,7 @@ function fillMonthCalendar(month, year) {
         var weekElem = $(`.week-${week} .day-container-${day}`);
         weekElem.removeClass('disabled-back');
         weekElem.attr('data-day', date.getDate());
+        weekElem.attr('work-day', day < 6);
 
         weekElem.click((elem) => {
             if ($(elem.target).attr('data-day')) {
