@@ -14,8 +14,14 @@ $(document).ready(function () {
 
     $('.prev-btn').click(() => {
         if (selected.length === 0) {
+            toggleLoading();
+
             today.setMonth(today.getMonth() - 1);
             fillCalendar(today);
+
+            setTimeout(() => {
+                toggleLoading();
+            }, 500);
         } else {
             confirmWithoutSavedDialog(true);
         }
@@ -23,15 +29,21 @@ $(document).ready(function () {
 
     $('.next-btn').click(() => {
         if (selected.length === 0) {
+            toggleLoading();
+
             today.setMonth(today.getMonth() + 1);
             fillCalendar(today);
+
+            setTimeout(() => {
+                toggleLoading();
+            }, 500);
         } else {
             confirmWithoutSavedDialog(false);
         }
     });
 
     $('#all_select_button').click(() => {
-        $('#save_button').removeClass('hide-block');
+        $('#add_time_button').removeClass('hide-block');
         $('#cancel_select_button').removeClass('hide-block');
         selected = [];
         $('.day-container').each((elem) => {
@@ -44,7 +56,7 @@ $(document).ready(function () {
     });
 
     $('#work_select_button').click(() => {
-        $('#save_button').removeClass('hide-block');
+        $('#add_time_button').removeClass('hide-block');
         $('#cancel_select_button').removeClass('hide-block');
         $('.day-container').removeClass('selected-day');
         selected = [];
@@ -58,12 +70,118 @@ $(document).ready(function () {
     });
 
     $('#cancel_select_button').click(() => {
-        $('.day-container').removeClass('selected-day');
         selected = [];
-        $('#cancel_select_button').addClass('hide-block');
-        $('#save_button').addClass('hide-block');
+        deleteSelected();
+    });
+
+    $('#add_time_button').click(() => {
+        addTimeDialog();
     });
 });
+
+function addTimeDialog() {
+    var dlgCnt = `` +
+        `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
+        `    <div class="flex flex-column flex-1 align-items-center gap-10 justify-start padding-10 fs-16">` +
+        `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
+        `            <div class="flex flex-row align-items-center justify-start full-width orange">Начало</div>` +
+        `            <div class="flex flex-row gap-10 full-width align-items-center justify-center times-block">` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" placeholder="" class="hours-start input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 gray fs-12">часов</div>` +
+        `                </div>` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" placeholder="" class="mins-start input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 fs-12 gray">минут</div>` +
+        `                </div>` +
+        `            </div>` +
+        `        </div>` +
+        `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
+        `            <div class="flex flex-row align-items-center justify-start full-width orange">Окончание</div>` +
+        `            <div class="flex flex-row gap-10 full-width align-items-center justify-center times-block">` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" placeholder="" class="hours-end input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 gray fs-12">часов</div>` +
+        `                </div>` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" placeholder="" class="mins-end input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 fs-12 gray">минут</div>` +
+        `                </div>` +
+        `            </div>` +
+        `        </div>` +
+        `    </div>` +
+        `    <div class="flex flex-row gap-10 align-items-end justify-space-between full-width">` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-fresh-block" onclick="confirmAddTime()">Добавить</div>` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
+        `    </div>` +
+        `</div>`;
+    showModal('Добавление времени', dlgCnt, null, null, null);
+}
+
+function confirmAddTime() {
+    var hoursStart = $('.hours-start').val();
+    var minsStart = $('.mins-start').val();
+    var hoursEnd = $('.hours-end').val();
+    var minsEnd = $('.mins-end').val();
+
+    if (!hoursStart || !minsStart) {
+        showAlert('error', 'Введите время начала рабочего дня');
+        return;
+    }
+
+    if (!hoursEnd || !minsEnd) {
+        showAlert('error', 'Введите время окончания рабочего дня');
+        return;
+    }
+
+    if (hoursStart > 23 || hoursEnd > 23 || hoursStart < 0 || hoursEnd < 0) {
+        showAlert('error', 'Неправильное значение часа');
+        return;
+    }
+
+    if (minsStart > 59 || minsEnd > 59 || minsStart < 0 || minsEnd < 0) {
+        showAlert('error', 'Неправильное значение минут');
+        return;
+    }
+
+    if ((hoursStart === hoursEnd && minsStart > minsEnd)
+        || (hoursStart > hoursEnd)) {
+        showAlert('error', 'Некорректный диапозон времени работы');
+        return;
+    }
+
+    toggleLoading();
+    var id = $('#bot_id').val();
+
+    $.ajax('/aif/admin/add-user-calendar',
+        {
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id,
+                days: selected,
+                year: today.getFullYear(),
+                month: today.getMonth() + 1,
+                hoursStart: hoursStart,
+                hoursEnd: hoursEnd,
+                minsStart: minsStart,
+                minsEnd: minsEnd
+            }),
+            complete: (data) => {
+                if (data) {
+                    showAlert('success', 'Календарь сохранен');
+                    fillCalendar(today);
+                } else {
+                    showAlert('error', 'Произошла ошибка. Попробуйте позже');
+                }
+
+                selected = [];
+                deleteSelected();
+                closeModal();
+                toggleLoading();
+            }
+        });
+}
 
 function confirmWithoutSavedDialog(back) {
     var dlgCnt = `` +
@@ -77,12 +195,20 @@ function confirmWithoutSavedDialog(back) {
     showModal('Cообщение', dlgCnt, null, null, null);
 }
 
-function confirmWithoutSaved(back) {
-    closeModal();
+function deleteSelected() {
     $('.day-container').removeClass('selected-day');
-    selected = [];
     $('#cancel_select_button').addClass('hide-block');
-    $('#save_button').addClass('hide-block');
+    $('#add_time_button').addClass('hide-block');
+    $('#edit_time_button').addClass('hide-block');
+    $('#delete_time_button').addClass('hide-block');
+}
+
+function confirmWithoutSaved(back) {
+    toggleLoading();
+
+    closeModal();
+    selected = [];
+    deleteSelected();
 
     if (back) {
         today.setMonth(today.getMonth() - 1);
@@ -91,6 +217,7 @@ function confirmWithoutSaved(back) {
     }
 
     fillCalendar(today);
+    toggleLoading();
 }
 
 function fillCalendar(date) {
@@ -103,50 +230,93 @@ function changeCurrentDate(date) {
 }
 
 function fillMonthCalendar(month, year) {
-    $('.days').text('');
-    $('.day-container').addClass('disabled-back');
-    $('.day-container').off('click');
-    var date = new Date(year, month);
-    date.setDate(1);
+    var id = $('#bot_id').val();
+    $.get(`/aif/admin/user-calendar?id=${id}&month=${month + 1}&year=${year}`).done((days) => {
+        $('.days').text('');
+        $('.time-calendar').remove();
+        $('.day-container').addClass('disabled-back').off('click');
+        var date = new Date(year, month);
+        date.setDate(1);
 
-    var i = 0;
-    var week = 1;
-    var day = date.getDay();
-    while (date.getMonth() === month) {
-        day = date.getDay() === 0 ? 7 : date.getDay();
-        $(`.week-${week} .day-${day}`).text(date.getDate());
+        var i = 0;
+        var week = 1;
+        var day = date.getDay();
+        while (date.getMonth() === month) {
+            day = date.getDay() === 0 ? 7 : date.getDay();
+            $(`.week-${week} .day-${day}`).text(date.getDate());
 
-        var weekElem = $(`.week-${week} .day-container-${day}`);
-        weekElem.removeClass('disabled-back');
-        weekElem.attr('data-day', date.getDate());
-        weekElem.attr('work-day', day < 6);
+            var weekElem = $(`.week-${week} .day-container-${day}`);
+            weekElem.removeClass('disabled-back');
+            weekElem.attr('data-day', date.getDate());
+            weekElem.attr('work-day', day < 6);
 
-        weekElem.click((elem) => {
-            if ($(elem.target).attr('data-day')) {
-                var selectedDay = $(elem.target).attr('data-day');
-
-                if ($(elem.target).hasClass('selected-day')) {
-                    $(elem.target).removeClass('selected-day');
-                    selected.splice(selected.findIndex((sel) => sel === selectedDay), 1);
-                } else {
-                    $(elem.target).addClass('selected-day');
-                    selected.push(selectedDay);
-                }
-
-                if (selected.length === 0) {
-                    $('#cancel_select_button').addClass('hide-block');
-                    $('#save_button').addClass('hide-block');
-                } else {
-                    $('#cancel_select_button').removeClass('hide-block');
-                    $('#save_button').removeClass('hide-block');
-                }
+            let index = days.findIndex(f => f.day === date.getDate());
+            if (index !== -1) {
+                fillDataFromUserCalendar(weekElem, days[index]);
+                weekElem.attr('calendar-set', true);
             }
-        });
 
-        if (day === 7) {
-            week = week + 1;
+            weekElem.click((elem) => {
+                if ($(elem.target).attr('data-day')) {
+                    var selectedDay = $(elem.target).attr('data-day');
+
+                    if ($(elem.target).hasClass('selected-day')) {
+                        $(elem.target).removeClass('selected-day');
+                        selected.splice(selected.findIndex((sel) => sel === selectedDay), 1);
+                    } else {
+                        $(elem.target).addClass('selected-day');
+                        selected.push(selectedDay);
+                    }
+
+                    if (selected.length === 0) {
+                        $('#cancel_select_button').addClass('hide-block');
+                        $('#add_time_button').addClass('hide-block');
+
+                        if (index !== -1) {
+                            $('#edit_time_button').addClass('hide-block');
+                            $('#delete_time_button').addClass('hide-block');
+                        }
+                    } else {
+                        $('#cancel_select_button').removeClass('hide-block');
+
+                        if (index !== -1) {
+                            $('#edit_time_button').removeClass('hide-block');
+                            $('#delete_time_button').removeClass('hide-block');
+                        } else {
+                            $('#add_time_button').removeClass('hide-block');
+                        }
+                    }
+                }
+            });
+
+            if (day === 7) {
+                week = week + 1;
+            }
+
+            date.setDate(date.getDate() + 1);
         }
+    });
+}
 
-        date.setDate(date.getDate() + 1);
-    }
+function fillDataFromUserCalendar(elem, day) {
+    var hoursStart = day.hoursStart.toString().length < 2 ? '0' + day.hoursStart.toString() : day.hoursStart.toString();
+    var minsStart = day.minsStart.toString().length < 2 ? '0' + day.minsStart.toString() : day.minsStart.toString();
+
+    var hoursEnd = day.hoursEnd.toString().length < 2 ? '0' + day.hoursEnd.toString() : day.hoursEnd.toString();
+    var minsEnd = day.minsEnd.toString().length < 2 ? '0' + day.minsEnd.toString() : day.minsEnd.toString();
+
+    var data = `` +
+        `<div class="flex flex-row full-width full-height align-items-center justify-center gap-10 time-calendar" style="pointer-events: none">` +
+        `    <div class="flex flex-row gap-0 align-items-end justify-center">` +
+        `        <div class="fs-20 orange">${hoursStart}</div>` +
+        `        <div class="fs-10">${minsStart}</div>` +
+        `    </div>` +
+        `    <div class="fs-20">:</div>` +
+        `    <div class="flex flex-row gap-0 align-items-end justify-center">` +
+        `        <div class="fs-20 orange">${hoursEnd}</div>` +
+        `        <div class="fs-10">${minsEnd}</div>` +
+        `    </div>` +
+        `</div>`;
+
+    $(elem).append(data);
 }

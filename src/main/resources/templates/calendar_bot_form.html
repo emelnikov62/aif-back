@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/modal.css}" href="/static/css/modal.css">
     <link rel="stylesheet" th:href="@{/css/adaptive.css}" href="/static/css/adaptive.css">
     <link rel="stylesheet" th:href="@{/css/noty.css}" href="/static/css/noty.css">
+    <link rel="stylesheet" th:href="@{/css/loading.css}" href="/static/css/loading.css">
     <script src="/static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
     <script src="/static/js/script.js" th:src="@{/js/script.js}"></script>
     <script src="/static/js/calendar.js" th:src="@{/js/calendar.js}"></script>
@@ -332,7 +333,13 @@
             </div>
             <div class="flex flex-row gap-10 align-items-center justify-center">
                 <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
-                     id="save_button">Сохранить
+                     id="add_time_button">Добавить время
+                </div>
+                <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-alert-success"
+                     id="edit_time_button">Изменить время
+                </div>
+                <div class="hide-block button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-alert-error"
+                     id="delete_time_button">Удалить время
                 </div>
                 <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-main-block"
                      id="close_button">Закрыть
@@ -341,6 +348,9 @@
         </div>
     </div>
     <input type="hidden" th:value="${id}" id="bot_id"/>
+</div>
+<div class="loader-container full-width full-height flex-column align-items-center justify-center flex hide-block">
+    <span class="loader"></span>
 </div>
 </body>
 </html>

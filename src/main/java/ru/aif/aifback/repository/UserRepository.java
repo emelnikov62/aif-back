@@ -29,7 +29,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @param tgId tg id
      * @return id
      */
-    @Query(value = "insert into aif_users(tg_id) values(:tg_id) returning id")
+    @Query(value = "insert into aif_users(tg_id) values(:tg_id)")
     @Modifying
     Long addUser(@Param("tg_id") String tgId);
 

@@ -61,3 +61,13 @@ function closeModal() {
     $('body').css({'overflow': 'auto'});
     $('.layout-modal').remove();
 }
+
+function toggleLoading() {
+    if ($('.loader-container').hasClass('hide-block')) {
+        $('.loader-container').removeClass('hide-block');
+        $('.main-root').addClass('opacity-20');
+    } else {
+        $('.loader-container').addClass('hide-block');
+        $('.main-root').removeClass('opacity-20');
+    }
+}

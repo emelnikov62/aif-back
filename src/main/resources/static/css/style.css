@@ -1645,6 +1645,10 @@ svg {
     left: 10px;
 }
 
+.left-5 {
+    left: 5px;
+}
+
 .left-20 {
     left: 20px;
 }
@@ -1981,6 +1985,10 @@ svg {
 .mark-hint .second {
     color: grey;
     font-size: 12px !important;
+}
+
+.gray {
+    color: gray;
 }
 
 .mark-hint.active {

@@ -18,8 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
+import ru.aif.aifback.model.UserCalendar;
 import ru.aif.aifback.model.UserItemGroup;
+import ru.aif.aifback.model.requests.UserCalendarRequest;
 import ru.aif.aifback.model.requests.UserItemRequest;
+import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -33,6 +36,7 @@ import ru.aif.aifback.services.user.UserItemService;
 public class UiController {
 
     private final UserItemService userItemService;
+    private final UserCalendarService userCalendarService;
 
     /**
      * Admin link bot form.
@@ -155,5 +159,29 @@ public class UiController {
     @PostMapping(value = "/add-user-group-item", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> addUserGroupItem(@RequestBody UserItemRequest userItemRequest) {
         return ResponseEntity.ok(userItemService.addUserGroupItem(userItemRequest));
+    }
+
+    /**
+     * Add user calendar.
+     * @param userCalendarRequest userCalendarRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/add-user-calendar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> addUserCalendar(@RequestBody UserCalendarRequest userCalendarRequest) {
+        return ResponseEntity.ok(userCalendarService.addDays(userCalendarRequest));
+    }
+
+    /**
+     * Get user calendar.
+     * @param id user bot id
+     * @param month month
+     * @param year year
+     * @return user calendar
+     */
+    @GetMapping(value = "/user-calendar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserCalendar>> getUserCalendar(@RequestParam(name = "id") Long id,
+                                                              @RequestParam(name = "month") Long month,
+                                                              @RequestParam(name = "year") Long year) {
+        return ResponseEntity.ok(userCalendarService.getUserCalendar(id, month, year));
     }
 }
