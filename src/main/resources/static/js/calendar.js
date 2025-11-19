@@ -3,11 +3,13 @@ var selected = [];
 var monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
 $(document).ready(function () {
+    let tg = window.Telegram.WebApp;
+    tg.expand();
     //const data = JSON.stringify({allow_vertical_swipe: false});
     //window.TelegramWebviewProxy.postEvent('web_app_setup_swipe_behavior', data);
 
     $('#close_button').click(function () {
-        //window.Telegram.WebApp.close();
+        window.Telegram.WebApp.close();
     });
 
     fillCalendar(today);
