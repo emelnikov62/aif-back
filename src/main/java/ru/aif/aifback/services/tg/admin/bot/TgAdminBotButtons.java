@@ -10,21 +10,21 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
  */
 public final class TgAdminBotButtons {
 
-    public static final String MENU_TITLE = "✅ Меню";
-    public static final String SELECT_BOT_TITLE = "✅ Выберите бота";
+    public static final String MENU_TITLE = "\uD83D\uDCCB Меню";
+    public static final String SELECT_BOT_TITLE = "\uD83C\uDF10 Выберите бота";
     public static final String MY_BOTS_TITLE = "\uD83D\uDCE6 Мои боты";
     public static final String CONNECT_BOT_TITLE = "\uD83C\uDF10 Подключить бота";
     public static final String BACK_BUTTON_TITLE = "⬅ Назад";
-    public static final String LINK_TOKEN_TITLE = "✅ Привязать TOKEN";
-    public static final String DELETE_BOT_TITLE = "⛔ Удалить";
+    public static final String LINK_TOKEN_TITLE = "\uD83D\uDD03 Привязать TOKEN";
+    public static final String DELETE_BOT_TITLE = "❌ Удалить";
     public static final String BOT_STATS_TITLE = "\uD83D\uDCCA Статистика";
     public static final String BOT_SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String BOT_ITEMS_TITLE = "\uD83D\uDCE6 Товары/Услуги";
     public static final String BOT_CALENDAR_TITLE = "\uD83D\uDCC5 Настройка календаря";
-    public static final String BOTS_EMPTY_TITLE = "✅ У Вас пока нет ботов";
-    public static final String DELETE_BOT_ERROR_ANSWER = "❌ Не удалось удалить бота. Попробуйте еще раз";
+    public static final String BOTS_EMPTY_TITLE = "\uD83D\uDCAD У Вас пока нет ботов";
+    public static final String DELETE_BOT_ERROR_ANSWER = "⛔ Не удалось удалить бота. Попробуйте еще раз";
     public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
-    public static final String CREATE_BOT_ERROR_ANSWER = "❌ Не удалось создать бота. Попробуйте еще раз";
+    public static final String CREATE_BOT_ERROR_ANSWER = "⛔ Не удалось создать бота. Попробуйте еще раз";
     public static final String CREATE_BOT_SUCCESS_ANSWER = "✅ Бот создан";
 
     public final static String BOT_SELECT = "bot_select";
