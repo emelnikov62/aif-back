@@ -69,7 +69,7 @@ public final class TgClientButtons {
      * @return add record button
      */
     public static InlineKeyboardButton createAddRecordButton(UserItem userItem) {
-        return new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s:%s", BOT_ADD_RECORD, userItem.getId()));
+        return new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s", BOT_ADD_RECORD, userItem.getId()));
     }
 
     /**

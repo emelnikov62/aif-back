@@ -139,7 +139,7 @@ public class TgClientService implements TgService {
                                                                                                              userItem.get().getMins().toString()));
                         answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
                         keyboard.addRow(TgClientButtons.createAddRecordButton(userItem.get()));
-                        keyboard.addRow(TgClientButtons.createBackButton(String.format("%s:%s", BOT_ITEMS, group.get().getId())));
+                        keyboard.addRow(TgClientButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, group.get().getId())));
 
                         TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
                                           Base64.getDecoder().decode(userItem.get().getFileData()),
@@ -155,7 +155,7 @@ public class TgClientService implements TgService {
                 String itemId = webhookRequest.getText().split(DELIMITER)[1];
                 Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
                 if (userItem.isPresent()) {
-                    keyboard.addRow(TgClientButtons.createBackButton(String.format("%s:%s", BOT_ITEMS, userItem.get().getAifUserItemGroupId())));
+                    keyboard.addRow(TgClientButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, userItem.get().getAifUserItemGroupId())));
                 }
             }
 
