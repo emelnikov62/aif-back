@@ -119,7 +119,7 @@ function editTimeDialog() {
         `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
         `    </div>` +
         `</div>`;
-    showModal('Редактирование времени', dlgCnt, null, null, null);
+    showModal('Редактирование времени', dlgCnt, null, null, null, 'times-form');
 }
 
 function confirmEditTime() {
@@ -256,7 +256,7 @@ function addTimeDialog() {
         `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
         `    </div>` +
         `</div>`;
-    showModal('Добавление времени', dlgCnt, null, null, null);
+    showModal('Добавление времени', dlgCnt, null, null, null, 'times-form');
 }
 
 function confirmAddTime() {
@@ -340,7 +340,7 @@ function confirmWithoutSavedDialog(back) {
         `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
         `    </div>` +
         `</div>`;
-    showModal('Cообщение', dlgCnt, null, null, null);
+    showModal('Cообщение', dlgCnt, null, null, null, null);
 }
 
 function deleteSelected() {

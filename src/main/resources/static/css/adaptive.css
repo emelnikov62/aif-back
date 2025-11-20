@@ -8,6 +8,10 @@
     .buttons-item div {
         width: 100%;
     }
+
+    .modal-window .times-form {
+        height: 380px !important;
+    }
 }
 
 @media only screen and (width < 1025px) {
@@ -17,7 +21,6 @@
     /*.button {*/
     /*    zoom: 1.5;*/
     /*}*/
-
     .case-items-game-container-few .case-item-game {
         min-width: auto !important;
     }
