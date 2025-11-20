@@ -318,7 +318,7 @@ public class TgBotRecordService implements TgBotService {
         List<InlineKeyboardButton> btns = new ArrayList<>();
         int num = 0;
         while (num < days.size()) {
-            String title = String.format("%s (%s)", days.get(num), TgUtils.getDayOfWeek(days.get(num), month, year));
+            String title = days.get(num).toString();//String.format("%s (%s)", days.get(num), TgUtils.getDayOfWeek(days.get(num), month, year));
             InlineKeyboardButton btn = new InlineKeyboardButton(title).callbackData(
                     String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, days.get(num), month, year, userItemId));
             btns.add(btn);
