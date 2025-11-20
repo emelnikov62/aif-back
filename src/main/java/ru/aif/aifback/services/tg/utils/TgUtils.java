@@ -1,5 +1,6 @@
 package ru.aif.aifback.services.tg.utils;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
 
@@ -34,6 +35,16 @@ public final class TgUtils {
             Map.entry(10L, "Октябрь"),
             Map.entry(11L, "Ноябрь"),
             Map.entry(12L, "Декабрь")
+    );
+
+    public static final Map<Integer, String> DAY_OF_WEEK = Map.ofEntries(
+            Map.entry(1, "Пн"),
+            Map.entry(2, "Вт"),
+            Map.entry(3, "Ср"),
+            Map.entry(4, "Чт"),
+            Map.entry(5, "Пт"),
+            Map.entry(6, "Сб"),
+            Map.entry(7, "Вс")
     );
 
     /**
@@ -87,5 +98,16 @@ public final class TgUtils {
     public static Map<String, Pair<Long, Long>> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem, Long minTimeUserItem) {
         Long userItemTime = userItem.getHours() * 60L + userItem.getMins();
         return Collections.emptyMap();
+    }
+
+    /**
+     * Get day of week.
+     * @param day day
+     * @param month month
+     * @param year year
+     * @return day of week
+     */
+    public static String getDayOfWeek(Long day, Long month, Long year) {
+        return DAY_OF_WEEK.get(LocalDate.of(year.intValue(), month.intValue(), day.intValue()).getDayOfWeek().getValue());
     }
 }
