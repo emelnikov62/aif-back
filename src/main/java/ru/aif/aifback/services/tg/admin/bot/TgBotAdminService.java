@@ -13,11 +13,13 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_SELECT;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BUY_BOT;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.SELECT_BOT_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createMainMenuKeyboard;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -31,8 +33,8 @@ import ru.aif.aifback.model.dictionary.Bot;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.TgBotService;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
+import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.BotService;
 import ru.aif.aifback.services.user.UserBotService;
 
@@ -91,8 +93,7 @@ public class TgBotAdminService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT)) {
-                answer = MENU_TITLE;
-                processBotSelect(webhookRequest.getText(), keyboard);
+                answer = processBotSelect(webhookRequest.getText(), keyboard);
                 keyboard.addRow(TgAdminBotButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
             }
 
@@ -150,7 +151,7 @@ public class TgBotAdminService implements TgBotService {
                                       userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
             });
 
-            answer = Objects.isNull(answer) ? MENU_TITLE : answer;
+            answer = Objects.isNull(answer) ? MY_BOTS_TITLE : answer;
         } else {
             answer = Objects.isNull(answer) ? BOTS_EMPTY_TITLE : answer;
         }
@@ -187,9 +188,8 @@ public class TgBotAdminService implements TgBotService {
             return;
         }
 
-        bots.forEach(bot -> {
-            keyboard.addRow(new InlineKeyboardButton("✅ " + bot.getDescription()).callbackData(String.format("%s;%s", BOT_CREATE, bot.getId())));
-        });
+        bots.forEach(bot -> keyboard.addRow(new InlineKeyboardButton(String.format("%s %s", getBotIconByType(bot.getType()), bot.getDescription()))
+                                                    .callbackData(String.format("%s;%s", BOT_CREATE, bot.getId()))));
     }
 
     /**
@@ -197,22 +197,40 @@ public class TgBotAdminService implements TgBotService {
      * @param text text
      * @param keyboard keyboard
      */
-    private void processBotSelect(String text, InlineKeyboardMarkup keyboard) {
-        if (!text.contains(DELIMITER)) {
-            return;
+    private String processBotSelect(String text, InlineKeyboardMarkup keyboard) {
+        String userBotId = text.split(DELIMITER)[1];
+
+        Optional<UserBot> userBot = userBotService.getUserBot(Long.valueOf(userBotId));
+        if (userBot.isEmpty()) {
+            return MENU_TITLE;
         }
 
-        String userBotId = text.split(DELIMITER)[1];
-        userBotService.getUserBot(Long.valueOf(userBotId)).ifPresent(entity -> {
-            if (Objects.isNull(entity.getToken())) {
-                keyboard.addRow(TgAdminBotButtons.createLinkBotButton(userBotId));
-            } else {
-                keyboard.addRow(TgAdminBotButtons.createSelectedBotMenu(userBotId));
-                keyboard.addRow(TgAdminBotButtons.createCalendarBotButton(userBotId));
-            }
-        });
+        if (Objects.isNull(userBot.get().getToken())) {
+            keyboard.addRow(TgAdminBotButtons.createLinkBotButton(userBotId));
+        } else {
+            keyboard.addRow(TgAdminBotButtons.createSelectedBotMenu(userBotId));
+            keyboard.addRow(TgAdminBotButtons.createCalendarBotButton(userBotId));
+        }
 
         keyboard.addRow(TgAdminBotButtons.createDeleteBotButton(userBotId));
+        return String.format("%s %s (ID: %s)",
+                             getBotIconByType(userBot.get().getBot().getType()),
+                             userBot.get().getBot().getDescription(),
+                             userBot.get().getId());
     }
 
+    /**
+     * Get bot icon.
+     * @param type type
+     * @return bot icon
+     */
+    private String getBotIconByType(String type) {
+        String icon = "\uD83C\uDF10";
+
+        if (Objects.equals(type, TgClientTypeBot.BOT_RECORD.getType())) {
+            icon = "\uD83D\uDCDD";
+        }
+
+        return icon;
+    }
 }
