@@ -90,7 +90,13 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @param aifUserBotId user bot id
      * @return user calendar months
      */
-    @Query(value = "select distinct on (a.year) a.month from aif_user_calendar a where a.year = :year and a.aif_user_bot_id = :aif_user_bot_id")
+    @Query(value = "select a.*" +
+                   "  from (" +
+                   "    select distinct on (a.year) a.month" +
+                   "      from aif_user_calendar a" +
+                   "     where a.year = :year and a.aif_user_bot_id = :aif_user_bot_id" +
+                   "     ) a" +
+                   " order by a.month")
     List<Long> findAllMonthsByYear(@Param("year") Long year, @Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
@@ -100,7 +106,7 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @param aifUserBotId user bot id
      * @return user calendar days
      */
-    @Query(value = "select a.day from aif_user_calendar a where a.year = :year and a.month = :month and a.aif_user_bot_id = :aif_user_bot_id")
+    @Query(value = "select a.day from aif_user_calendar a where a.year = :year and a.month = :month and a.aif_user_bot_id = :aif_user_bot_id order by a.day")
     List<Long> findAllDaysByMonthAndYear(@Param("year") Long year, @Param("month") Long month, @Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
