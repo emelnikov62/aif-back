@@ -25,6 +25,7 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.formatTime;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -263,8 +264,8 @@ public class TgBotRecordService implements TgBotService {
 
         keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear)).callbackData(
                 String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)));
-        keyboard.addRow(
-                new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
+        keyboard.addRow(new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
+                String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
     }
 
     /**
@@ -280,8 +281,27 @@ public class TgBotRecordService implements TgBotService {
             return;
         }
 
-        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(TgUtils.getMonthByNumber(month)).callbackData(
-                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, userItemId))));
+        List<InlineKeyboardButton> btns = new ArrayList<>();
+        int num = 0;
+        while (num < months.size()) {
+            InlineKeyboardButton btn = new InlineKeyboardButton(TgUtils.getMonthByNumber(months.get(num))).callbackData(
+                    String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, months.get(num), year, userItemId));
+            btns.add(btn);
+
+            num++;
+
+            if (num % 4 == 0) {
+                keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+                btns.clear();
+            }
+        }
+
+        if (!btns.isEmpty()) {
+            keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+        }
+
+        //        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(TgUtils.getMonthByNumber(month)).callbackData(
+        //                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, userItemId))));
     }
 
     /**
@@ -298,8 +318,27 @@ public class TgBotRecordService implements TgBotService {
             return;
         }
 
-        days.forEach(day -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(day)).callbackData(
-                String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, userItemId))));
+        List<InlineKeyboardButton> btns = new ArrayList<>();
+        int num = 0;
+        while (num < days.size()) {
+            InlineKeyboardButton btn = new InlineKeyboardButton(String.valueOf(days.get(num))).callbackData(
+                    String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, days.get(num), month, year, userItemId));
+            btns.add(btn);
+
+            num++;
+
+            if (num % 7 == 0) {
+                keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+                btns.clear();
+            }
+        }
+
+        if (!btns.isEmpty()) {
+            keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+        }
+
+        //        days.forEach(day -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(day)).callbackData(
+        //                String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, userItemId))));
     }
 
     /**
