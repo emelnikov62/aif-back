@@ -105,4 +105,27 @@ public class UserCalendarService {
         return userCalendarRepository.findAllMonthsByYear(year, userBotId);
     }
 
+    /**
+     * Find all days by year and month.
+     * @param year year
+     * @param month month
+     * @param userBotId user bot id
+     * @return user calendar days
+     */
+    public List<Long> findAllDaysByMonthAndYear(Long year, Long month, Long userBotId) {
+        return userCalendarRepository.findAllDaysByMonthAndYear(year, month, userBotId);
+    }
+
+    /**
+     * Find all times by year and month and day.
+     * @param year year
+     * @param month month
+     * @param day day
+     * @param userBotId user bot id
+     * @return user calendar times
+     */
+    public List<UserCalendar> findAllDaysByMonthAndYearAndDay(Long year, Long month, Long day, Long userBotId) {
+        return userCalendarRepository.findAllDaysByMonthAndYearAndDay(year, month, day, userBotId);
+    }
+
 }

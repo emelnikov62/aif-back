@@ -15,18 +15,19 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 public final class TgClientBotRecordButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
-    public static final String SERVICE_TITLE = "✅ Товар/Услуга";
     public static final String ACTIVE_TITLE = "✅ Активные записи";
     public static final String HISTORY_TITLE = "\uD83D\uDD5C История записей";
     public static final String SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
-    public static final String ITEMS_TITLE = "\uD83D\uDCE6 Товары/Услуги";
+    public static final String ITEMS_TITLE = "\uD83D\uDCE6 Услуги";
     public static final String BACK_BUTTON_TITLE = "⬅ Назад";
-    public static final String GROUP_EMPTY_TITLE = "✅ Товаров/Услуг пока нет";
+    public static final String GROUP_EMPTY_TITLE = "✅ Услуг пока нет";
     public static final String GROUP_TITLE = "\uD83D\uDD38 %s";
     public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
     public static final String ADD_RECORD_TITLE = "\uD83D\uDCC6 Записаться";
     public static final String CALENDAR_SELECT_YEAR_TITLE = "\uD83D\uDCC6 Выберите год";
     public static final String CALENDAR_SELECT_MONTH_TITLE = "\uD83D\uDCC6 Выберите месяц";
+    public static final String CALENDAR_SELECT_DAY_TITLE = "\uD83D\uDCC6 Выберите день";
+    public static final String CALENDAR_SELECT_TIME_TITLE = "\uD83D\uDCC6 Выберите время";
 
     public final static String BOT_ACTIVE = "bot_active";
     public final static String BOT_HISTORY = "bot_history";
@@ -38,6 +39,8 @@ public final class TgClientBotRecordButtons {
     public static final String BACK_TO_GROUPS_MENU = "back_to_groups_menu";
     public static final String BOT_SELECT_YEAR = "back_select_year";
     public static final String BOT_SELECT_MONTH = "back_select_month";
+    public static final String BOT_SELECT_DAY = "back_select_day";
+    public static final String BOT_SELECT_TIME = "back_select_time";
     public static final String BOT_ADD_RECORD = "back_add_record";
 
     /**

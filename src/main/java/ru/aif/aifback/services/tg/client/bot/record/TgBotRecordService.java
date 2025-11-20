@@ -10,10 +10,14 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_HISTORY;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ITEMS;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_DAY;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_MONTH;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_TIME;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_YEAR;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SETTINGS;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_DAY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_MONTH_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
@@ -34,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
+import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.TgBotService;
@@ -107,29 +112,8 @@ public class TgBotRecordService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_ITEM_ADDITIONAL)) {
-                answer = GROUP_EMPTY_TITLE;
-                String itemId = webhookRequest.getText().split(DELIMITER)[1];
-
-                Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
-                if (userItem.isPresent()) {
-                    Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
-                    if (group.isPresent()) {
-                        answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName());
-                        answer += String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName());
-                        answer += String.format("\uD83D\uDD5B <b>Продолжительность:</b> %s \n\n", formatTime(userItem.get().getHours().toString(),
-                                                                                                             userItem.get().getMins().toString()));
-                        answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
-                        keyboard.addRow(TgClientBotRecordButtons.createAddRecordButton(userItem.get()));
-                        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, group.get().getId())));
-
-                        TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
-                                          Base64.getDecoder().decode(userItem.get().getFileData()),
-                                          answer,
-                                          keyboard,
-                                          bot);
-                        return;
-                    }
-                }
+                processBotItemAdditional(webhookRequest.getText().split(DELIMITER)[1], keyboard, webhookRequest.getChatId(), bot);
+                return;
             }
 
             if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
@@ -145,6 +129,35 @@ public class TgBotRecordService implements TgBotService {
                 answer = CALENDAR_SELECT_MONTH_TITLE;
                 processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
+            }
+
+            if (webhookRequest.getText().contains(BOT_SELECT_MONTH)) {
+                String month = webhookRequest.getText().split(DELIMITER)[1];
+                String year = webhookRequest.getText().split(DELIMITER)[2];
+                String itemId = webhookRequest.getText().split(DELIMITER)[3];
+                answer = CALENDAR_SELECT_DAY_TITLE;
+                processBotCalendarDays(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), Long.valueOf(month), keyboard);
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR, year, itemId)));
+            }
+
+            if (webhookRequest.getText().contains(BOT_SELECT_DAY)) {
+                String day = webhookRequest.getText().split(DELIMITER)[1];
+                String month = webhookRequest.getText().split(DELIMITER)[2];
+                String year = webhookRequest.getText().split(DELIMITER)[3];
+                String itemId = webhookRequest.getText().split(DELIMITER)[4];
+                answer = CALENDAR_SELECT_TIME_TITLE;
+                processBotCalendarTimes(Long.valueOf(itemId),
+                                        Long.valueOf(webhookRequest.getId()),
+                                        Long.valueOf(year),
+                                        Long.valueOf(month),
+                                        Long.valueOf(day),
+                                        keyboard);
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, itemId)));
+            }
+
+            if (webhookRequest.getText().contains(BOT_SELECT_TIME)) {
+                answer = MENU_TITLE;
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
@@ -181,10 +194,8 @@ public class TgBotRecordService implements TgBotService {
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
         TelegramBot bot = new TelegramBot(userBot.getToken());
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()),
-                            MENU_TITLE,
-                            TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()),
-                            bot);
+        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE,
+                            TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()), bot);
     }
 
     /**
@@ -240,14 +251,14 @@ public class TgBotRecordService implements TgBotService {
         int currentYear = currentDate.getYear();
         int nextYear = currentYear + 1;
 
-        keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear))
-                                .callbackData(String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)));
-        keyboard.addRow(new InlineKeyboardButton(String.valueOf(nextYear))
-                                .callbackData(String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
+        keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear)).callbackData(
+                String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)));
+        keyboard.addRow(new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
+                String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
     }
 
     /**
-     * Process select years.
+     * Process select month.
      * @param userItemId user item id
      * @param id id
      * @param year year
@@ -261,6 +272,71 @@ public class TgBotRecordService implements TgBotService {
 
         months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(TgUtils.getMonthByNumber(month)).callbackData(
                 String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, userItemId))));
+    }
+
+    /**
+     * Process select days.
+     * @param userItemId user item id
+     * @param id id
+     * @param year year
+     * @param month month
+     * @param keyboard keyboard
+     */
+    private void processBotCalendarDays(Long userItemId, Long id, Long year, Long month, InlineKeyboardMarkup keyboard) {
+        List<Long> days = userCalendarService.findAllDaysByMonthAndYear(year, month, id);
+        if (days.isEmpty()) {
+            return;
+        }
+
+        days.forEach(day -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(day)).callbackData(
+                String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, userItemId))));
+    }
+
+    /**
+     * Process select times.
+     * @param userItemId user item id
+     * @param id id
+     * @param year year
+     * @param month month
+     * @param day day
+     * @param keyboard keyboard
+     */
+    private void processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+        List<UserCalendar> times = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
+        if (times.isEmpty()) {
+            return;
+        }
+
+        times.forEach(time -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(time)).callbackData(
+                String.format("%s;%s;%s;%s", BOT_SELECT_TIME, time.getId(), userItemId, id))));
+    }
+
+    /**
+     * Process bot additional item.
+     * @param itemId item id
+     * @param keyboard keuboard
+     * @param chatId chat id
+     * @param bot bot
+     */
+    private void processBotItemAdditional(String itemId, InlineKeyboardMarkup keyboard, String chatId, TelegramBot bot) {
+        String answer = GROUP_EMPTY_TITLE;
+
+        Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
+        if (userItem.isPresent()) {
+            Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
+
+            if (group.isPresent()) {
+                answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName());
+                answer += String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName());
+                answer += String.format("\uD83D\uDD5B <b>Продолжительность:</b> %s \n\n",
+                                        formatTime(userItem.get().getHours().toString(), userItem.get().getMins().toString()));
+                answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+                keyboard.addRow(TgClientBotRecordButtons.createAddRecordButton(userItem.get()));
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, group.get().getId())));
+
+                TgUtils.sendPhoto(Long.valueOf(chatId), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
+            }
+        }
     }
 
 }
