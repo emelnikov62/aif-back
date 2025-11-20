@@ -24,6 +24,7 @@ public final class TgClientButtons {
     public static final String GROUP_EMPTY_TITLE = "✅ Товаров/Услуг пока нет";
     public static final String GROUP_TITLE = "\uD83D\uDD38 %s";
     public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
+    public static final String ADD_RECORD_TITLE = "\uD83D\uDCC6 Записаться";
 
     public final static String BOT_ACTIVE = "bot_active";
     public final static String BOT_HISTORY = "bot_history";
@@ -33,6 +34,8 @@ public final class TgClientButtons {
     public final static String BOT_ITEM_ADDITIONAL = "bot_item_additional";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
     public static final String BACK_TO_GROUPS_MENU = "back_to_groups_menu";
+    public static final String BACK_TO_ITEMS_MENU = "back_to_items_menu";
+    public static final String BOT_ADD_RECORD = "back_add_record";
 
     /**
      * Create main menu.
@@ -58,6 +61,15 @@ public final class TgClientButtons {
      */
     public static InlineKeyboardButton createBackButton(String callback) {
         return new InlineKeyboardButton(BACK_BUTTON_TITLE).callbackData(callback);
+    }
+
+    /**
+     * Create add record button.
+     * @param userItem user item
+     * @return add record button
+     */
+    public static InlineKeyboardButton createAddRecordButton(UserItem userItem) {
+        return new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s:%s", BOT_ADD_RECORD, userItem.getId()));
     }
 
     /**
