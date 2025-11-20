@@ -30,4 +30,8 @@
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_calendar.sql" stripComments="true"/>
     </changeSet>
 
+    <changeSet author="emelnikov" id="create_table_aif_clients" context="prod" dbms="postgresql" runOnChange="true">
+        <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_clients.sql" stripComments="true"/>
+    </changeSet>
+
 </databaseChangeLog>

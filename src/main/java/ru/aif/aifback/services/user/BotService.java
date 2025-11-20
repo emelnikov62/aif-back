@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.Bot;
-import ru.aif.aifback.repository.BotRepository;
+import ru.aif.aifback.model.dictionary.Bot;
+import ru.aif.aifback.repository.dictionary.BotRepository;
 
 /**
  * Bot API service.

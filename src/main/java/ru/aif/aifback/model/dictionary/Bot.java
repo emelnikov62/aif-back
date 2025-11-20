@@ -1,4 +1,4 @@
-package ru.aif.aifback.model;
+package ru.aif.aifback.model.dictionary;
 
 import java.time.LocalDateTime;
 
@@ -6,26 +6,21 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * User model.
+ * Bot type model.
  * @author emelnikov
  */
 @ToString
 @Data
-@Table("aif_users")
-@RequiredArgsConstructor
-public class User {
+@Table("aif_bots")
+public class Bot {
 
     @Id
     private Long id;
-    private String tgId;
+    private String type;
+    private String description;
     private boolean active;
     private LocalDateTime created;
-
-    public User(String tgId) {
-        this.tgId = tgId;
-    }
 }

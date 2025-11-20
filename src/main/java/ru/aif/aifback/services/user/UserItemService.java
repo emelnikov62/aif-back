@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.UserItem;
-import ru.aif.aifback.model.UserItemGroup;
+import ru.aif.aifback.model.user.UserItem;
+import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.model.requests.UserItemRequest;
-import ru.aif.aifback.repository.UserItemGroupRepository;
-import ru.aif.aifback.repository.UserItemRepository;
+import ru.aif.aifback.repository.user.UserItemGroupRepository;
+import ru.aif.aifback.repository.user.UserItemRepository;
 
 /**
  * User item API service.

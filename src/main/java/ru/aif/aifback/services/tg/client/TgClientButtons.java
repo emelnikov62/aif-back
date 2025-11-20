@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import ru.aif.aifback.model.UserItem;
-import ru.aif.aifback.model.UserItemGroup;
+import ru.aif.aifback.model.user.UserItem;
+import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 
 /**

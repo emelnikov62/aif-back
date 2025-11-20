@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.UserCalendar;
+import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.requests.UserCalendarRequest;
-import ru.aif.aifback.repository.UserCalendarRepository;
+import ru.aif.aifback.repository.user.UserCalendarRepository;
 
 /**
  * User calendar API service.

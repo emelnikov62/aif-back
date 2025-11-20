@@ -15,9 +15,9 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.User;
-import ru.aif.aifback.model.UserBot;
-import ru.aif.aifback.repository.UserBotRepository;
+import ru.aif.aifback.model.user.User;
+import ru.aif.aifback.model.user.UserBot;
+import ru.aif.aifback.repository.user.UserBotRepository;
 
 /**
  * User bot API service.

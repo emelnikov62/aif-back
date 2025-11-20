@@ -1,4 +1,4 @@
-package ru.aif.aifback.repository;
+package ru.aif.aifback.repository.client;
 
 import java.util.Optional;
 
@@ -8,29 +8,29 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import ru.aif.aifback.model.User;
+import ru.aif.aifback.model.client.Client;
 
 /**
- * User repository.
+ * Client repository.
  * @author emelnikov
  */
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface ClientRepository extends CrudRepository<Client, Long> {
 
     /**
-     * Get user by tg id.
+     * Get client by tg id.
      * @param tgId tg id
-     * @return user data
+     * @return client data
      */
-    Optional<User> findByTgId(String tgId);
+    Optional<Client> findByTgId(String tgId);
 
     /**
-     * Add user.
+     * Add client.
      * @param tgId tg id
      * @return id
      */
-    @Query(value = "insert into aif_users(tg_id) values(:tg_id)")
+    @Query(value = "insert into aif_clients(tg_id) values(:tg_id)")
     @Modifying
-    Long addUser(@Param("tg_id") String tgId);
+    Long addClient(@Param("tg_id") String tgId);
 
 }

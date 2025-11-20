@@ -1,4 +1,4 @@
-package ru.aif.aifback.repository;
+package ru.aif.aifback.repository.user;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import ru.aif.aifback.model.UserBot;
+import ru.aif.aifback.model.user.UserBot;
 
 /**
  * User bot repository.

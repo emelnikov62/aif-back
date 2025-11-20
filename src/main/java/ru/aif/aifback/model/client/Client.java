@@ -1,4 +1,4 @@
-package ru.aif.aifback.model;
+package ru.aif.aifback.model.client;
 
 import java.time.LocalDateTime;
 
@@ -10,25 +10,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * User calendar model.
+ * Client model.
  * @author emelnikov
  */
 @ToString
 @Data
-@Table("aif_user_calendar")
+@Table("aif_clients")
 @RequiredArgsConstructor
-public class UserCalendar {
+public class Client {
 
     @Id
     private Long id;
-    private Long aifUserBotId;
-    private Long hoursStart;
-    private Long minsStart;
-    private Long hoursEnd;
-    private Long minsEnd;
-    private Long day;
-    private Long month;
-    private Long year;
+    private String tgId;
+    private boolean active;
     private LocalDateTime created;
 
+    public Client(String tgId) {
+        this.tgId = tgId;
+    }
 }

@@ -1,4 +1,4 @@
-package ru.aif.aifback.model;
+package ru.aif.aifback.model.user;
 
 import java.time.LocalDateTime;
 import java.util.List;

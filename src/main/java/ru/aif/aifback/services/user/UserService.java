@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.User;
-import ru.aif.aifback.repository.UserRepository;
+import ru.aif.aifback.model.user.User;
+import ru.aif.aifback.repository.user.UserRepository;
 
 /**
  * User API service.

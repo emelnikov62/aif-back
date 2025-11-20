@@ -1,4 +1,4 @@
-package ru.aif.aifback.model;
+package ru.aif.aifback.model.user;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import ru.aif.aifback.model.dictionary.Bot;
 
 /**
  * User bot model.
