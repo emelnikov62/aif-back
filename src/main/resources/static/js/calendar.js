@@ -50,7 +50,11 @@ $(document).ready(function () {
             var dc = $($('.day-container')[elem]);
             if (dc.attr('data-day') && dc.attr('calendar-set') === 'false') {
                 dc.addClass('selected-day');
-                selected.push(dc.attr('data-day'));
+                selected.push({
+                    day: dc.attr('data-day'),
+                    set: dc.attr('calendar-set') === 'true',
+                    id: dc.attr('calendar-id')
+                });
             }
         });
     });
@@ -66,9 +70,14 @@ $(document).ready(function () {
                 && dc.attr('work-day') === 'true'
                 && dc.attr('calendar-set') === 'false') {
                 dc.addClass('selected-day');
-                selected.push(dc.attr('data-day'));
+                selected.push({
+                    day: dc.attr('data-day'),
+                    set: dc.attr('calendar-set') === 'true',
+                    id: dc.attr('calendar-id')
+                });
             }
         });
+        console.log(selected);
     });
 
     $('#cancel_select_button').click(() => {
