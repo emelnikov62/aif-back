@@ -9,7 +9,7 @@
         width: 100%;
     }
 
-    .modal-window .times-form {
+    .modal-window.times-form {
         height: 380px !important;
     }
 }
