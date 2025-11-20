@@ -135,14 +135,10 @@ public class TgBotRecordService implements TgBotService {
 
             if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
                 String itemId = webhookRequest.getText().split(DELIMITER)[1];
-                Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
-                if (userItem.isPresent()) {
-                    answer = CALENDAR_SELECT_YEAR_TITLE;
-                    processBotCalendarYears(userItem.get().getId(), keyboard);
+                answer = CALENDAR_SELECT_YEAR_TITLE;
+                processBotCalendarYears(Long.valueOf(itemId), keyboard);
 
-                    keyboard.addRow(
-                            TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, userItem.get().getAifUserItemGroupId())));
-                }
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL, itemId)));
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT_YEAR)) {
