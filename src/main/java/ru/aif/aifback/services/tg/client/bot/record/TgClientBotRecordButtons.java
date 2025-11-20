@@ -25,9 +25,9 @@ public final class TgClientBotRecordButtons {
     public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
     public static final String ADD_RECORD_TITLE = "\uD83D\uDCC6 Записаться";
     public static final String CALENDAR_SELECT_YEAR_TITLE = "\uD83D\uDCC6 Выберите год";
-    public static final String CALENDAR_SELECT_MONTH_TITLE = "\uD83D\uDCC6 Выберите месяц";
-    public static final String CALENDAR_SELECT_DAY_TITLE = "\uD83D\uDCC6 Выберите день";
-    public static final String CALENDAR_SELECT_TIME_TITLE = "\uD83D\uDCC6 Выберите время";
+    public static final String CALENDAR_SELECT_MONTH_TITLE = "\uD83D\uDCC6 %s - Выберите месяц";
+    public static final String CALENDAR_SELECT_DAY_TITLE = "\uD83D\uDCC6 %s - Выберите день";
+    public static final String CALENDAR_SELECT_TIME_TITLE = "\uD83D\uDCC6 %s - Выберите время";
     public static final String CALENDAR_EMPTY_TIME_TITLE = "\uD83D\uDEAB Свободных мест нет. Выберите другой день";
 
     public final static String BOT_ACTIVE = "bot_active";

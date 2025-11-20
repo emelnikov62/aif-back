@@ -132,7 +132,7 @@ public class TgBotRecordService implements TgBotService {
             if (webhookRequest.getText().contains(BOT_SELECT_YEAR)) {
                 String year = webhookRequest.getText().split(DELIMITER)[1];
                 String itemId = webhookRequest.getText().split(DELIMITER)[2];
-                answer = CALENDAR_SELECT_MONTH_TITLE;
+                answer = String.format(CALENDAR_SELECT_MONTH_TITLE, year);
                 processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
             }
@@ -141,7 +141,7 @@ public class TgBotRecordService implements TgBotService {
                 String month = webhookRequest.getText().split(DELIMITER)[1];
                 String year = webhookRequest.getText().split(DELIMITER)[2];
                 String itemId = webhookRequest.getText().split(DELIMITER)[3];
-                answer = CALENDAR_SELECT_DAY_TITLE;
+                answer = String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(Long.valueOf(month)));
                 processBotCalendarDays(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), Long.valueOf(month), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR, year, itemId)));
             }
@@ -152,7 +152,7 @@ public class TgBotRecordService implements TgBotService {
                 String year = webhookRequest.getText().split(DELIMITER)[3];
                 String itemId = webhookRequest.getText().split(DELIMITER)[4];
 
-                answer = CALENDAR_SELECT_TIME_TITLE;
+                answer = String.format(CALENDAR_SELECT_TIME_TITLE, day);
                 if (!processBotCalendarTimes(Long.valueOf(itemId),
                                              Long.valueOf(webhookRequest.getId()),
                                              Long.valueOf(year),
