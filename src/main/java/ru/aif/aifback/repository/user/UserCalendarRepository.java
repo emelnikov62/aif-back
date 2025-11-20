@@ -84,11 +84,11 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
                  @Param("mins_end") Long minsEnd);
 
     /**
-     * Get user calendar by year.
+     * Get user calendar months by year.
      * @param year year
      * @param aifUserBotId user bot id
-     * @return user calendar
+     * @return user calendar months
      */
-    @Query(value = "select * from aif_user_calendar a where a.year = :year and a.aif_user_bot_id = :aif_user_bot_id")
-    List<UserCalendar> findAllByYear(@Param("year") Long year, @Param("aif_user_bot_id") Long aifUserBotId);
+    @Query(value = "select distinct on (a.year) a.month from aif_user_calendar a where a.year = :year and a.aif_user_bot_id = :aif_user_bot_id")
+    List<Long> findAllMonthsByYear(@Param("year") Long year, @Param("aif_user_bot_id") Long aifUserBotId);
 }

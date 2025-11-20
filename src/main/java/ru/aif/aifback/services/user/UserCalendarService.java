@@ -96,13 +96,13 @@ public class UserCalendarService {
     }
 
     /**
-     * Find all by year.
+     * Find all months by year.
      * @param year year
      * @param userBotId user bot id
-     * @return user calendar
+     * @return user calendar months
      */
-    public List<UserCalendar> findAllByYear(Long year, Long userBotId) {
-        return userCalendarRepository.findAllByYear(year, userBotId);
+    public List<Long> findAllMonthsByYear(Long year, Long userBotId) {
+        return userCalendarRepository.findAllMonthsByYear(year, userBotId);
     }
 
 }

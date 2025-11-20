@@ -34,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
-import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.TgBotService;
@@ -137,7 +136,6 @@ public class TgBotRecordService implements TgBotService {
                 String itemId = webhookRequest.getText().split(DELIMITER)[1];
                 answer = CALENDAR_SELECT_YEAR_TITLE;
                 processBotCalendarYears(Long.valueOf(itemId), keyboard);
-
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL, itemId)));
             }
 
@@ -146,9 +144,7 @@ public class TgBotRecordService implements TgBotService {
                 String itemId = webhookRequest.getText().split(DELIMITER)[2];
                 answer = CALENDAR_SELECT_MONTH_TITLE;
                 processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
-
-                keyboard.addRow(
-                        TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
@@ -258,13 +254,13 @@ public class TgBotRecordService implements TgBotService {
      * @param keyboard keyboard
      */
     private void processBotCalendarMonths(Long userItemId, Long id, Long year, InlineKeyboardMarkup keyboard) {
-        List<UserCalendar> months = userCalendarService.findAllByYear(year, id);
+        List<Long> months = userCalendarService.findAllMonthsByYear(year, id);
         if (months.isEmpty()) {
             return;
         }
 
-        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(month.getMonth())).callbackData(
-                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, TgUtils.getMonthByNumber(month.getMonth()), userItemId, month.getId()))));
+        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(TgUtils.getMonthByNumber(month)).callbackData(
+                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, userItemId))));
     }
 
 }
