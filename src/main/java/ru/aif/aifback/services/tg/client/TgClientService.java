@@ -3,6 +3,7 @@ package ru.aif.aifback.services.tg.client;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.client.TgClientButtons.ADD_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BACK_TO_GROUPS_MENU;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ADD_RECORD;
@@ -155,6 +156,7 @@ public class TgClientService implements TgService {
                 String itemId = webhookRequest.getText().split(DELIMITER)[1];
                 Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
                 if (userItem.isPresent()) {
+                    answer = ADD_RECORD_TITLE;
                     keyboard.addRow(TgClientButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, userItem.get().getAifUserItemGroupId())));
                 }
             }
