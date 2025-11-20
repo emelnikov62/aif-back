@@ -27,9 +27,11 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -42,6 +44,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
+import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.TgBotService;
 import ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons;
 import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
@@ -60,6 +63,7 @@ public class TgBotRecordService implements TgBotService {
 
     private final UserItemService userItemService;
     private final UserCalendarService userCalendarService;
+    private final ClientService clientService;
 
     /**
      * Webhook process.
@@ -153,7 +157,8 @@ public class TgBotRecordService implements TgBotService {
                                              Long.valueOf(year),
                                              Long.valueOf(month),
                                              Long.valueOf(day),
-                                             keyboard)) {
+                                             keyboard,
+                                             webhookRequest.getChatId())) {
                     answer = CALENDAR_EMPTY_TIME_TITLE;
                 }
 
@@ -305,9 +310,10 @@ public class TgBotRecordService implements TgBotService {
      * @param month month
      * @param day day
      * @param keyboard keyboard
+     * @param tgId tg id client
      * @return true/false
      */
-    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard, String tgId) {
         Optional<UserCalendar> userCalendar = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
         if (userCalendar.isEmpty()) {
             return Boolean.FALSE;
@@ -318,13 +324,25 @@ public class TgBotRecordService implements TgBotService {
             return Boolean.FALSE;
         }
 
-        List<String> times = TgUtils.formatTimeCalendar(userCalendar.get(), userItem.get(), userItemService.getMinTimeUserItem(id));
+        Map<String, Pair<Long, Long>> times = TgUtils.formatTimeCalendar(userCalendar.get(), userItem.get(), userItemService.getMinTimeUserItem(id));
         if (times.isEmpty()) {
             return Boolean.FALSE;
         }
 
-        times.forEach(time -> keyboard.addRow(new InlineKeyboardButton(time).callbackData(
-                String.format("%s;%s;%s;%s", BOT_SELECT_TIME, userCalendar.get().getId(), userItemId, id))));
+        Long clientId = clientService.getClientIdOrCreate(tgId);
+        if (Objects.isNull(clientId)) {
+            return Boolean.FALSE;
+        }
+
+        times.forEach((key, value) -> keyboard.addRow(new InlineKeyboardButton(key).callbackData(
+                String.format("%s;%s;%s;%s;%s;%s;%s",
+                              BOT_SELECT_TIME,
+                              clientId,
+                              id,
+                              userItemId,
+                              userCalendar.get().getId(),
+                              value.getLeft(),
+                              value.getRight()))));
 
         return Boolean.TRUE;
     }
@@ -337,18 +355,17 @@ public class TgBotRecordService implements TgBotService {
      * @param bot bot
      */
     private void processBotItemAdditional(String itemId, InlineKeyboardMarkup keyboard, String chatId, TelegramBot bot) {
-        String answer = GROUP_EMPTY_TITLE;
-
         Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
         if (userItem.isPresent()) {
             Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
 
             if (group.isPresent()) {
-                answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName());
-                answer += String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName());
-                answer += String.format("\uD83D\uDD5B <b>Продолжительность:</b> %s \n\n",
-                                        formatTime(userItem.get().getHours().toString(), userItem.get().getMins().toString()));
-                answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+                String answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName())
+                                + String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName())
+                                + String.format("\uD83D\uDD5B <b>Продолжительность:</b> %s \n\n",
+                                                formatTime(userItem.get().getHours().toString(), userItem.get().getMins().toString()))
+                                + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+
                 keyboard.addRow(TgClientBotRecordButtons.createAddRecordButton(userItem.get()));
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEMS, group.get().getId())));
 

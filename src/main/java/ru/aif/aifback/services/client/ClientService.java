@@ -30,15 +30,33 @@ public class ClientService {
     }
 
     /**
+     * Get client id or create new.
+     * @param tgId tg id
+     * @return id
+     */
+    public Long getClientIdOrCreate(String tgId) {
+        Long id;
+
+        Optional<Client> client = getClientByTgId(tgId);
+        if (client.isEmpty()) {
+            id = createClient(tgId);
+        } else {
+            id = client.get().getId();
+        }
+
+        return id;
+    }
+
+    /**
      * Create client.
      * @param tgId tg id
      * @return client data
      */
-    public Optional<Long> createClient(String tgId) {
+    public Long createClient(String tgId) {
         try {
-            return Optional.of(clientRepository.addClient(tgId));
+            return clientRepository.addClient(tgId);
         } catch (Exception e) {
-            return Optional.empty();
+            return null;
         }
     }
 

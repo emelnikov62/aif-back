@@ -1,8 +1,9 @@
 package ru.aif.aifback.services.tg.utils;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.Keyboard;
@@ -83,7 +84,8 @@ public final class TgUtils {
      * @param minTimeUserItem min time user item
      * @return times
      */
-    public static List<String> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem, Long minTimeUserItem) {
-        return Collections.emptyList();
+    public static Map<String, Pair<Long, Long>> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem, Long minTimeUserItem) {
+        Long userItemTime = userItem.getHours() * 60L + userItem.getMins();
+        return Collections.emptyMap();
     }
 }
