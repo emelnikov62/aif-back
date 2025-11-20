@@ -110,8 +110,8 @@
 
 .modal-window {
     min-height: 200px;
-    width: fit-content;
-    height: fit-content;
+    width: auto;
+    height: auto;
 }
 
 .edit-faq-window {
