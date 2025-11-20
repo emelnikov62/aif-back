@@ -10,6 +10,7 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_EMPTY_
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_CREATE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_DELETE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_SELECT;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BUY_BOT;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS;
@@ -107,6 +108,11 @@ public class TgBotAdminService implements TgBotService {
                 || webhookRequest.getText().contains(BOT_DELETE)
                 || webhookRequest.getText().contains(BOT_CREATE)) {
                 answer = processUserBot(webhookRequest.getChatId(), webhookRequest.getText(), keyboard);
+                keyboard.addRow(TgAdminBotButtons.createBackButton(BACK_TO_MAIN_MENU));
+            }
+
+            if (webhookRequest.getText().contains(BOT_STATS)) {
+                answer = MENU_TITLE;
                 keyboard.addRow(TgAdminBotButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
