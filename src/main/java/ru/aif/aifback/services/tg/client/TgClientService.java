@@ -140,7 +140,7 @@ public class TgClientService implements TgService {
                                                                                                              userItem.get().getMins().toString()));
                         answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
                         keyboard.addRow(TgClientButtons.createAddRecordButton(userItem.get()));
-                        keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_GROUPS_MENU));
+                        keyboard.addRow(TgClientButtons.createBackButton(BACK_TO_ITEMS_MENU));
 
                         TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
                                           Base64.getDecoder().decode(userItem.get().getFileData()),
