@@ -263,9 +263,9 @@ public class TgBotRecordService implements TgBotService {
         int nextYear = currentYear + 1;
 
         keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear)).callbackData(
-                String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)));
-        keyboard.addRow(new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
-                String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
+                                String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)),
+                        new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
+                                String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
     }
 
     /**
@@ -299,9 +299,6 @@ public class TgBotRecordService implements TgBotService {
         if (!btns.isEmpty()) {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
-
-        //        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(TgUtils.getMonthByNumber(month)).callbackData(
-        //                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, userItemId))));
     }
 
     /**
@@ -336,9 +333,6 @@ public class TgBotRecordService implements TgBotService {
         if (!btns.isEmpty()) {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
-
-        //        days.forEach(day -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(day)).callbackData(
-        //                String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, userItemId))));
     }
 
     /**
