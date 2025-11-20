@@ -28,4 +28,10 @@ public class Client {
     public Client(String tgId) {
         this.tgId = tgId;
     }
+
+    public Client(String tgId, boolean active, LocalDateTime created) {
+        this.tgId = tgId;
+        this.active = active;
+        this.created = created;
+    }
 }

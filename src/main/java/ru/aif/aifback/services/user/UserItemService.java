@@ -2,6 +2,7 @@ package ru.aif.aifback.services.user;
 
 import static ru.aif.aifback.constants.Constants.MIN_TIME_ITEM;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -164,8 +165,10 @@ public class UserItemService {
      */
     public Boolean addUserGroupItem(UserItemRequest userItemRequest) {
         try {
-            Long id = userItemGroupRepository.addUserGroupItem(userItemRequest.getName(), userItemRequest.getId());
-            return Objects.isNull(id) ? Boolean.FALSE : Boolean.TRUE;
+            UserItemGroup userItemGroup = new UserItemGroup(userItemRequest.getId(), userItemRequest.getName(), Boolean.FALSE, LocalDateTime.now());
+            userItemGroupRepository.save(userItemGroup);
+
+            return Objects.isNull(userItemGroup.getId()) ? Boolean.FALSE : Boolean.TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Boolean.FALSE;
@@ -179,5 +182,15 @@ public class UserItemService {
      */
     public Long getMinTimeUserItem(Long userBotId) {
         return userItemRepository.findMinimumItemTime(userBotId).orElse(MIN_TIME_ITEM);
+    }
+
+    /**
+     * Find all user items by user staff.
+     * @param aifUserStaffId user staff id
+     * @param aifUserBotId user bot id
+     * @return user items
+     */
+    public List<UserItem> findAllByUserStaff(Long aifUserStaffId, Long aifUserBotId) {
+        return userItemRepository.findAllByUserStaff(aifUserBotId, aifUserStaffId);
     }
 }

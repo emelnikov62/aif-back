@@ -28,4 +28,10 @@ public class User {
     public User(String tgId) {
         this.tgId = tgId;
     }
+
+    public User(String tgId, boolean active, LocalDateTime created) {
+        this.tgId = tgId;
+        this.active = active;
+        this.created = created;
+    }
 }

@@ -11,9 +11,6 @@ create table if not exists aif_user_items (
     created         timestamp default now() not null
 );
 
-alter table aif_user_items
-add if not exists file_data bytea;
-alter table aif_user_items
-add if not exists aif_user_item_group_id bigint not null
-    constraint aif_user_items_item_groups_fl references aif_user_item_groups;
+alter table aif_user_items add if not exists file_data bytea;
+alter table aif_user_items add if not exists aif_user_item_group_id bigint not null constraint aif_user_items_item_groups_fl references aif_user_item_groups;
 alter table aif_user_items drop if exists aif_user_bot_id;

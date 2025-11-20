@@ -28,7 +28,7 @@ $(document).ready(function () {
                     name: name
                 }),
                 complete: (data) => {
-                    if (data) {
+                    if (data.responseText === 'true') {
                         showAlert('success', 'Группа добавлена');
                         getUserItemGroups(id);
                     } else {
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 data: formData,
                 dataType: 'multipart/form-data',
                 complete: (data) => {
-                    if (data) {
+                    if (data.responseText === 'true') {
                         showAlert('success', 'Товар/услуга добавлена');
                         getUserItemGroups($('#bot_id').val());
                     } else {
@@ -316,7 +316,7 @@ function changeUserItemGroupActive(group, id) {
                     active: group.active ? false : true
                 }),
                 complete: (data) => {
-                    if (data) {
+                    if (data.responseText === 'true') {
                         showAlert('success', 'Группа изменена');
                         getUserItemGroups(id);
                     } else {
@@ -338,7 +338,7 @@ function changeUserItemActive(item, id) {
                     active: item.active ? false : true
                 }),
                 complete: (data) => {
-                    if (data) {
+                    if (data.responseText === 'true') {
                         showAlert('success', 'Товар/услуга изменена');
                         getUserItemGroups(id);
                     } else {

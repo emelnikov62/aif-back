@@ -26,16 +26,6 @@ public interface UserBotRepository extends CrudRepository<UserBot, Long> {
     List<UserBot> findAllByAifUserId(Long id);
 
     /**
-     * Add user bot.
-     * @param userId user id
-     * @param botId bot id
-     * @return id
-     */
-    @Query(value = "insert into aif_user_bots(aif_user_id, aif_bot_id) values(:user_id, :bot_id)")
-    @Modifying
-    Long addUserBot(@Param("user_id") Long userId, @Param("bot_id") Long botId);
-
-    /**
      * Set token bot.
      * @param id id
      * @param token token

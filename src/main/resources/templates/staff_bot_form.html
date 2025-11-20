@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Специалисты</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/adaptive.css}" href="/static/css/adaptive.css">
+    <link rel="stylesheet" th:href="@{/css/noty.css}" href="/static/css/noty.css">
+    <link rel="stylesheet" th:href="@{/css/loading.css}" href="/static/css/loading.css">
+    <script src="/static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <script src="/static/js/script.js" th:src="@{/js/script.js}"></script>
+    <script src="/static/js/staff.js" th:src="@{/js/staff.js}"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="full-width">
+<div class="main-root main gradient-bs full-width full-height flex gap-10 flex-column align-items-center justify-start padding-20">
+    <div class="flex flex-column gap-10 full-width align-items-start justify-center">
+        <div class="flex flex-column gap-10 full-width align-items-center justify-center">
+            <span class="main orange fs-24 text-center">AIF</span>
+            <span class="main fs-20 text-center">Специалисты</span>
+        </div>
+        <div class="flex flex-row align-items-center justify-space-between full-width">
+            <div class="add-staff-btn button gap-5 full-width flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-fresh-block">
+                Добавить специалиста
+            </div>
+        </div>
+        <div class="staff-form hide-block flex flex-column gap-10 padding-10 full-width align-items-center justify-center back block back-static opacity-full">
+            <div>
+                <div class="flex flex-row full-width align-items-center justify-center main fs-20">
+                    Добавление специалиста
+                </div>
+            </div>
+            <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 surname-staff"
+                   placeholder="Фамилия"/>
+            <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 name-staff"
+                   placeholder="Имя"/>
+            <input type="text" class="input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 third-staff"
+                   placeholder="Отчество"/>
+            <div class="flex full-width flex-column align-items-start justify-center gap-10">
+                <div class="flex flex-row full-width align-items-center justify-space-between orange border-dashed padding-10">
+                    <span>Выполняемые услуги</span>
+                    <div class="hide-block clear-selected-services block back back-static gradient-bs cursor main padding-10">Отменить</div>
+                    <div class="flex align-items-center justify-end flex-row gap-10">
+                        <span>Выбрано: </span>
+                        <div class="main selected-services-count">0</div>
+                    </div>
+                </div>
+                <div class="flex full-width align-items-center justify-center flex-column gap-10">
+                    <div class="flex flex-column full-width align-items-center justify-center gap-5"
+                         th:each="group : ${groups}">
+                        <div onclick="expandGroup(this)" th:data="'group-' + ${group.id}"
+                             class="flex flex-row full-width align-items-center justify-space-between back block back-static border-dashed cursor padding-10 groups">
+                            <span th:text="${group.getName()}"/>
+                            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" th:data="'group-' + ${group.id}">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                </g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
+                                          stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <div th:class="'hide-block flex full-width gap-5 wrap group-items group-' + ${group.id}">
+                            <div class="item-elem flex-1 flex padding-10 border-dashed align-items-center justify-center cursor min-width-180"
+                                 th:each="item : ${group.getItems()}"
+                                 th:data="'item-id-' + ${item.id}"
+                                 th:data-id="${item.id}">
+                                <span th:text="${item.name}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
+                <div class="save-staff-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
+                    Добавить
+                </div>
+                <div class="cancel-staff-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
+                    Отменить
+                </div>
+            </div>
+        </div>
+        <div class="staff-item-form hide-block flex flex-column gap-10 padding-10 full-width align-items-center justify-center back block back-static opacity-full">
+            <div>
+                <div class="flex flex-row full-width align-items-center justify-center main fs-20">
+                    Добавление услуги
+                </div>
+            </div>
+            <div class="flex full-width flex-column align-items-start justify-center gap-10">
+                <div class="flex flex-row full-width align-items-center justify-space-between orange border-dashed padding-10">
+                    <span>Выполняемые услуги</span>
+                    <div class="hide-block clear-selected-services block back back-static gradient-bs cursor main padding-10">Отменить</div>
+                    <div class="flex align-items-center justify-end flex-row gap-10">
+                        <span>Выбрано: </span>
+                        <div class="main selected-services-count">0</div>
+                    </div>
+                </div>
+                <div class="flex full-width align-items-center justify-center flex-column gap-10">
+                    <div class="flex flex-column full-width align-items-center justify-center gap-5"
+                         th:each="group : ${groups}">
+                        <div onclick="expandGroup(this)" th:data="'group-' + ${group.id}"
+                             class="flex flex-row full-width align-items-center justify-space-between back block back-static border-dashed cursor padding-10 groups">
+                            <span th:text="${group.getName()}"/>
+                            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" th:data="'group-' + ${group.id}">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                </g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
+                                          stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <div th:class="'hide-block flex full-width gap-5 wrap group-items group-' + ${group.id}">
+                            <div class="item-elem flex-1 flex padding-10 border-dashed align-items-center justify-center cursor min-width-180"
+                                 th:each="item : ${group.getItems()}"
+                                 th:data="'item-id-' + ${item.id}"
+                                 th:data-id="${item.id}">
+                                <span th:text="${item.name}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
+                <div class="save-staff-item-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
+                    Добавить
+                </div>
+                <div class="cancel-staff-item-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-r">
+                    Отменить
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="user-staffs-list flex flex-column gap-10 align-items-center justify-start full-width overflow-y"></div>
+    <input type="hidden" th:value="${id}" id="bot_id"/>
+</div>
+<div class="loader-container full-width full-height flex-column align-items-center justify-center flex hide-block">
+    <span class="loader"></span>
+</div>
+</body>
+</html>

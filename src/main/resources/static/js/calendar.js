@@ -77,7 +77,6 @@ $(document).ready(function () {
                 });
             }
         });
-        console.log(selected);
     });
 
     $('#cancel_select_button').click(() => {
@@ -186,7 +185,7 @@ function confirmEditTime() {
                 minsEnd: minsEnd
             }),
             complete: (data) => {
-                if (data) {
+                if (data.responseText === 'true') {
                     showAlert('success', 'Календарь сохранен');
                     fillCalendar(today);
                 } else {
@@ -214,7 +213,7 @@ function deleteTime() {
                 ids: selected.filter(s => s.id !== 'null').map(s => s.id)
             }),
             complete: (data) => {
-                if (data) {
+                if (data.responseText === 'true') {
                     selected = [];
                     deleteSelected();
 
@@ -325,7 +324,7 @@ function confirmAddTime() {
                 minsEnd: minsEnd
             }),
             complete: (data) => {
-                if (data) {
+                if (data.responseText === 'true') {
                     showAlert('success', 'Календарь сохранен');
                     fillCalendar(today);
                 } else {

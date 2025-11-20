@@ -109,4 +109,25 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
                    "  order by times.time" +
                    "  limit 1")
     Optional<Long> findMinimumItemTime(@Param("aif_user_bot_id") Long aifUserBotId);
+
+    /**
+     * Find all user items by user staff.
+     * @param aifUserBotId user bot id
+     * @param aifUserStaffId user staff id
+     * @return user items
+     */
+    @Query(value = "select asi.id, " +
+                   "       a.name," +
+                   "       a.hours," +
+                   "       a.mins," +
+                   "       a.amount," +
+                   "       asi.active," +
+                   "       convert_from(a.file_data, 'UTF-8') as file_data," +
+                   "       a.created," +
+                   "       a.aif_user_item_group_id" +
+                   "  from aif_user_items a" +
+                   "  join aif_user_item_groups ag on ag.id = a.aif_user_item_group_id" +
+                   "  join aif_user_staff_items asi on asi.aif_user_item_id = a.id" +
+                   " where ag.aif_user_bot_id = :aif_user_bot_id and asi.aif_user_staff_id = :aif_user_staff_id")
+    List<UserItem> findAllByUserStaff(@Param("aif_user_bot_id") Long aifUserBotId, @Param("aif_user_staff_id") Long aifUserStaffId);
 }

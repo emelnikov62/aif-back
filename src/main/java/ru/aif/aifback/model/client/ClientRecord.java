@@ -30,4 +30,16 @@ public class ClientRecord {
     private String status;
     private LocalDateTime created;
 
+    public ClientRecord(Long aifClientId, Long aifUserBotId, Long aifUserItemId, Long aifUserCalendarId, Long hours, Long mins, String status,
+                        LocalDateTime created) {
+        this.aifClientId = aifClientId;
+        this.aifUserBotId = aifUserBotId;
+        this.aifUserItemId = aifUserItemId;
+        this.aifUserCalendarId = aifUserCalendarId;
+        this.hours = hours;
+        this.mins = mins;
+        this.status = status;
+        this.created = created;
+    }
+
 }

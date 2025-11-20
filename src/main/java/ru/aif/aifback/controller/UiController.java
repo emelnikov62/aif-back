@@ -18,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
-import ru.aif.aifback.model.user.UserCalendar;
-import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.model.requests.UserCalendarRequest;
 import ru.aif.aifback.model.requests.UserItemRequest;
+import ru.aif.aifback.model.user.UserCalendar;
+import ru.aif.aifback.model.user.UserItemGroup;
+import ru.aif.aifback.model.user.UserStaff;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
+import ru.aif.aifback.services.user.UserStaffService;
 
 /**
  * UI controller.
@@ -36,6 +38,7 @@ import ru.aif.aifback.services.user.UserItemService;
 public class UiController {
 
     private final UserItemService userItemService;
+    private final UserStaffService userStaffService;
     private final UserCalendarService userCalendarService;
 
     /**
@@ -72,6 +75,21 @@ public class UiController {
     public String itemsForm(@RequestParam(name = "id") String id, Model model) {
         model.addAttribute("id", id);
         return "items_bot_form";
+    }
+
+    /**
+     * Admin staff bot form.
+     * @param id id
+     * @param model model
+     * @return true/false
+     */
+    @GetMapping(value = "/staff-bot-form")
+    public String staffForm(@RequestParam(name = "id") String id, Model model) {
+        List<UserItemGroup> groups = userItemService.getUserItemGroups(Long.valueOf(id));
+        model.addAttribute("id", id);
+        model.addAttribute("groups", groups);
+
+        return "staff_bot_form";
     }
 
     /**
@@ -204,4 +222,45 @@ public class UiController {
     public ResponseEntity<Boolean> editUserCalendar(@RequestBody UserCalendarRequest userCalendarRequest) {
         return ResponseEntity.ok(userCalendarService.editDays(userCalendarRequest));
     }
+
+    /**
+     * Add user staff.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/add-user-staff", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> addUserStaff(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userStaffService.addUserStaff(userItemRequest));
+    }
+
+    /**
+     * Get user staffs.
+     * @param id user bot id
+     * @return user staffs
+     */
+    @GetMapping(value = "/list-user-staffs", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserStaff>> getUserCalendar(@RequestParam(name = "id") Long id) {
+        return ResponseEntity.ok(userStaffService.getUserStaffs(id));
+    }
+
+    /**
+     * Update user staff item active.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/update-user-staff-item-active", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateUserStaffItemActive(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userStaffService.updateUserStaffItemActive(userItemRequest.getId(), userItemRequest.getActive()));
+    }
+
+    /**
+     * Update user staff active.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/update-user-staff-active", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateUserStaffActive(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userStaffService.updateUserStaffActive(userItemRequest.getId(), userItemRequest.getActive()));
+    }
+
 }

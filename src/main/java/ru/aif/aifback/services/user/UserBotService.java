@@ -1,10 +1,9 @@
 package ru.aif.aifback.services.user;
 
-import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_SUCCESS_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_ERROR_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_SUCCESS_ANSWER;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,7 +60,7 @@ public class UserBotService {
     public List<UserBot> getUserBotsByTgId(String tgId) {
         List<UserBot> userBots = new ArrayList<>();
 
-        userService.getUserByTgId(tgId).ifPresent(user -> {
+        userService.getUserByTgIdOrCreate(tgId).ifPresent(user -> {
             userBots.addAll(userBotRepository.findAllByAifUserId(user.getId()));
 
             if (!userBots.isEmpty()) {
@@ -94,28 +93,23 @@ public class UserBotService {
      * @param botId bot id
      * @return answer
      */
-    public String createUserBot(String tgId, Long botId) {
+    public Boolean createUserBot(String tgId, Long botId) {
         try {
-            Optional<User> user = userService.getUserByTgId(tgId);
-            Long userId = null;
-
+            Optional<User> user = userService.getUserByTgIdOrCreate(tgId);
             if (user.isEmpty()) {
-                Optional<Long> saved = userService.createUser(tgId);
-                if (saved.isPresent()) {
-                    userId = saved.get();
-                }
-            } else {
-                userId = user.get().getId();
+                return Boolean.FALSE;
             }
 
-            if (Objects.isNull(userId)) {
-                throw new Exception(CREATE_BOT_ERROR_ANSWER);
-            }
+            UserBot userBot = new UserBot(user.get().getId(),
+                                          botId,
+                                          Boolean.FALSE,
+                                          null,
+                                          LocalDateTime.now());
+            userBotRepository.save(userBot);
 
-            userBotRepository.addUserBot(userId, botId);
-            return CREATE_BOT_SUCCESS_ANSWER;
+            return Objects.nonNull(userBot.getId()) ? Boolean.TRUE : Boolean.FALSE;
         } catch (Exception e) {
-            return CREATE_BOT_ERROR_ANSWER;
+            return Boolean.FALSE;
         }
     }
 

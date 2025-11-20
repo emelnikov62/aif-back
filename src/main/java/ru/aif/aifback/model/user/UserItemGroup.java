@@ -40,4 +40,11 @@ public class UserItemGroup {
         this.aifUserBotId = aifUserBotId;
     }
 
+    public UserItemGroup(Long aifUserBotId, String name, boolean active, LocalDateTime created) {
+        this.name = name;
+        this.aifUserBotId = aifUserBotId;
+        this.active = active;
+        this.created = created;
+    }
+
 }

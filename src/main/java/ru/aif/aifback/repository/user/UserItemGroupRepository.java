@@ -18,16 +18,6 @@ import ru.aif.aifback.model.user.UserItemGroup;
 public interface UserItemGroupRepository extends CrudRepository<UserItemGroup, Long> {
 
     /**
-     * Add user group item.
-     * @param name name
-     * @param aifUserBotId user bot id
-     * @return id
-     */
-    @Query(value = "insert into aif_user_item_groups(name, aif_user_bot_id) values(:name, :aif_user_bot_id)")
-    @Modifying
-    Long addUserGroupItem(@Param("name") String name, @Param("aif_user_bot_id") Long aifUserBotId);
-
-    /**
      * Find all groups by bot id.
      * @param aifUserBotId bot id
      * @return list groups

@@ -12,6 +12,8 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_DELETE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_SELECT;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BUY_BOT;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_SUCCESS_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
@@ -143,7 +145,11 @@ public class TgBotAdminService implements TgBotService {
 
         if (text.contains(BOT_CREATE)) {
             Long botId = Long.valueOf(text.split(DELIMITER)[1]);
-            answer = userBotService.createUserBot(id, botId);
+            if (userBotService.createUserBot(id, botId)) {
+                answer = CREATE_BOT_SUCCESS_ANSWER;
+            } else {
+                answer = CREATE_BOT_ERROR_ANSWER;
+            }
         }
 
         List<UserBot> userBots = userBotService.getUserBotsByTgId(id);

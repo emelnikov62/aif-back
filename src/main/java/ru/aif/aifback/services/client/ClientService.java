@@ -1,5 +1,6 @@
 package ru.aif.aifback.services.client;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -54,7 +55,10 @@ public class ClientService {
      */
     public Long createClient(String tgId) {
         try {
-            return clientRepository.addClient(tgId);
+            Client client = new Client(tgId, Boolean.TRUE, LocalDateTime.now());
+            clientRepository.save(client);
+
+            return client.getId();
         } catch (Exception e) {
             return null;
         }

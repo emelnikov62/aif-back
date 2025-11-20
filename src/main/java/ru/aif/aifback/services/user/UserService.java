@@ -21,12 +21,18 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * Get user by tg id.
+     * Get user by tg id or create new.
      * @param tgId tg id
      * @return user data
      */
-    public Optional<User> getUserByTgId(String tgId) {
-        return userRepository.findByTgId(tgId);
+    public Optional<User> getUserByTgIdOrCreate(String tgId) {
+        Optional<User> user = userRepository.findByTgId(tgId);
+        if (user.isPresent()) {
+            return user;
+        }
+
+        return createUser(tgId).flatMap(userRepository::findById);
+
     }
 
     /**
@@ -36,7 +42,10 @@ public class UserService {
      */
     public Optional<Long> createUser(String tgId) {
         try {
-            return Optional.of(userRepository.addUser(tgId));
+            User user = new User(tgId);
+            userRepository.save(user);
+
+            return Optional.of(user.getId());
         } catch (Exception e) {
             return Optional.empty();
         }

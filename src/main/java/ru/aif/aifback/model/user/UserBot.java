@@ -44,4 +44,12 @@ public class UserBot {
         this.aifUserId = aifUserId;
         this.aifBotId = aifBotId;
     }
+
+    public UserBot(Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created) {
+        this.aifUserId = aifUserId;
+        this.aifBotId = aifBotId;
+        this.active = active;
+        this.token = token;
+        this.created = created;
+    }
 }

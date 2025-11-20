@@ -1,5 +1,6 @@
 package ru.aif.aifback.services.client;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
+import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 
 /**
  * Client record API service.
@@ -41,7 +43,17 @@ public class ClientRecordService {
      */
     public Optional<Long> addClientRecord(Long clientId, Long userBotId, Long userItemId, Long userCalendarId, Long hours, Long mins) {
         try {
-            return Optional.of(clientRecordRepository.addClientRecord(clientId, userBotId, userItemId, userCalendarId, hours, mins));
+            ClientRecord clientRecord = new ClientRecord(clientId,
+                                                         userBotId,
+                                                         userItemId,
+                                                         userCalendarId,
+                                                         hours,
+                                                         mins,
+                                                         TgClientRecordType.ACTIVE.getType(),
+                                                         LocalDateTime.now());
+            clientRecordRepository.save(clientRecord);
+
+            return Optional.of(clientRecord.getId());
         } catch (Exception e) {
             return Optional.empty();
         }
