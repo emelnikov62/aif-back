@@ -4,7 +4,6 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.TgAdminButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BACK_TO_GROUPS_MENU;
-import static ru.aif.aifback.services.tg.client.TgClientButtons.BACK_TO_ITEMS_MENU;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.tg.client.TgClientButtons.BOT_GROUP;
@@ -117,7 +116,7 @@ public class TgClientService implements TgService {
                 keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_MAIN_MENU));
             }
 
-            if (webhookRequest.getText().contains(BOT_ITEMS) || Objects.equals(webhookRequest.getText(), BACK_TO_ITEMS_MENU)) {
+            if (webhookRequest.getText().contains(BOT_ITEMS)) {
                 answer = MENU_TITLE;
                 String groupId = webhookRequest.getText().split(DELIMITER)[1];
                 if (!processBotGroupItems(Long.valueOf(groupId), keyboard)) {
@@ -140,7 +139,7 @@ public class TgClientService implements TgService {
                                                                                                              userItem.get().getMins().toString()));
                         answer += String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
                         keyboard.addRow(TgClientButtons.createAddRecordButton(userItem.get()));
-                        keyboard.addRow(TgClientButtons.createBackButton(BACK_TO_ITEMS_MENU));
+                        keyboard.addRow(TgClientButtons.createBackButton(String.format("%s:%s", BOT_ITEMS, group.get().getId())));
 
                         TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()),
                                           Base64.getDecoder().decode(userItem.get().getFileData()),
@@ -153,7 +152,11 @@ public class TgClientService implements TgService {
             }
 
             if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
-                keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_ITEMS_MENU));
+                String itemId = webhookRequest.getText().split(DELIMITER)[1];
+                Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
+                if (userItem.isPresent()) {
+                    keyboard.addRow(TgClientButtons.createBackButton(String.format("%s:%s", BOT_ITEMS, userItem.get().getAifUserItemGroupId())));
+                }
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
