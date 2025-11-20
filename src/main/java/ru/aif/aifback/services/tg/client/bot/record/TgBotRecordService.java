@@ -144,14 +144,11 @@ public class TgBotRecordService implements TgBotService {
             if (webhookRequest.getText().contains(BOT_SELECT_YEAR)) {
                 String year = webhookRequest.getText().split(DELIMITER)[1];
                 String itemId = webhookRequest.getText().split(DELIMITER)[2];
-                Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
-                if (userItem.isPresent()) {
-                    answer = CALENDAR_SELECT_MONTH_TITLE;
-                    processBotCalendarMonths(userItem.get().getId(), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
+                answer = CALENDAR_SELECT_MONTH_TITLE;
+                processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
 
-                    keyboard.addRow(
-                            TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, userItem.get().getId())));
-                }
+                keyboard.addRow(
+                        TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
@@ -266,10 +263,8 @@ public class TgBotRecordService implements TgBotService {
             return;
         }
 
-        months.forEach(month -> {
-            keyboard.addRow(new InlineKeyboardButton(String.valueOf(month.getMonth())).callbackData(
-                    String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, TgUtils.getMonthByNumber(month.getMonth()), userItemId, month.getId())));
-        });
+        months.forEach(month -> keyboard.addRow(new InlineKeyboardButton(String.valueOf(month.getMonth())).callbackData(
+                String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, TgUtils.getMonthByNumber(month.getMonth()), userItemId, month.getId()))));
     }
 
 }
