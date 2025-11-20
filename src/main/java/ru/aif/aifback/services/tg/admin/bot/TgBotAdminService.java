@@ -144,11 +144,12 @@ public class TgBotAdminService implements TgBotService {
         List<UserBot> userBots = userBotService.getUserBotsByTgId(id);
         if (!userBots.isEmpty()) {
             userBots.forEach(userBot -> {
-                keyboard.addRow(new InlineKeyboardButton(
-                        String.format("%s %s (ID: %s)",
-                                      (userBot.isActive() && Objects.nonNull(userBot.getToken()) ? "✅" : "❌"),
-                                      userBot.getBot().getDescription(),
-                                      userBot.getId())).callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
+                keyboard.addRow(new InlineKeyboardButton(String.format("%s %s (ID: %s) %s",
+                                                                       getBotIconByType(userBot.getBot().getType()),
+                                                                       userBot.getBot().getDescription(),
+                                                                       userBot.getId(),
+                                                                       (userBot.isActive() && Objects.nonNull(userBot.getToken()) ? "✅" : "❌")))
+                                        .callbackData(String.format("%s;%s", BOT_SELECT, userBot.getId())));
             });
 
             answer = Objects.isNull(answer) ? MY_BOTS_TITLE : answer;
