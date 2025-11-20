@@ -1,4 +1,6 @@
-package ru.aif.aifback.services.tg;
+package ru.aif.aifback.services.tg.utils;
+
+import java.util.Map;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.Keyboard;
@@ -13,6 +15,21 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public final class TgUtils {
+
+    public static final Map<Long, String> MONTHS = Map.ofEntries(
+            Map.entry(1L, "Январь"),
+            Map.entry(2L, "Февраль"),
+            Map.entry(3L, "Март"),
+            Map.entry(4L, "Апрель"),
+            Map.entry(5L, "Май"),
+            Map.entry(6L, "Июнь"),
+            Map.entry(7L, "Июль"),
+            Map.entry(8L, "Август"),
+            Map.entry(9L, "Сентябрь"),
+            Map.entry(10L, "Октябрь"),
+            Map.entry(11L, "Ноябрь"),
+            Map.entry(12L, "Декабрь")
+    );
 
     /**
      * Send photo.
@@ -44,5 +61,14 @@ public final class TgUtils {
      */
     public static void sendMessage(Long id, String text, Keyboard keyboard, TelegramBot bot) {
         log.info("{}", bot.execute(new SendMessage(id, text).parseMode(ParseMode.HTML).replyMarkup(keyboard)));
+    }
+
+    /**
+     * Get month by number.
+     * @param number number
+     * @return month
+     */
+    public static String getMonthByNumber(Long number) {
+        return MONTHS.get(number);
     }
 }

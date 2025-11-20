@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.requests.UserCalendarRequest;
+import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.repository.user.UserCalendarRepository;
 
 /**
@@ -93,6 +93,16 @@ public class UserCalendarService {
         } catch (Exception e) {
             return Boolean.FALSE;
         }
+    }
+
+    /**
+     * Find all by year.
+     * @param year year
+     * @param userBotId user bot id
+     * @return user calendar
+     */
+    public List<UserCalendar> findAllByYear(Long year, Long userBotId) {
+        return userCalendarRepository.findAllByYear(year, userBotId);
     }
 
 }

@@ -1,4 +1,4 @@
-package ru.aif.aifback.services.tg.admin;
+package ru.aif.aifback.services.tg.admin.bot;
 
 import com.pengrad.telegrambot.model.WebAppInfo;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
  * TG admin buttons.
  * @author emelnikov
  */
-public final class TgAdminButtons {
+public final class TgAdminBotButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
     public static final String SELECT_BOT_TITLE = "✅ Выберите бота";

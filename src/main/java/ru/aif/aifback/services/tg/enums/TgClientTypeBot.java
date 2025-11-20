@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TgClientTypeBot {
+
+    BOT_ADMIN("admin"),
     BOT_RECORD("recording_clients");
 
     private final String type;
+
 }

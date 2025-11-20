@@ -1,9 +1,9 @@
 package ru.aif.aifback.services.user;
 
-import static ru.aif.aifback.services.tg.admin.TgAdminButtons.CREATE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.admin.TgAdminButtons.CREATE_BOT_SUCCESS_ANSWER;
-import static ru.aif.aifback.services.tg.admin.TgAdminButtons.DELETE_BOT_ERROR_ANSWER;
-import static ru.aif.aifback.services.tg.admin.TgAdminButtons.DELETE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.CREATE_BOT_SUCCESS_ANSWER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_ERROR_ANSWER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_SUCCESS_ANSWER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.dictionary.Bot;
 import ru.aif.aifback.model.user.User;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.repository.user.UserBotRepository;
@@ -38,7 +39,18 @@ public class UserBotService {
      * @return user bot data
      */
     public Optional<UserBot> getUserBot(Long id) {
-        return userBotRepository.findById(id);
+        Optional<UserBot> userBot = userBotRepository.findById(id);
+        if (userBot.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<Bot> botType = botService.findById(userBot.get().getAifBotId());
+        if (botType.isEmpty()) {
+            return Optional.empty();
+        }
+
+        userBot.get().setBot(botType.get());
+        return userBot;
     }
 
     /**

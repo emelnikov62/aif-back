@@ -1,4 +1,4 @@
-package ru.aif.aifback.services.tg.client;
+package ru.aif.aifback.services.tg.client.bot.record;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
  * TG client buttons.
  * @author emelnikov
  */
-public final class TgClientButtons {
+public final class TgClientBotRecordButtons {
 
     public static final String MENU_TITLE = "✅ Меню";
     public static final String SERVICE_TITLE = "✅ Товар/Услуга";
@@ -25,6 +25,8 @@ public final class TgClientButtons {
     public static final String GROUP_TITLE = "\uD83D\uDD38 %s";
     public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
     public static final String ADD_RECORD_TITLE = "\uD83D\uDCC6 Записаться";
+    public static final String CALENDAR_SELECT_YEAR_TITLE = "\uD83D\uDCC6 Выберите год";
+    public static final String CALENDAR_SELECT_MONTH_TITLE = "\uD83D\uDCC6 Выберите месяц";
 
     public final static String BOT_ACTIVE = "bot_active";
     public final static String BOT_HISTORY = "bot_history";
@@ -34,7 +36,8 @@ public final class TgClientButtons {
     public final static String BOT_ITEM_ADDITIONAL = "bot_item_additional";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
     public static final String BACK_TO_GROUPS_MENU = "back_to_groups_menu";
-    public static final String BACK_TO_ITEMS_MENU = "back_to_items_menu";
+    public static final String BOT_SELECT_YEAR = "back_select_year";
+    public static final String BOT_SELECT_MONTH = "back_select_month";
     public static final String BOT_ADD_RECORD = "back_add_record";
 
     /**
