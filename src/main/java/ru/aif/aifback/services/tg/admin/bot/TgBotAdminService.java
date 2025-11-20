@@ -94,7 +94,6 @@ public class TgBotAdminService implements TgBotService {
 
             if (webhookRequest.getText().contains(BOT_SELECT)) {
                 answer = processBotSelect(webhookRequest.getText(), keyboard);
-                keyboard.addRow(TgAdminBotButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BUY_BOT) || Objects.equals(webhookRequest.getText(), BACK_TO_BUY_BOTS_MENU)) {
@@ -210,10 +209,13 @@ public class TgBotAdminService implements TgBotService {
             keyboard.addRow(TgAdminBotButtons.createLinkBotButton(userBotId));
         } else {
             keyboard.addRow(TgAdminBotButtons.createSelectedBotMenu(userBotId));
-            keyboard.addRow(TgAdminBotButtons.createCalendarBotButton(userBotId));
+
+            if (Objects.equals(userBot.get().getBot().getType(), TgClientTypeBot.BOT_RECORD.getType())) {
+                keyboard.addRow(TgAdminBotButtons.createCalendarStaffBotButtons(userBotId));
+            }
         }
 
-        keyboard.addRow(TgAdminBotButtons.createDeleteBotButton(userBotId));
+        keyboard.addRow(TgAdminBotButtons.createDeleteBotButton(userBotId), TgAdminBotButtons.createBackButton(BACK_TO_MY_BOTS_MENU));
         return String.format("%s %s (ID: %s)",
                              getBotIconByType(userBot.get().getBot().getType()),
                              userBot.get().getBot().getDescription(),
