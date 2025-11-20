@@ -150,10 +150,10 @@ public class TgClientService implements TgService {
                         return;
                     }
                 }
+            }
 
-                if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
-                    keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_ITEMS_MENU));
-                }
+            if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
+                keyboard.addRow(TgClientButtons.createBackButton(TgClientButtons.BACK_TO_ITEMS_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
