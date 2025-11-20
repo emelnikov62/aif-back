@@ -29,8 +29,8 @@ function showAlert(type, message) {
 
 function showModal(caption, container, top, left, right, clElem) {
     var dlg = `` +
-        `<div class="layout-modal ${clElem}">` +
-        `    <div class="layout-modal-container gradient-main-block block modal-window" style="top: ${top ? top + 'px' : 'auto'}; left: ${left ? left + 'px' : 'auto'}; right: ${right ? right + 'px' : 'auto'}">` +
+        `<div class="layout-modal">` +
+        `    <div class="layout-modal-container gradient-main-block block modal-window ${clElem}" style="top: ${top ? top + 'px' : 'auto'}; left: ${left ? left + 'px' : 'auto'}; right: ${right ? right + 'px' : 'auto'}">` +
         `        <div class="layout-modal-header back-static block border-radius-header">` +
         `            <div class="layout-modal-header-title">${caption}</div>` +
         `            <div class="back back-static border-dashed gradient-cv flex flex-row align-items-center justify-center" onclick="closeModal()">` +
