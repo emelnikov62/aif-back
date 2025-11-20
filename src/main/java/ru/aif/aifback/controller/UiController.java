@@ -184,4 +184,24 @@ public class UiController {
                                                               @RequestParam(name = "year") Long year) {
         return ResponseEntity.ok(userCalendarService.getUserCalendar(id, month, year));
     }
+
+    /**
+     * Delete user calendar.
+     * @param userCalendarRequest userCalendarRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/delete-user-calendar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteUserCalendar(@RequestBody UserCalendarRequest userCalendarRequest) {
+        return ResponseEntity.ok(userCalendarService.deleteDays(userCalendarRequest));
+    }
+
+    /**
+     * Edit user calendar.
+     * @param userCalendarRequest userCalendarRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/edit-user-calendar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> editUserCalendar(@RequestBody UserCalendarRequest userCalendarRequest) {
+        return ResponseEntity.ok(userCalendarService.editDays(userCalendarRequest));
+    }
 }

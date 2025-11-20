@@ -61,4 +61,38 @@ public class UserCalendarService {
         }
     }
 
+    /**
+     * Delete days.
+     * @param userCalendarRequest user calendar data
+     * @return true/false
+     */
+    public Boolean deleteDays(UserCalendarRequest userCalendarRequest) {
+        try {
+            userCalendarRepository.deleteDays(userCalendarRequest.getIds(), userCalendarRequest.getId());
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Edit days.
+     * @param userCalendarRequest user calendar data
+     * @return true/false
+     */
+    public Boolean editDays(UserCalendarRequest userCalendarRequest) {
+        try {
+            userCalendarRequest.getIds().forEach(id -> {
+                userCalendarRepository.editDay(id,
+                                               userCalendarRequest.getHoursStart(),
+                                               userCalendarRequest.getMinsStart(),
+                                               userCalendarRequest.getHoursEnd(),
+                                               userCalendarRequest.getMinsEnd());
+            });
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+    }
+
 }

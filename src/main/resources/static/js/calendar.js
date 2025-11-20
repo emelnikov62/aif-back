@@ -48,7 +48,7 @@ $(document).ready(function () {
         selected = [];
         $('.day-container').each((elem) => {
             var dc = $($('.day-container')[elem]);
-            if (dc.attr('data-day')) {
+            if (dc.attr('data-day') && dc.attr('calendar-set') === 'false') {
                 dc.addClass('selected-day');
                 selected.push(dc.attr('data-day'));
             }
@@ -62,7 +62,9 @@ $(document).ready(function () {
         selected = [];
         $('.day-container').each((elem) => {
             var dc = $($('.day-container')[elem]);
-            if (dc.attr('data-day') && dc.attr('work-day') === 'true') {
+            if (dc.attr('data-day')
+                && dc.attr('work-day') === 'true'
+                && dc.attr('calendar-set') === 'false') {
                 dc.addClass('selected-day');
                 selected.push(dc.attr('data-day'));
             }
@@ -73,11 +75,150 @@ $(document).ready(function () {
         selected = [];
         deleteSelected();
     });
-
-    $('#add_time_button').click(() => {
-        addTimeDialog();
-    });
 });
+
+function editTimeDialog() {
+    var day = selected[0];
+    var hoursStart = $(`.hs-${day.day}`).text();
+    var minsStart = $(`.ms-${day.day}`).text();
+    var hoursEnd = $(`.he-${day.day}`).text();
+    var minsEnd = $(`.me-${day.day}`).text();
+
+    var dlgCnt = `` +
+        `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
+        `    <div class="flex flex-column flex-1 align-items-center gap-10 justify-start padding-10 fs-16">` +
+        `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
+        `            <div class="flex flex-row align-items-center justify-start full-width orange">Начало</div>` +
+        `            <div class="flex flex-row gap-10 full-width align-items-center justify-center times-block">` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" value="${hoursStart}" placeholder="" class="hours-start input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 gray fs-12">часов</div>` +
+        `                </div>` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" value="${minsStart}" placeholder="" class="mins-start input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 fs-12 gray">минут</div>` +
+        `                </div>` +
+        `            </div>` +
+        `        </div>` +
+        `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
+        `            <div class="flex flex-row align-items-center justify-start full-width orange">Окончание</div>` +
+        `            <div class="flex flex-row gap-10 full-width align-items-center justify-center times-block">` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" value="${hoursEnd}" placeholder="" class="hours-end input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 gray fs-12">часов</div>` +
+        `                </div>` +
+        `                <div class="align-items-center full-width justify-center relative flex flex-row align-items-center justify-center">` +
+        `                    <input type="number" value="${minsEnd}" placeholder="" class="mins-end input flex-1 full-width fs-16 back-static padding-left-right-60 input-skin-price height-40 border-radius-10"/>` +
+        `                    <div class="absolute left-10 fs-12 gray">минут</div>` +
+        `                </div>` +
+        `            </div>` +
+        `        </div>` +
+        `    </div>` +
+        `    <div class="flex flex-row gap-10 align-items-end justify-space-between full-width">` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-fresh-block" onclick="confirmEditTime()">Сохранить</div>` +
+        `        <div class="button gap-5 flex flex-row padding-10 back-static back block upper font-bold fs-16 border-[main-color] gradient-main-block" onclick="closeModal()">Отменить</div>` +
+        `    </div>` +
+        `</div>`;
+    showModal('Редактирование времени', dlgCnt, null, null, null);
+}
+
+function confirmEditTime() {
+    var hoursStart = $('.hours-start').val();
+    var minsStart = $('.mins-start').val();
+    var hoursEnd = $('.hours-end').val();
+    var minsEnd = $('.mins-end').val();
+
+    hoursStart = hoursStart ? parseInt(hoursStart) : null;
+    minsStart = minsStart ? parseInt(minsStart) : null;
+    hoursEnd = hoursEnd ? parseInt(hoursEnd) : null;
+    minsEnd = minsEnd ? parseInt(minsEnd) : null;
+
+    if (!hoursStart) {
+        showAlert('error', 'Введите время начала рабочего дня');
+        return;
+    }
+
+    if (!hoursEnd) {
+        showAlert('error', 'Введите время окончания рабочего дня');
+        return;
+    }
+
+    if (hoursStart > 23 || hoursEnd > 23 || hoursStart < 0 || hoursEnd < 0) {
+        showAlert('error', 'Неправильное значение часа');
+        return;
+    }
+
+    minsStart = minsStart ? minsStart : 0;
+    minsEnd = minsEnd ? minsEnd : 0;
+
+    if (minsStart > 59 || minsEnd > 59 || minsStart < 0 || minsEnd < 0) {
+        showAlert('error', 'Неправильное значение минут');
+        return;
+    }
+
+    if ((hoursStart === hoursEnd && minsStart > minsEnd) || (hoursStart > hoursEnd)) {
+        showAlert('error', 'Некорректный диапозон времени работы');
+        return;
+    }
+
+    toggleLoading();
+    var id = $('#bot_id').val();
+
+    $.ajax('/aif/admin/edit-user-calendar',
+        {
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id,
+                ids: selected.map(s => s.id),
+                hoursStart: hoursStart,
+                hoursEnd: hoursEnd,
+                minsStart: minsStart,
+                minsEnd: minsEnd
+            }),
+            complete: (data) => {
+                if (data) {
+                    showAlert('success', 'Календарь сохранен');
+                    fillCalendar(today);
+                } else {
+                    showAlert('error', 'Произошла ошибка. Попробуйте позже');
+                }
+
+                selected = [];
+                deleteSelected();
+                closeModal();
+                toggleLoading();
+            }
+        });
+}
+
+function deleteTime() {
+    toggleLoading();
+    var id = $('#bot_id').val();
+
+    $.ajax('/aif/admin/delete-user-calendar',
+        {
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id,
+                ids: selected.filter(s => s.id !== 'null').map(s => s.id)
+            }),
+            complete: (data) => {
+                if (data) {
+                    selected = [];
+                    deleteSelected();
+
+                    showAlert('success', 'Календарь сохранен');
+                    fillCalendar(today);
+                } else {
+                    showAlert('error', 'Произошла ошибка. Попробуйте позже');
+                }
+
+                toggleLoading();
+            }
+        });
+}
 
 function addTimeDialog() {
     var dlgCnt = `` +
@@ -124,12 +265,17 @@ function confirmAddTime() {
     var hoursEnd = $('.hours-end').val();
     var minsEnd = $('.mins-end').val();
 
-    if (!hoursStart || !minsStart) {
+    hoursStart = hoursStart ? parseInt(hoursStart) : null;
+    minsStart = minsStart ? parseInt(minsStart) : null;
+    hoursEnd = hoursEnd ? parseInt(hoursEnd) : null;
+    minsEnd = minsEnd ? parseInt(minsEnd) : null;
+
+    if (!hoursStart) {
         showAlert('error', 'Введите время начала рабочего дня');
         return;
     }
 
-    if (!hoursEnd || !minsEnd) {
+    if (!hoursEnd) {
         showAlert('error', 'Введите время окончания рабочего дня');
         return;
     }
@@ -139,13 +285,15 @@ function confirmAddTime() {
         return;
     }
 
+    minsStart = minsStart ? minsStart : 0;
+    minsEnd = minsEnd ? minsEnd : 0;
+
     if (minsStart > 59 || minsEnd > 59 || minsStart < 0 || minsEnd < 0) {
         showAlert('error', 'Неправильное значение минут');
         return;
     }
 
-    if ((hoursStart === hoursEnd && minsStart > minsEnd)
-        || (hoursStart > hoursEnd)) {
+    if ((hoursStart === hoursEnd && minsStart > minsEnd) || (hoursStart > hoursEnd)) {
         showAlert('error', 'Некорректный диапозон времени работы');
         return;
     }
@@ -159,7 +307,7 @@ function confirmAddTime() {
             contentType: 'application/json',
             data: JSON.stringify({
                 id: id,
-                days: selected,
+                days: selected.map(s => s.day),
                 year: today.getFullYear(),
                 month: today.getMonth() + 1,
                 hoursStart: hoursStart,
@@ -254,18 +402,29 @@ function fillMonthCalendar(month, year) {
             if (index !== -1) {
                 fillDataFromUserCalendar(weekElem, days[index]);
                 weekElem.attr('calendar-set', true);
+                weekElem.attr('calendar-id', days[index].id);
+            } else {
+                weekElem.attr('calendar-set', false);
+                weekElem.attr('calendar-id', null);
             }
 
             weekElem.click((elem) => {
                 if ($(elem.target).attr('data-day')) {
                     var selectedDay = $(elem.target).attr('data-day');
+                    var setDay = $(elem.target).attr('calendar-set');
+                    var setDayId = $(elem.target).attr('calendar-id');
+
+                    if ((ifOnlyDays(false) && index !== -1) || (ifOnlyDays(true) && index === -1)) {
+                        selected = [];
+                        deleteSelected();
+                    }
 
                     if ($(elem.target).hasClass('selected-day')) {
                         $(elem.target).removeClass('selected-day');
-                        selected.splice(selected.findIndex((sel) => sel === selectedDay), 1);
+                        selected.splice(selected.findIndex((sel) => sel.day === selectedDay), 1);
                     } else {
                         $(elem.target).addClass('selected-day');
-                        selected.push(selectedDay);
+                        selected.push({day: selectedDay, set: setDay === 'true', id: setDayId});
                     }
 
                     if (selected.length === 0) {
@@ -308,15 +467,23 @@ function fillDataFromUserCalendar(elem, day) {
     var data = `` +
         `<div class="flex flex-row full-width full-height align-items-center justify-center gap-10 time-calendar" style="pointer-events: none">` +
         `    <div class="flex flex-row gap-0 align-items-end justify-center">` +
-        `        <div class="fs-20 orange">${hoursStart}</div>` +
-        `        <div class="fs-10">${minsStart}</div>` +
+        `        <div class="fs-20 orange hs-${day.day}">${hoursStart}</div>` +
+        `        <div class="fs-10 ms-${day.day}">${minsStart}</div>` +
         `    </div>` +
         `    <div class="fs-20">:</div>` +
         `    <div class="flex flex-row gap-0 align-items-end justify-center">` +
-        `        <div class="fs-20 orange">${hoursEnd}</div>` +
-        `        <div class="fs-10">${minsEnd}</div>` +
+        `        <div class="fs-20 orange he-${day.day}">${hoursEnd}</div>` +
+        `        <div class="fs-10 me-${day.day}">${minsEnd}</div>` +
         `    </div>` +
         `</div>`;
 
     $(elem).append(data);
+}
+
+function ifOnlyDays(set) {
+    if (selected.length === 0) {
+        return true;
+    }
+
+    return selected.findIndex(s => set ? !s.set : s.set) === -1;
 }

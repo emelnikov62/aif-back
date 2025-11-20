@@ -29,6 +29,8 @@ public class UserCalendarRequest {
 
     private List<Long> days;
 
+    private List<Long> ids;
+
     private Long month;
 
     private Long year;
