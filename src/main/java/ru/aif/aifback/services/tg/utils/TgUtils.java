@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.utils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -8,6 +10,8 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.user.UserCalendar;
+import ru.aif.aifback.model.user.UserItem;
 
 /**
  * TG API utils.
@@ -70,5 +74,15 @@ public final class TgUtils {
      */
     public static String getMonthByNumber(Long number) {
         return MONTHS.get(number);
+    }
+
+    /**
+     * Get format times by user calendar and user item.
+     * @param userCalendar user calendar
+     * @param userItem user item
+     * @return times
+     */
+    public static List<String> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem) {
+        return Collections.emptyList();
     }
 }

@@ -1,6 +1,7 @@
 package ru.aif.aifback.repository.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -99,7 +100,7 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @param aifUserBotId user bot id
      * @return user calendar days
      */
-    @Query(value = "select distinct on (a.month) a.day from aif_user_calendar a where a.year = :year and a.month = :month and a.aif_user_bot_id = :aif_user_bot_id")
+    @Query(value = "select a.day from aif_user_calendar a where a.year = :year and a.month = :month and a.aif_user_bot_id = :aif_user_bot_id")
     List<Long> findAllDaysByMonthAndYear(@Param("year") Long year, @Param("month") Long month, @Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
@@ -111,8 +112,8 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @return user calendar days
      */
     @Query(value = "select a.* from aif_user_calendar a where a.year = :year and a.month = :month and a.day = :day and a.aif_user_bot_id = :aif_user_bot_id")
-    List<UserCalendar> findAllDaysByMonthAndYearAndDay(@Param("year") Long year,
-                                                       @Param("month") Long month,
-                                                       @Param("day") Long day,
-                                                       @Param("aif_user_bot_id") Long aifUserBotId);
+    Optional<UserCalendar> findAllDaysByMonthAndYearAndDay(@Param("year") Long year,
+                                                           @Param("month") Long month,
+                                                           @Param("day") Long day,
+                                                           @Param("aif_user_bot_id") Long aifUserBotId);
 }

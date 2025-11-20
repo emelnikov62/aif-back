@@ -2,6 +2,7 @@ package ru.aif.aifback.services.user;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -124,7 +125,7 @@ public class UserCalendarService {
      * @param userBotId user bot id
      * @return user calendar times
      */
-    public List<UserCalendar> findAllDaysByMonthAndYearAndDay(Long year, Long month, Long day, Long userBotId) {
+    public Optional<UserCalendar> findAllDaysByMonthAndYearAndDay(Long year, Long month, Long day, Long userBotId) {
         return userCalendarRepository.findAllDaysByMonthAndYearAndDay(year, month, day, userBotId);
     }
 
