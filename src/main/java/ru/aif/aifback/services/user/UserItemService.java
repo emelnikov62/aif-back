@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.user;
 
+import static ru.aif.aifback.constants.Constants.MIN_TIME_ITEM;
+
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -9,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.requests.UserItemRequest;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
-import ru.aif.aifback.model.requests.UserItemRequest;
 import ru.aif.aifback.repository.user.UserItemGroupRepository;
 import ru.aif.aifback.repository.user.UserItemRepository;
 
@@ -168,5 +170,14 @@ public class UserItemService {
             log.error(e.getMessage(), e);
             return Boolean.FALSE;
         }
+    }
+
+    /**
+     * Get min time user item.
+     * @param userBotId user bot id
+     * @return min time user item
+     */
+    public Long getMinTimeUserItem(Long userBotId) {
+        return userItemRepository.findMinimumItemTime(userBotId).orElse(MIN_TIME_ITEM);
     }
 }

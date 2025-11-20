@@ -80,9 +80,10 @@ public final class TgUtils {
      * Get format times by user calendar and user item.
      * @param userCalendar user calendar
      * @param userItem user item
+     * @param minTimeUserItem min time user item
      * @return times
      */
-    public static List<String> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem) {
+    public static List<String> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem, Long minTimeUserItem) {
         return Collections.emptyList();
     }
 }

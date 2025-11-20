@@ -15,6 +15,7 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_TIME;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_YEAR;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SETTINGS;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_DAY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_MONTH_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_TIME_TITLE;
@@ -145,9 +146,17 @@ public class TgBotRecordService implements TgBotService {
                 String month = webhookRequest.getText().split(DELIMITER)[2];
                 String year = webhookRequest.getText().split(DELIMITER)[3];
                 String itemId = webhookRequest.getText().split(DELIMITER)[4];
+
                 answer = CALENDAR_SELECT_TIME_TITLE;
-                processBotCalendarTimes(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), Long.valueOf(month),
-                                        Long.valueOf(day), keyboard);
+                if (!processBotCalendarTimes(Long.valueOf(itemId),
+                                             Long.valueOf(webhookRequest.getId()),
+                                             Long.valueOf(year),
+                                             Long.valueOf(month),
+                                             Long.valueOf(day),
+                                             keyboard)) {
+                    answer = CALENDAR_EMPTY_TIME_TITLE;
+                }
+
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, itemId)));
             }
 
@@ -296,25 +305,28 @@ public class TgBotRecordService implements TgBotService {
      * @param month month
      * @param day day
      * @param keyboard keyboard
+     * @return true/false
      */
-    private void processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
         Optional<UserCalendar> userCalendar = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
         if (userCalendar.isEmpty()) {
-            return;
+            return Boolean.FALSE;
         }
 
         Optional<UserItem> userItem = userItemService.findUserItemById(userItemId);
         if (userItem.isEmpty()) {
-            return;
+            return Boolean.FALSE;
         }
 
-        List<String> times = TgUtils.formatTimeCalendar(userCalendar.get(), userItem.get());
+        List<String> times = TgUtils.formatTimeCalendar(userCalendar.get(), userItem.get(), userItemService.getMinTimeUserItem(id));
         if (times.isEmpty()) {
-            return;
+            return Boolean.FALSE;
         }
 
         times.forEach(time -> keyboard.addRow(new InlineKeyboardButton(time).callbackData(
                 String.format("%s;%s;%s;%s", BOT_SELECT_TIME, userCalendar.get().getId(), userItemId, id))));
+
+        return Boolean.TRUE;
     }
 
     /**
