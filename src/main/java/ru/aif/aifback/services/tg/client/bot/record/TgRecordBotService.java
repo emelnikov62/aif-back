@@ -27,9 +27,11 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.HISTORY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ITEMS_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.RECORDS_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SETTINGS_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_SELECT_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.formatTime;
@@ -221,12 +223,12 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_HISTORY)) {
-                answer = MENU_TITLE;
+                answer = HISTORY_TITLE;
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_MAIN_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_SETTINGS)) {
-                answer = MENU_TITLE;
+                answer = SETTINGS_TITLE;
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_MAIN_MENU));
             }
 
