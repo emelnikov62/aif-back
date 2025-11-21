@@ -3,7 +3,6 @@ package ru.aif.aifback.services.tg.client.bot.record;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.DELIMITER_CHAR;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
-import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BACK_TO_GROUPS_MENU;
@@ -202,7 +201,6 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_CONFIRM_SELECT_TIME)) {
-                TgUtils.sendMessage(TG_LOG_ID, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN));
                 String hours = webhookRequest.getText().split(DELIMITER)[2];
                 String mins = webhookRequest.getText().split(DELIMITER)[3];
                 String calendarId = webhookRequest.getText().split(DELIMITER)[1];
@@ -551,8 +549,10 @@ public class TgRecordBotService implements TgBotService {
             String dayOfWeek = TgUtils.getDayOfWeek(clientRecord.getUserCalendar().getDay(),
                                                     clientRecord.getUserCalendar().getMonth(),
                                                     clientRecord.getUserCalendar().getYear());
-            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %02d:%02d (%s)",
+            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %s %s %02d:%02d (%s)",
                                                                    dayOfWeek,
+                                                                   clientRecord.getUserCalendar().getDay(),
+                                                                   TgUtils.getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
                                                                    clientRecord.getUserItem().getName()))
