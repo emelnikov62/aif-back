@@ -14,13 +14,13 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
  */
 public final class TgClientBotRecordButtons {
 
-    public static final String MENU_TITLE = "✅ Меню";
+    public static final String MENU_TITLE = "\uD83D\uDCCB Меню";
     public static final String ACTIVE_TITLE = "✅ Активные записи";
-    public static final String HISTORY_TITLE = "\uD83D\uDD5C История записей";
+    public static final String HISTORY_TITLE = "⏳ История записей";
     public static final String SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String ITEMS_TITLE = "\uD83D\uDCE6 Услуги";
     public static final String BACK_BUTTON_TITLE = "⬅ Назад";
-    public static final String GROUP_EMPTY_TITLE = "✅ Услуг пока нет";
+    public static final String GROUP_EMPTY_TITLE = "\uD83D\uDEAB Услуг пока нет";
     public static final String GROUP_TITLE = "\uD83D\uDD38 %s";
     public static final String ITEM_TITLE = "\uD83D\uDD38 %s (\uD83D\uDCB5 %s, \uD83D\uDD5B %s)";
     public static final String ADD_RECORD_TITLE = "\uD83D\uDCC6 Записаться";
