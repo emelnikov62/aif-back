@@ -38,11 +38,12 @@ public final class TgClientBotRecordButtons {
     public final static String BOT_ITEM_ADDITIONAL = "bot_item_additional";
     public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
     public static final String BACK_TO_GROUPS_MENU = "back_to_groups_menu";
-    public static final String BOT_SELECT_YEAR = "back_select_year";
-    public static final String BOT_SELECT_MONTH = "back_select_month";
-    public static final String BOT_SELECT_DAY = "back_select_day";
-    public static final String BOT_SELECT_TIME = "back_select_time";
-    public static final String BOT_ADD_RECORD = "back_add_record";
+    public static final String BOT_SELECT_YEAR = "bot_select_year";
+    public static final String BOT_SELECT_MONTH = "bot_select_month";
+    public static final String BOT_SELECT_DAY = "bot_select_day";
+    public static final String BOT_SELECT_TIME = "bot_select_time";
+    public static final String BOT_CONFIRM_SELECT_TIME = "back_confirm_select_time";
+    public static final String BOT_ADD_RECORD = "bot_add_record";
 
     /**
      * Create main menu.

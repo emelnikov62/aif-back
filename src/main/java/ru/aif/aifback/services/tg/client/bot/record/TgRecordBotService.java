@@ -6,6 +6,7 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BACK_TO_MAI
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BACK_TO_GROUPS_MENU;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ADD_RECORD;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_CONFIRM_SELECT_TIME;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_GROUP;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_HISTORY;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ITEMS;
@@ -34,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -41,6 +43,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.constants.Constants;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.client.ClientRecordTime;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
@@ -172,6 +175,22 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT_TIME)) {
+                String hours = webhookRequest.getText().split(DELIMITER)[2];
+                String mins = webhookRequest.getText().split(DELIMITER)[3];
+                String calendarIds = webhookRequest.getText().split(DELIMITER)[1];
+                String itemId = webhookRequest.getText().split(DELIMITER)[4];
+                String day = webhookRequest.getText().split(DELIMITER)[5];
+                String month = webhookRequest.getText().split(DELIMITER)[6];
+                String year = webhookRequest.getText().split(DELIMITER)[7];
+                answer = MENU_TITLE;
+                keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, itemId)));
+            }
+
+            if (webhookRequest.getText().contains(BOT_CONFIRM_SELECT_TIME)) {
+                String hours = webhookRequest.getText().split(DELIMITER)[2];
+                String mins = webhookRequest.getText().split(DELIMITER)[3];
+                String calendarId = webhookRequest.getText().split(DELIMITER)[1];
+                String itemId = webhookRequest.getText().split(DELIMITER)[4];
                 answer = MENU_TITLE;
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
@@ -392,7 +411,26 @@ public class TgRecordBotService implements TgBotService {
                                                                     .stream()
                                                                     .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
                                                                     .toList()) {
-            btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s", BOT_SELECT_TIME, userItemId)));
+            if (entry.getValue().size() == 1) {
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s",
+                                                                                             BOT_CONFIRM_SELECT_TIME,
+                                                                                             entry.getValue().get(0).getCalendarId(),
+                                                                                             entry.getValue().get(0).getHours(),
+                                                                                             entry.getValue().get(0).getMins(),
+                                                                                             userItemId)));
+            } else {
+                String listCalendarIds = Strings.join(entry.getValue().stream().map(ClientRecordTime::getCalendarId).toList(),
+                                                      Constants.DELIMITER_CHAR);
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;{%s};%s;%s;%s;%s;%s;%s",
+                                                                                             BOT_SELECT_TIME,
+                                                                                             listCalendarIds,
+                                                                                             entry.getValue().get(0).getHours(),
+                                                                                             entry.getValue().get(0).getMins(),
+                                                                                             userItemId,
+                                                                                             day,
+                                                                                             month,
+                                                                                             year)));
+            }
 
             if (++num % 5 == 0) {
                 keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
