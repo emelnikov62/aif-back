@@ -118,18 +118,12 @@ public class TgRecordBotService implements TgBotService {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
             if (Objects.equals(webhookRequest.getText(), BOT_ACTIVE)) {
-                answer = ACTIVE_TITLE;
-                if (!processBotActiveRecords(webhookRequest.getChatId(), keyboard)) {
-                    answer = RECORDS_EMPTY_TITLE;
-                }
+                answer = processBotActiveRecords(webhookRequest.getChatId(), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_MAIN_MENU));
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_GROUP) || Objects.equals(webhookRequest.getText(), BACK_TO_GROUPS_MENU)) {
-                answer = ITEMS_TITLE;
-                if (!processBotGroups(userBot, keyboard)) {
-                    answer = GROUP_EMPTY_TITLE;
-                }
+                answer = processBotGroups(userBot, keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_MAIN_MENU));
             }
 
@@ -146,16 +140,14 @@ public class TgRecordBotService implements TgBotService {
 
             if (webhookRequest.getText().contains(BOT_ADD_RECORD)) {
                 String itemId = webhookRequest.getText().split(DELIMITER)[1];
-                answer = CALENDAR_SELECT_YEAR_TITLE;
-                processBotCalendarYears(Long.valueOf(itemId), keyboard);
+                answer = processBotCalendarYears(Long.valueOf(itemId), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL, itemId)));
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT_YEAR)) {
                 String year = webhookRequest.getText().split(DELIMITER)[1];
                 String itemId = webhookRequest.getText().split(DELIMITER)[2];
-                answer = String.format(CALENDAR_SELECT_MONTH_TITLE, year);
-                processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
+                answer = processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ADD_RECORD, itemId)));
             }
 
@@ -163,8 +155,11 @@ public class TgRecordBotService implements TgBotService {
                 String month = webhookRequest.getText().split(DELIMITER)[1];
                 String year = webhookRequest.getText().split(DELIMITER)[2];
                 String itemId = webhookRequest.getText().split(DELIMITER)[3];
-                answer = String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(Long.valueOf(month)));
-                processBotCalendarDays(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), Long.valueOf(month), keyboard);
+                answer = processBotCalendarDays(Long.valueOf(itemId),
+                                                Long.valueOf(webhookRequest.getId()),
+                                                Long.valueOf(year),
+                                                Long.valueOf(month),
+                                                keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR, year, itemId)));
             }
 
@@ -173,17 +168,12 @@ public class TgRecordBotService implements TgBotService {
                 String month = webhookRequest.getText().split(DELIMITER)[2];
                 String year = webhookRequest.getText().split(DELIMITER)[3];
                 String itemId = webhookRequest.getText().split(DELIMITER)[4];
-
-                answer = String.format(CALENDAR_SELECT_TIME_TITLE, day);
-                if (!processBotCalendarTimes(Long.valueOf(itemId),
-                                             Long.valueOf(webhookRequest.getId()),
-                                             Long.valueOf(year),
-                                             Long.valueOf(month),
-                                             Long.valueOf(day),
-                                             keyboard)) {
-                    answer = CALENDAR_EMPTY_TIME_TITLE;
-                }
-
+                answer = processBotCalendarTimes(Long.valueOf(itemId),
+                                                 Long.valueOf(webhookRequest.getId()),
+                                                 Long.valueOf(year),
+                                                 Long.valueOf(month),
+                                                 Long.valueOf(day),
+                                                 keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH, month, year, itemId)));
             }
 
@@ -195,10 +185,7 @@ public class TgRecordBotService implements TgBotService {
                 String day = webhookRequest.getText().split(DELIMITER)[5];
                 String month = webhookRequest.getText().split(DELIMITER)[6];
                 String year = webhookRequest.getText().split(DELIMITER)[7];
-                answer = STAFF_SELECT_TITLE;
-                if (!processBotSelectStaff(Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(itemId), calendarIds, keyboard)) {
-                    answer = STAFF_EMPTY_TITLE;
-                }
+                answer = processBotSelectStaff(Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(itemId), calendarIds, keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, itemId)));
             }
 
@@ -208,17 +195,14 @@ public class TgRecordBotService implements TgBotService {
                 String calendarId = webhookRequest.getText().split(DELIMITER)[1];
                 String itemId = webhookRequest.getText().split(DELIMITER)[4];
                 String staffId = webhookRequest.getText().split(DELIMITER)[5];
-                answer = ACTIVE_TITLE;
-                if (!processBotConfirmRecord(Long.valueOf(hours),
-                                             Long.valueOf(mins),
-                                             Long.valueOf(itemId),
-                                             Long.valueOf(calendarId),
-                                             Long.valueOf(staffId),
-                                             Long.valueOf(webhookRequest.getId()),
-                                             webhookRequest.getChatId(),
-                                             keyboard)) {
-                    answer = CONFIRM_RECORD_ERROR_TITLE;
-                }
+                answer = processBotConfirmRecord(Long.valueOf(hours),
+                                                 Long.valueOf(mins),
+                                                 Long.valueOf(itemId),
+                                                 Long.valueOf(calendarId),
+                                                 Long.valueOf(staffId),
+                                                 Long.valueOf(webhookRequest.getId()),
+                                                 webhookRequest.getChatId(),
+                                                 keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
@@ -273,24 +257,23 @@ public class TgRecordBotService implements TgBotService {
      * Process bot groups button.
      * @param userBot user bot
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
-    private Boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
+    private String processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
         List<UserItemGroup> groups = userItemService.getUserItemGroupsAndActive(userBot.getId());
         if (groups.isEmpty()) {
-            return Boolean.FALSE;
+            return GROUP_EMPTY_TITLE;
         }
 
         groups.forEach(group -> keyboard.addRow(TgClientBotRecordButtons.createGroupsBotMenu(group)));
-
-        return Boolean.TRUE;
+        return ITEMS_TITLE;
     }
 
     /**
      * Process bot group items button.
      * @param groupId group id
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
     private String processBotGroupItems(Long groupId, InlineKeyboardMarkup keyboard) {
         Optional<UserItemGroup> userItemGroup = userItemService.findUserItemGroupByItemId(groupId);
@@ -312,8 +295,9 @@ public class TgRecordBotService implements TgBotService {
      * Process select years.
      * @param keyboard keyboard
      * @param userItemId user item id
+     * @return answer
      */
-    private void processBotCalendarYears(Long userItemId, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarYears(Long userItemId, InlineKeyboardMarkup keyboard) {
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
         int nextYear = currentYear + 1;
@@ -322,6 +306,8 @@ public class TgRecordBotService implements TgBotService {
                                 String.format("%s;%s;%s", BOT_SELECT_YEAR, currentYear, userItemId)),
                         new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
                                 String.format("%s;%s;%s", BOT_SELECT_YEAR, nextYear, userItemId)));
+
+        return CALENDAR_SELECT_YEAR_TITLE;
     }
 
     /**
@@ -331,10 +317,10 @@ public class TgRecordBotService implements TgBotService {
      * @param year year
      * @param keyboard keyboard
      */
-    private void processBotCalendarMonths(Long userItemId, Long id, Long year, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarMonths(Long userItemId, Long id, Long year, InlineKeyboardMarkup keyboard) {
         List<Long> months = userCalendarService.findAllMonthsByYear(year, id);
         if (months.isEmpty()) {
-            return;
+            return CALENDAR_EMPTY_TIME_TITLE;
         }
 
         List<InlineKeyboardButton> btns = new ArrayList<>();
@@ -355,6 +341,8 @@ public class TgRecordBotService implements TgBotService {
         if (!btns.isEmpty()) {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
+
+        return String.format(CALENDAR_SELECT_MONTH_TITLE, year);
     }
 
     /**
@@ -365,10 +353,10 @@ public class TgRecordBotService implements TgBotService {
      * @param month month
      * @param keyboard keyboard
      */
-    private void processBotCalendarDays(Long userItemId, Long id, Long year, Long month, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarDays(Long userItemId, Long id, Long year, Long month, InlineKeyboardMarkup keyboard) {
         List<Long> days = userCalendarService.findAllDaysByMonthAndYear(year, month, id);
         if (days.isEmpty()) {
-            return;
+            return CALENDAR_EMPTY_TIME_TITLE;
         }
 
         List<InlineKeyboardButton> btns = new ArrayList<>();
@@ -390,6 +378,8 @@ public class TgRecordBotService implements TgBotService {
         if (!btns.isEmpty()) {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
+
+        return String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(month));
     }
 
     /**
@@ -400,17 +390,17 @@ public class TgRecordBotService implements TgBotService {
      * @param month month
      * @param day day
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
-    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
         List<UserCalendar> calendars = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
         if (calendars.isEmpty()) {
-            return Boolean.FALSE;
+            return CALENDAR_EMPTY_TIME_TITLE;
         }
 
         Optional<UserItem> userItem = userItemService.findUserItemById(userItemId);
         if (userItem.isEmpty()) {
-            return Boolean.FALSE;
+            return CALENDAR_EMPTY_TIME_TITLE;
         }
 
         Map<String, List<ClientRecordTime>> times = new HashMap<>();
@@ -434,7 +424,7 @@ public class TgRecordBotService implements TgBotService {
         }
 
         if (times.isEmpty()) {
-            return Boolean.FALSE;
+            return CALENDAR_EMPTY_TIME_TITLE;
         }
 
         List<InlineKeyboardButton> btns = new ArrayList<>();
@@ -475,7 +465,7 @@ public class TgRecordBotService implements TgBotService {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return Boolean.TRUE;
+        return String.format(CALENDAR_SELECT_TIME_TITLE, day);
     }
 
     /**
@@ -485,12 +475,12 @@ public class TgRecordBotService implements TgBotService {
      * @param itemId itemId
      * @param calendarIds calendar ids
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
-    private Boolean processBotSelectStaff(Long hours, Long mins, Long itemId, String calendarIds, InlineKeyboardMarkup keyboard) {
+    private String processBotSelectStaff(Long hours, Long mins, Long itemId, String calendarIds, InlineKeyboardMarkup keyboard) {
         List<String> stringCalendarIds = Arrays.stream(calendarIds.split(DELIMITER_CHAR)).toList();
         if (stringCalendarIds.isEmpty()) {
-            return Boolean.FALSE;
+            return STAFF_EMPTY_TITLE;
         }
 
         for (String calendarId : stringCalendarIds) {
@@ -509,7 +499,7 @@ public class TgRecordBotService implements TgBotService {
                     String.format("%s;%s;%s;%s;%s;%s", BOT_CONFIRM_SELECT_TIME, userCalendar.get().getId(), hours, mins, itemId, userStaff.getId())));
         }
 
-        return keyboard.inlineKeyboard().length == 0 ? Boolean.FALSE : Boolean.TRUE;
+        return keyboard.inlineKeyboard().length == 0 ? STAFF_EMPTY_TITLE : STAFF_SELECT_TITLE;
     }
 
     /**
@@ -522,21 +512,21 @@ public class TgRecordBotService implements TgBotService {
      * @param id user bot id
      * @param clientTgId client tg id
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
-    private Boolean processBotConfirmRecord(Long hours, Long mins, Long itemId, Long calendarId, Long staffId, Long id, String clientTgId,
-                                            InlineKeyboardMarkup keyboard) {
+    private String processBotConfirmRecord(Long hours, Long mins, Long itemId, Long calendarId, Long staffId, Long id, String clientTgId,
+                                           InlineKeyboardMarkup keyboard) {
         Long clientId = clientService.getClientIdOrCreate(clientTgId);
         if (Objects.isNull(clientId)) {
-            return Boolean.FALSE;
+            return CONFIRM_RECORD_ERROR_TITLE;
         }
 
         Optional<Long> clientRecordId = clientRecordService.addClientRecord(clientId, id, itemId, calendarId, staffId, hours, mins);
         if (clientRecordId.isEmpty()) {
-            return Boolean.FALSE;
+            return CONFIRM_RECORD_ERROR_TITLE;
         }
 
-        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
+        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType()) ? ACTIVE_TITLE : CONFIRM_RECORD_ERROR_TITLE;
     }
 
     /**
@@ -568,15 +558,15 @@ public class TgRecordBotService implements TgBotService {
      * Process active client records.
      * @param clientTgId client tg id
      * @param keyboard keyboard
-     * @return true/false
+     * @return answer
      */
-    private Boolean processBotActiveRecords(String clientTgId, InlineKeyboardMarkup keyboard) {
+    private String processBotActiveRecords(String clientTgId, InlineKeyboardMarkup keyboard) {
         Long clientId = clientService.getClientIdOrCreate(clientTgId);
         if (Objects.isNull(clientId)) {
-            return Boolean.FALSE;
+            return RECORDS_EMPTY_TITLE;
         }
 
-        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
+        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType()) ? ACTIVE_TITLE : RECORDS_EMPTY_TITLE;
     }
 
     /**
