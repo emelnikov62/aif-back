@@ -319,7 +319,8 @@ function confirmAddTime() {
                 hoursStart: hoursStart,
                 hoursEnd: hoursEnd,
                 minsStart: minsStart,
-                minsEnd: minsEnd
+                minsEnd: minsEnd,
+                staffId: $('#staff-selected').val()
             }),
             complete: (data) => {
                 if (data.responseText === 'true') {
