@@ -171,7 +171,7 @@ function addUserItemGroup(group) {
         `<div class="flex flex-column gap-0 align-items-center justify-start full-width">` +
         `    <div class="border-dashed cursor flex flex-row full-width gap-10 back back-static opacity-full gradient-ig block padding-10 align-items-center justify-space-between">` +
         `       <div class="flex flex-row gap-10 align-items-center justify-center">` +
-        `           <div class="expand-group-${group.id} block back-static back opacity-full padding-10 gradient-bs flex flex-row align-items-center justify-center">` +
+        `           <div class="expand-group-${group.id} block back-static back opacity-full padding-10 border-dashed flex flex-row align-items-center justify-center">` +
         `               <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" class="expand-svg-${group.id}">` +
         `                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>` +
         `                   <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>` +
@@ -196,10 +196,10 @@ function addUserItemGroup(group) {
         `           <div class="add-item-btn add-item-btn-${group.id} button gap-5 flex flex-row padding-10 back-static back block upper font-bold border-[main-color] gradient-main-block">` +
         `              Добавить товар/услугу` +
         `           </div>` +
-        `           <div id="active-item-group-btn-${group.id}" class="block back-static back opacity-full padding-10 ${!group.active ? 'gradient-alert-success' : 'gradient-alert-error'} flex flex-row align-items-center justify-end">` +
+        `           <div id="active-item-group-btn-${group.id}" class="block back-static back opacity-full padding-10 upper ${!group.active ? 'gradient-alert-success' : 'gradient-alert-error'} flex flex-row align-items-center justify-end">` +
         `               <span>${group.active ? 'Деактивировать' : 'Активировать'}</span>` +
         `           </div>` +
-        `           <div id="delete-group-btn-${group.id}" class="block back-static back opacity-full padding-10 gradient-cl flex flex-row align-items-center justify-end">` +
+        `           <div id="delete-group-btn-${group.id}" class="hide-block block back-static back opacity-full padding-10 gradient-cl flex flex-row align-items-center justify-end">` +
         `               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">` +
         `                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>` +
         `                   <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>` +
@@ -243,36 +243,40 @@ function deleteUserItemGroup(group, id) {
 
 function addUserItem(item) {
     return `` +
-        `<div class="border-dashed cursor flex flex-row full-width gap-10 back back-static opacity-full gradient-empty block padding-10 align-items-center justify-space-between">` +
+        `<div class="border-dashed cursor gradient-cg flex flex-row full-width gap-10 back back-static opacity-full gradient-empty block padding-10 align-items-center justify-space-between">` +
         `    <div class="flex flex-row gap-10 align-items-start justify-center full-height">` +
-        `        <div>` +
-        (item.fileData ? `<img class="block back back-static opacity-full min-width-100 max-width-100 height-90" src="data:image/jpeg;base64, ${item.fileData}" />` : `<img class="block back back-static opacity-full min-width-100 max-width-100 height-90" src="/images/empty.jpg"/>`) +
-        `            <div class="flex flex-row gap-0 align-items-center justify-center">` +
-        `                <span class="main">${item.amount}</span>` +
-        `                <svg fill="grey" viewBox="-64 0 512 512" xmlns="http://www.w3.org/2000/svg" v-else-if="svgKey == SVG.ROUBLE" width="10px" height="10px" style="width: auto; height: auto">` +
-        `                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>` +
-        `                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>` +
-        `                    <g id="SVGRepo_iconCarrier">` +
-        `                        <path d="M239.36 320C324.48 320 384 260.542 384 175.071S324.48 32 239.36 32H76c-6.627 0-12 5.373-12 12v206.632H12c-6.627 0-12 5.373-12 12V308c0 6.627 5.373 12 12 12h52v32H12c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h52v52c0 6.627 5.373 12 12 12h58.56c6.627 0 12-5.373 12-12v-52H308c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H146.56v-32h92.8zm-92.8-219.252h78.72c46.72 0 74.88 29.11 74.88 74.323 0 45.832-28.16 75.561-76.16 75.561h-77.44V100.748z">` +
-        `                        </path>` +
-        `                    </g>` +
-        `                </svg>` +
-        `             </div>` +
-        `         </div>` +
-        `         <div class="flex flex-column gap-0 align-items-start justify-space-between full-height">` +
+        `         <div class="flex flex-row gap-10 align-items-start justify-space-between full-height">` +
         `              <div class="flex flex-row align-items-center justify-start border-dashed padding-5">` +
-        `                  <div class="flex flex-column gap-0 align-items-start justify-center full-width">` +
+        (item.fileData ? `<img class="block back back-static opacity-full width-image" src="data:image/jpeg;base64, ${item.fileData}" />` : `<img class="block back back-static opacity-full width-image" src="/images/empty.jpg"/>`) +
+        `              </div>` +
+        `              <div class="flex flex-row align-items-center justify-start border-dashed padding-5 full-height">` +
+        `                  <div class="flex flex-column gap-0 align-items-start justify-space-between full-height full-width">` +
         `                      <div class="main orange">Услуга</div>` +
         `                      <div class="flex flex-row gap-5 align-items-center justify-start full-width">` +
         `                          <span class="main">${item.name}</span>` +
         `                      </div>` +
         `                  </div>` +
         `              </div>` +
-        `              <div class="flex flex-row align-items-center justify-start border-dashed padding-5">` +
-        `                  <div class="flex flex-column gap-0 align-items-start justify-center full-width">` +
+        `              <div class="flex flex-row align-items-center justify-start border-dashed padding-5 full-height">` +
+        `                  <div class="flex flex-column gap-0 align-items-start justify-space-between full-width full-height">` +
         `                      <div class="main orange">Время</div>` +
         `                      <div class="flex flex-row gap-5 align-items-center justify-start full-width">` +
         `                          <span class="main">${item.hours.toString().length < 2 ? '0' + item.hours.toString() : item.hours}:${item.mins.toString().length < 2 ? '0' + item.mins.toString() : item.mins}</span>` +
+        `                      </div>` +
+        `                  </div>` +
+        `              </div>` +
+        `              <div class="flex flex-row align-items-center justify-start border-dashed padding-5 full-height">` +
+        `                  <div class="flex flex-column gap-0 align-items-start justify-space-between full-width full-height">` +
+        `                      <div class="main orange">Стоимость</div>` +
+        `                      <div class="flex flex-row gap-0 align-items-center justify-start full-width">` +
+        `                          <span>${item.amount}</span>` +
+        `                          <svg fill="grey" viewBox="-64 0 512 512" xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" style="width: auto; height: auto">` +
+        `                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>` +
+        `                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>` +
+        `                              <g id="SVGRepo_iconCarrier">` +
+        `                                  <path d="M239.36 320C324.48 320 384 260.542 384 175.071S324.48 32 239.36 32H76c-6.627 0-12 5.373-12 12v206.632H12c-6.627 0-12 5.373-12 12V308c0 6.627 5.373 12 12 12h52v32H12c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h52v52c0 6.627 5.373 12 12 12h58.56c6.627 0 12-5.373 12-12v-52H308c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H146.56v-32h92.8zm-92.8-219.252h78.72c46.72 0 74.88 29.11 74.88 74.323 0 45.832-28.16 75.561-76.16 75.561h-77.44V100.748z"></path>` +
+        `                              </g>` +
+        `                          </svg>` +
         `                      </div>` +
         `                  </div>` +
         `              </div>` +
@@ -288,10 +292,10 @@ function addUserItem(item) {
         `                </g>` +
         `            </svg>` +
         `        </div>` +
-        `        <div id="active-item-btn-${item.id}" class="block back-static back opacity-full padding-10 ${!item.active ? 'gradient-alert-success' : 'gradient-alert-error'} flex flex-row align-items-center justify-end">` +
+        `        <div id="active-item-btn-${item.id}" class="block back-static back opacity-full upper padding-10 ${!item.active ? 'gradient-alert-success' : 'gradient-alert-error'} flex flex-row align-items-center justify-end">` +
         `            <span>${item.active ? 'Деактивировать' : 'Активировать'}</span>` +
         `        </div>` +
-        `        <div id="delete-item-btn-${item.id}" class="block back-static back opacity-full padding-10 gradient-cl flex flex-row align-items-center justify-end">` +
+        `        <div id="delete-item-btn-${item.id}" class="hide-block block back-static back opacity-full padding-10 gradient-cl flex flex-row align-items-center justify-end">` +
         `            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">` +
         `               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>` +
         `               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>` +

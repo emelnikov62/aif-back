@@ -4,6 +4,7 @@ import static ru.aif.aifback.constants.Constants.MIN_TIME_ITEM;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -83,6 +84,16 @@ public class UserItemService {
     }
 
     /**
+     * Find all user items by group id and staff id.
+     * @param groupId group id
+     * @param staffId staff id
+     * @return list user items
+     */
+    public List<UserItem> getUserItemsByGroupIdAndStaffId(Long groupId, Long staffId) {
+        return userItemRepository.findAllByGroupIdAndStaffId(groupId, staffId);
+    }
+
+    /**
      * Find all user item groups by user bot id.
      * @param id user bot id
      * @return list user item groups
@@ -93,6 +104,25 @@ public class UserItemService {
             group.setItems(getUserItemsByGroupId(group.getId()));
         });
         return groups;
+    }
+
+    /**
+     * Find all user item groups by user bot id and user staff id.
+     * @param id user bot id
+     * @param staffId user staff id
+     * @return list user item groups
+     */
+    public List<UserItemGroup> getUserItemGroups(Long id, Long staffId) {
+        List<UserItemGroup> groups = userItemGroupRepository.findAllByBotIdAndActive(id);
+
+        groups.forEach(group -> {
+            List<UserItem> items = Objects.isNull(staffId)
+                                   ? getUserItemsByGroupId(group.getId())
+                                   : getUserItemsByGroupIdAndStaffId(group.getId(), staffId);
+            group.setItems(items.isEmpty() ? Collections.emptyList() : items);
+        });
+
+        return groups.stream().filter(f -> !f.getItems().isEmpty()).toList();
     }
 
     /**
@@ -185,12 +215,11 @@ public class UserItemService {
     }
 
     /**
-     * Find all user items by user staff.
-     * @param aifUserStaffId user staff id
-     * @param aifUserBotId user bot id
-     * @return user items
+     * Find user item by user staff item id.
+     * @param userStaffItemId user staff item id
+     * @return user item
      */
-    public List<UserItem> findAllByUserStaff(Long aifUserStaffId, Long aifUserBotId) {
-        return userItemRepository.findAllByUserStaff(aifUserBotId, aifUserStaffId);
+    public UserItem findByUserStaffItemId(Long userStaffItemId) {
+        return userItemRepository.findByUserStaffItemId(userStaffItemId);
     }
 }

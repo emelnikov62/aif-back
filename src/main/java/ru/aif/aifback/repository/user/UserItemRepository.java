@@ -58,6 +58,31 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
     List<UserItem> findAllByGroupId(@Param("group_id") Long groupId);
 
     /**
+     * Find all user items by group id and staff id.
+     * @param groupId group id
+     * @param staffId staff id
+     * @return list user items
+     */
+    @Query(value = "select a.id, " +
+                   "       a.name," +
+                   "       a.hours," +
+                   "       a.mins," +
+                   "       a.amount," +
+                   "       a.active," +
+                   "       convert_from(a.file_data, 'UTF-8') as file_data," +
+                   "       a.created," +
+                   "       a.aif_user_item_group_id" +
+                   "  from aif_user_items a" +
+                   " where a.aif_user_item_group_id = :group_id" +
+                   "   and not exists(" +
+                   "        select null" +
+                   "          from aif_user_staff_items asi" +
+                   "         where asi.aif_user_item_id = a.id" +
+                   "           and asi.aif_user_staff_id = :staff_id" +
+                   "   )")
+    List<UserItem> findAllByGroupIdAndStaffId(@Param("group_id") Long groupId, @Param("staff_id") Long staffId);
+
+    /**
      * Delete user item.
      * @param id id
      */
@@ -111,23 +136,21 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
     Optional<Long> findMinimumItemTime(@Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
-     * Find all user items by user staff.
-     * @param aifUserBotId user bot id
-     * @param aifUserStaffId user staff id
-     * @return user items
+     * Find user item by user staff item id.
+     * @param aifUserStaffItemId user staff item id
+     * @return user item
      */
-    @Query(value = "select asi.id, " +
+    @Query(value = "select a.id, " +
                    "       a.name," +
                    "       a.hours," +
                    "       a.mins," +
                    "       a.amount," +
-                   "       asi.active," +
+                   "       a.active," +
                    "       convert_from(a.file_data, 'UTF-8') as file_data," +
                    "       a.created," +
                    "       a.aif_user_item_group_id" +
                    "  from aif_user_items a" +
-                   "  join aif_user_item_groups ag on ag.id = a.aif_user_item_group_id" +
                    "  join aif_user_staff_items asi on asi.aif_user_item_id = a.id" +
-                   " where ag.aif_user_bot_id = :aif_user_bot_id and asi.aif_user_staff_id = :aif_user_staff_id")
-    List<UserItem> findAllByUserStaff(@Param("aif_user_bot_id") Long aifUserBotId, @Param("aif_user_staff_id") Long aifUserStaffId);
+                   " where asi.id = :aif_user_bot_id")
+    UserItem findByUserStaffItemId(@Param("aif_user_bot_id") Long aifUserStaffItemId);
 }

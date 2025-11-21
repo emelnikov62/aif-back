@@ -31,7 +31,7 @@ public class UserStaff {
     private LocalDateTime created;
 
     @Transient
-    private List<UserItem> items;
+    private List<UserStaffItem> items;
 
     public UserStaff(Long id, Long aifUserBotId, String name, String surname, String third, boolean active, LocalDateTime created) {
         this.id = id;

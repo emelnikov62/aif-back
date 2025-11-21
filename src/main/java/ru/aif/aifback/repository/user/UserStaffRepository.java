@@ -34,17 +34,4 @@ public interface UserStaffRepository extends CrudRepository<UserStaff, Long> {
     @Modifying
     void updateUserStaffActive(@Param("active") boolean active, @Param("id") Long id);
 
-    /**
-     * Update user staff item active.
-     * @param active active
-     * @param id id
-     */
-    @Query(value = "update aif_user_staff_items set active = :active where id = :id")
-    @Modifying
-    void updateUserStaffItemActive(@Param("active") boolean active, @Param("id") Long id);
-
-    @Query(value = "insert into aif_user_staff_items(aif_user_staff_id, aif_user_item_id) values (:aif_user_staff_id, :aif_user_item_id)")
-    @Modifying
-    void addLinkToItem(@Param("aif_user_staff_id") Long aifUserStaffId, @Param("aif_user_item_id") Long aifUserItemId);
-
 }

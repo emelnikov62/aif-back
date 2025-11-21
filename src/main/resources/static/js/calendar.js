@@ -1,6 +1,6 @@
-var today = new Date();
-var selected = [];
-var monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+let today = new Date();
+let selected = [];
+let monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
 $(document).ready(function () {
     let tg = window.Telegram.WebApp;
@@ -86,13 +86,13 @@ $(document).ready(function () {
 });
 
 function editTimeDialog() {
-    var day = selected[0];
-    var hoursStart = $(`.hs-${day.day}`).text();
-    var minsStart = $(`.ms-${day.day}`).text();
-    var hoursEnd = $(`.he-${day.day}`).text();
-    var minsEnd = $(`.me-${day.day}`).text();
+    let day = selected[0];
+    let hoursStart = $(`.hs-${day.day}`).text();
+    let minsStart = $(`.ms-${day.day}`).text();
+    let hoursEnd = $(`.he-${day.day}`).text();
+    let minsEnd = $(`.me-${day.day}`).text();
 
-    var dlgCnt = `` +
+    let dlgCnt = `` +
         `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
         `    <div class="flex flex-column flex-1 align-items-center gap-10 justify-start padding-10 fs-16">` +
         `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
@@ -131,10 +131,10 @@ function editTimeDialog() {
 }
 
 function confirmEditTime() {
-    var hoursStart = $('.hours-start').val();
-    var minsStart = $('.mins-start').val();
-    var hoursEnd = $('.hours-end').val();
-    var minsEnd = $('.mins-end').val();
+    let hoursStart = $('.hours-start').val();
+    let minsStart = $('.mins-start').val();
+    let hoursEnd = $('.hours-end').val();
+    let minsEnd = $('.mins-end').val();
 
     hoursStart = hoursStart ? parseInt(hoursStart) : null;
     minsStart = minsStart ? parseInt(minsStart) : null;
@@ -170,7 +170,7 @@ function confirmEditTime() {
     }
 
     toggleLoading();
-    var id = $('#bot_id').val();
+    let id = $('#bot_id').val();
 
     $.ajax('/aif/admin/edit-user-calendar',
         {
@@ -202,7 +202,7 @@ function confirmEditTime() {
 
 function deleteTime() {
     toggleLoading();
-    var id = $('#bot_id').val();
+    let id = $('#bot_id').val();
 
     $.ajax('/aif/admin/delete-user-calendar',
         {
@@ -229,7 +229,7 @@ function deleteTime() {
 }
 
 function addTimeDialog() {
-    var dlgCnt = `` +
+    let dlgCnt = `` +
         `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
         `    <div class="flex flex-column flex-1 align-items-center gap-10 justify-start padding-10 fs-16">` +
         `        <div class="flex flex-column gap-5 full-width align-items-center justify-center">` +
@@ -268,10 +268,10 @@ function addTimeDialog() {
 }
 
 function confirmAddTime() {
-    var hoursStart = $('.hours-start').val();
-    var minsStart = $('.mins-start').val();
-    var hoursEnd = $('.hours-end').val();
-    var minsEnd = $('.mins-end').val();
+    let hoursStart = $('.hours-start').val();
+    let minsStart = $('.mins-start').val();
+    let hoursEnd = $('.hours-end').val();
+    let minsEnd = $('.mins-end').val();
 
     hoursStart = hoursStart ? parseInt(hoursStart) : null;
     minsStart = minsStart ? parseInt(minsStart) : null;
@@ -307,7 +307,7 @@ function confirmAddTime() {
     }
 
     toggleLoading();
-    var id = $('#bot_id').val();
+    let id = $('#bot_id').val();
 
     $.ajax('/aif/admin/add-user-calendar',
         {
@@ -340,7 +340,7 @@ function confirmAddTime() {
 }
 
 function confirmWithoutSavedDialog(back) {
-    var dlgCnt = `` +
+    let dlgCnt = `` +
         `<div class="flex flex-column align-items-center justify-center full-width full-h-content padding-5 gradient-bs block">` +
         `    <div class="flex flex-column flex-1 align-items-center justify-start padding-10 fs-16">Данные на текущем месяце не сохранены! Продолжить?</div>` +
         `    <div class="flex flex-row gap-10 align-items-end justify-space-between full-width">` +
@@ -386,22 +386,22 @@ function changeCurrentDate(date) {
 }
 
 function fillMonthCalendar(month, year) {
-    var id = $('#bot_id').val();
+    let id = $('#bot_id').val();
     $.get(`/aif/admin/user-calendar?id=${id}&month=${month + 1}&year=${year}`).done((days) => {
         $('.days').text('');
         $('.time-calendar').remove();
         $('.day-container').addClass('disabled-back').off('click');
-        var date = new Date(year, month);
+        let date = new Date(year, month);
         date.setDate(1);
 
-        var i = 0;
-        var week = 1;
-        var day = date.getDay();
+        let i = 0;
+        let week = 1;
+        let day = date.getDay();
         while (date.getMonth() === month) {
             day = date.getDay() === 0 ? 7 : date.getDay();
             $(`.week-${week} .day-${day}`).text(date.getDate());
 
-            var weekElem = $(`.week-${week} .day-container-${day}`);
+            let weekElem = $(`.week-${week} .day-container-${day}`);
             weekElem.removeClass('disabled-back');
             weekElem.attr('data-day', date.getDate());
             weekElem.attr('work-day', day < 6);
@@ -466,13 +466,13 @@ function fillMonthCalendar(month, year) {
 }
 
 function fillDataFromUserCalendar(elem, day) {
-    var hoursStart = day.hoursStart.toString().length < 2 ? '0' + day.hoursStart.toString() : day.hoursStart.toString();
-    var minsStart = day.minsStart.toString().length < 2 ? '0' + day.minsStart.toString() : day.minsStart.toString();
+    let hoursStart = day.hoursStart.toString().length < 2 ? '0' + day.hoursStart.toString() : day.hoursStart.toString();
+    let minsStart = day.minsStart.toString().length < 2 ? '0' + day.minsStart.toString() : day.minsStart.toString();
 
-    var hoursEnd = day.hoursEnd.toString().length < 2 ? '0' + day.hoursEnd.toString() : day.hoursEnd.toString();
-    var minsEnd = day.minsEnd.toString().length < 2 ? '0' + day.minsEnd.toString() : day.minsEnd.toString();
+    let hoursEnd = day.hoursEnd.toString().length < 2 ? '0' + day.hoursEnd.toString() : day.hoursEnd.toString();
+    let minsEnd = day.minsEnd.toString().length < 2 ? '0' + day.minsEnd.toString() : day.minsEnd.toString();
 
-    var data = `` +
+    let data = `` +
         `<div class="flex flex-row full-width full-height align-items-center justify-center gap-10 time-calendar" style="pointer-events: none">` +
         `    <div class="flex flex-row gap-0 align-items-end justify-center">` +
         `        <div class="fs-20 orange hs-${day.day}">${hoursStart}</div>` +

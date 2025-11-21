@@ -45,33 +45,7 @@
                         <div class="main selected-services-count">0</div>
                     </div>
                 </div>
-                <div class="flex full-width align-items-center justify-center flex-column gap-10">
-                    <div class="flex flex-column full-width align-items-center justify-center gap-5"
-                         th:each="group : ${groups}">
-                        <div onclick="expandGroup(this)" th:data="'group-' + ${group.id}"
-                             class="flex flex-row full-width align-items-center justify-space-between back block back-static border-dashed cursor padding-10 groups">
-                            <span th:text="${group.getName()}"/>
-                            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" th:data="'group-' + ${group.id}">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                </g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
-                                          stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                          stroke-linejoin="round"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div th:class="'hide-block flex full-width gap-5 wrap group-items group-' + ${group.id}">
-                            <div class="item-elem flex-1 flex padding-10 border-dashed align-items-center justify-center cursor min-width-180"
-                                 th:each="item : ${group.getItems()}"
-                                 th:data="'item-id-' + ${item.id}"
-                                 th:data-id="${item.id}">
-                                <span th:text="${item.name}"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="flex full-width align-items-center justify-center flex-column gap-10 staff-item-groups"></div>
             </div>
             <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
                 <div class="save-staff-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">
@@ -97,33 +71,7 @@
                         <div class="main selected-services-count">0</div>
                     </div>
                 </div>
-                <div class="flex full-width align-items-center justify-center flex-column gap-10">
-                    <div class="flex flex-column full-width align-items-center justify-center gap-5"
-                         th:each="group : ${groups}">
-                        <div onclick="expandGroup(this)" th:data="'group-' + ${group.id}"
-                             class="flex flex-row full-width align-items-center justify-space-between back block back-static border-dashed cursor padding-10 groups">
-                            <span th:text="${group.getName()}"/>
-                            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" th:data="'group-' + ${group.id}">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                </g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path d="M19.9201 8.9502L13.4001 15.4702C12.6301 16.2402 11.3701 16.2402 10.6001 15.4702L4.08008 8.9502"
-                                          stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                          stroke-linejoin="round"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div th:class="'hide-block flex full-width gap-5 wrap group-items group-' + ${group.id}">
-                            <div class="item-elem flex-1 flex padding-10 border-dashed align-items-center justify-center cursor min-width-180"
-                                 th:each="item : ${group.getItems()}"
-                                 th:data="'item-id-' + ${item.id}"
-                                 th:data-id="${item.id}">
-                                <span th:text="${item.name}"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="flex full-width align-items-center justify-center flex-column gap-10 staff-edit-item-groups"></div>
             </div>
             <div class="buttons-item flex flex-row gap-10 align-items-end justify-space-between full-width">
                 <div class="save-staff-item-btn button gap-5 flex flex-row padding-10 back-static back block height-45 upper font-bold fs-16 border-[main-color] gradient-main-block">

@@ -85,10 +85,7 @@ public class UiController {
      */
     @GetMapping(value = "/staff-bot-form")
     public String staffForm(@RequestParam(name = "id") String id, Model model) {
-        List<UserItemGroup> groups = userItemService.getUserItemGroups(Long.valueOf(id));
         model.addAttribute("id", id);
-        model.addAttribute("groups", groups);
-
         return "staff_bot_form";
     }
 
@@ -261,6 +258,28 @@ public class UiController {
     @PostMapping(value = "/update-user-staff-active", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> updateUserStaffActive(@RequestBody UserItemRequest userItemRequest) {
         return ResponseEntity.ok(userStaffService.updateUserStaffActive(userItemRequest.getId(), userItemRequest.getActive()));
+    }
+
+    /**
+     * Get user item groups.
+     * @param id user bot id
+     * @param staffId user staff id
+     * @return user item groups
+     */
+    @GetMapping(value = "/list-user-item-groups-filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserItemGroup>> getUserItemGroupsWithFilter(@RequestParam(name = "id") Long id,
+                                                                           @RequestParam(name = "staff_id", required = false) Long staffId) {
+        return ResponseEntity.ok(userItemService.getUserItemGroups(id, staffId));
+    }
+
+    /**
+     * Update user staff active.
+     * @param userItemRequest userItemRequest
+     * @return true/false
+     */
+    @PostMapping(value = "/update-user-staff-items", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateUserStaffItems(@RequestBody UserItemRequest userItemRequest) {
+        return ResponseEntity.ok(userStaffService.updateUserStaffItems(userItemRequest.getId(), userItemRequest.getServices()));
     }
 
 }

@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.UserItemRequest;
 import ru.aif.aifback.model.user.UserStaff;
+import ru.aif.aifback.model.user.UserStaffItem;
+import ru.aif.aifback.repository.user.UserStaffItemRepository;
 import ru.aif.aifback.repository.user.UserStaffRepository;
 
 /**
@@ -22,6 +24,7 @@ import ru.aif.aifback.repository.user.UserStaffRepository;
 public class UserStaffService {
 
     private final UserStaffRepository userStaffRepository;
+    private final UserStaffItemRepository userStaffItemRepository;
     private final UserItemService userItemService;
 
     /**
@@ -32,7 +35,9 @@ public class UserStaffService {
     public List<UserStaff> getUserStaffs(Long userBotId) {
         List<UserStaff> userStaffs = userStaffRepository.findAllByUserBotId(userBotId);
         userStaffs.forEach(userStaff -> {
-            userStaff.setItems(userItemService.findAllByUserStaff(userStaff.getId(), userBotId));
+            List<UserStaffItem> staffItems = userStaffItemRepository.findAllByUserStaffId(userStaff.getId());
+            staffItems.forEach(staffItem -> staffItem.setUserItem(userItemService.findByUserStaffItemId(staffItem.getId())));
+            userStaff.setItems(staffItems);
         });
 
         return userStaffs;
@@ -57,7 +62,7 @@ public class UserStaffService {
                 return Boolean.FALSE;
             }
 
-            userItemRequest.getServices().forEach(service -> userStaffRepository.addLinkToItem(userStaff.getId(), service));
+            userItemRequest.getServices().forEach(service -> userStaffItemRepository.addLinkToItem(userStaff.getId(), service));
 
             return Boolean.TRUE;
         } catch (Exception e) {
@@ -90,7 +95,23 @@ public class UserStaffService {
      */
     public Boolean updateUserStaffItemActive(Long id, boolean active) {
         try {
-            userStaffRepository.updateUserStaffItemActive(active, id);
+            userStaffItemRepository.updateUserStaffItemActive(active, id);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Boolean.FALSE;
+        }
+    }
+
+    /**
+     * Update user staff items.
+     * @param id id
+     * @param services items
+     * @return true/false
+     */
+    public Boolean updateUserStaffItems(Long id, List<Long> services) {
+        try {
+            services.forEach(service -> userStaffItemRepository.addLinkToItem(id, service));
             return Boolean.TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);

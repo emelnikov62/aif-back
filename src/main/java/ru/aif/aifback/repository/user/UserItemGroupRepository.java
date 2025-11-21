@@ -26,6 +26,17 @@ public interface UserItemGroupRepository extends CrudRepository<UserItemGroup, L
     List<UserItemGroup> findAllByBotId(@Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
+     * Find all groups by bot id.
+     * @param aifUserBotId bot id
+     * @return list groups
+     */
+    @Query(value = "select a.*" +
+                   "  from aif_user_item_groups a" +
+                   " where a.aif_user_bot_id = :aif_user_bot_id" +
+                   "   and a.active")
+    List<UserItemGroup> findAllByBotIdAndActive(@Param("aif_user_bot_id") Long aifUserBotId);
+
+    /**
      * Delete user group item.
      * @param id id
      */
