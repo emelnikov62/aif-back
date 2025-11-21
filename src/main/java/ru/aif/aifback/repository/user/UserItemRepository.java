@@ -58,6 +58,24 @@ public interface UserItemRepository extends CrudRepository<UserItem, Long> {
     List<UserItem> findAllByGroupId(@Param("group_id") Long groupId);
 
     /**
+     * Find all user items by group id and active.
+     * @param groupId group id
+     * @return list user items
+     */
+    @Query(value = "select a.id, " +
+                   "       a.name," +
+                   "       a.hours," +
+                   "       a.mins," +
+                   "       a.amount," +
+                   "       a.active," +
+                   "       convert_from(a.file_data, 'UTF-8') as file_data," +
+                   "       a.created," +
+                   "       a.aif_user_item_group_id" +
+                   "  from aif_user_items a" +
+                   " where a.aif_user_item_group_id = :group_id and a.active")
+    List<UserItem> findAllByGroupIdAndActive(@Param("group_id") Long groupId);
+
+    /**
      * Find all user items by group id and staff id.
      * @param groupId group id
      * @param staffId staff id

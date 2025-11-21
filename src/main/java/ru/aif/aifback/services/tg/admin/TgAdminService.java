@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.tg.TgService;
-import ru.aif.aifback.services.tg.admin.bot.TgBotAdminService;
+import ru.aif.aifback.services.tg.admin.bot.TgAdminBotService;
 import ru.aif.aifback.services.user.UserBotService;
 
 /**
@@ -18,7 +18,7 @@ import ru.aif.aifback.services.user.UserBotService;
 @RequiredArgsConstructor
 public class TgAdminService implements TgService {
 
-    private final TgBotAdminService tgBotAdminService;
+    private final TgAdminBotService tgBotAdminService;
     private final UserBotService userBotService;
 
     /**

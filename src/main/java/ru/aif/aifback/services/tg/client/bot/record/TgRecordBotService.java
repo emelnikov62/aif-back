@@ -60,7 +60,7 @@ import ru.aif.aifback.services.user.UserItemService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgBotRecordService implements TgBotService {
+public class TgRecordBotService implements TgBotService {
 
     private final UserItemService userItemService;
     private final UserCalendarService userCalendarService;
@@ -225,7 +225,7 @@ public class TgBotRecordService implements TgBotService {
      * @return true/false
      */
     private boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
-        List<UserItemGroup> groups = userItemService.getUserItemGroups(userBot.getId());
+        List<UserItemGroup> groups = userItemService.getUserItemGroupsAndActive(userBot.getId());
         if (groups.isEmpty()) {
             return Boolean.FALSE;
         }
@@ -242,7 +242,7 @@ public class TgBotRecordService implements TgBotService {
      * @return true/false
      */
     private boolean processBotGroupItems(Long groupId, InlineKeyboardMarkup keyboard) {
-        List<UserItem> items = userItemService.getUserItemsByGroupId(groupId);
+        List<UserItem> items = userItemService.getUserItemsByGroupIdAndActive(groupId);
         if (items.isEmpty()) {
             return Boolean.FALSE;
         }

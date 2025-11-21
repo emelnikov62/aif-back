@@ -22,7 +22,7 @@ public interface UserItemGroupRepository extends CrudRepository<UserItemGroup, L
      * @param aifUserBotId bot id
      * @return list groups
      */
-    @Query(value = "select * from aif_user_item_groups a where a.aif_user_bot_id = :aif_user_bot_id")
+    @Query(value = "select a.* from aif_user_item_groups a where a.aif_user_bot_id = :aif_user_bot_id")
     List<UserItemGroup> findAllByBotId(@Param("aif_user_bot_id") Long aifUserBotId);
 
     /**
@@ -30,10 +30,7 @@ public interface UserItemGroupRepository extends CrudRepository<UserItemGroup, L
      * @param aifUserBotId bot id
      * @return list groups
      */
-    @Query(value = "select a.*" +
-                   "  from aif_user_item_groups a" +
-                   " where a.aif_user_bot_id = :aif_user_bot_id" +
-                   "   and a.active")
+    @Query(value = "select a.* from aif_user_item_groups a where a.aif_user_bot_id = :aif_user_bot_id and a.active")
     List<UserItemGroup> findAllByBotIdAndActive(@Param("aif_user_bot_id") Long aifUserBotId);
 
     /**

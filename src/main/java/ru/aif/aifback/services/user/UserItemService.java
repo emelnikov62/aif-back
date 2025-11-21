@@ -84,6 +84,15 @@ public class UserItemService {
     }
 
     /**
+     * Find all user items by group id and active.
+     * @param groupId group id
+     * @return list user items
+     */
+    public List<UserItem> getUserItemsByGroupIdAndActive(Long groupId) {
+        return userItemRepository.findAllByGroupIdAndActive(groupId);
+    }
+
+    /**
      * Find all user items by group id and staff id.
      * @param groupId group id
      * @param staffId staff id
@@ -100,6 +109,19 @@ public class UserItemService {
      */
     public List<UserItemGroup> getUserItemGroups(Long id) {
         List<UserItemGroup> groups = userItemGroupRepository.findAllByBotId(id);
+        groups.forEach(group -> {
+            group.setItems(getUserItemsByGroupId(group.getId()));
+        });
+        return groups;
+    }
+
+    /**
+     * Find all user item groups by user bot id and active.
+     * @param id user bot id
+     * @return list user item groups
+     */
+    public List<UserItemGroup> getUserItemGroupsAndActive(Long id) {
+        List<UserItemGroup> groups = userItemGroupRepository.findAllByBotIdAndActive(id);
         groups.forEach(group -> {
             group.setItems(getUserItemsByGroupId(group.getId()));
         });

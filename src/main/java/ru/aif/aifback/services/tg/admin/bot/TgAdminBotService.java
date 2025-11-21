@@ -48,7 +48,7 @@ import ru.aif.aifback.services.user.UserBotService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgBotAdminService implements TgBotService {
+public class TgAdminBotService implements TgBotService {
 
     private final UserBotService userBotService;
     private final BotService botService;
