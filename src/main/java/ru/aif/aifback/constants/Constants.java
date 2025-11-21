@@ -7,7 +7,7 @@ package ru.aif.aifback.constants;
 public final class Constants {
 
     public final static String DELIMITER = ";";
-    public final static char DELIMITER_CHAR = '|';
+    public final static String DELIMITER_CHAR = "|";
 
     public final static String MAIN_URL = "/aif";
     public final static String ADMIN_URL = "/admin";

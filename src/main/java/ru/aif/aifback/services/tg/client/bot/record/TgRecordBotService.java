@@ -450,7 +450,7 @@ public class TgRecordBotService implements TgBotService {
                                                                                              entry.getValue().get(0).getStaffId())));
             } else {
                 String listCalendarIds = Strings.join(entry.getValue().stream().map(ClientRecordTime::getCalendarId).toList(),
-                                                      Constants.DELIMITER_CHAR);
+                                                      Constants.DELIMITER_CHAR.charAt(0));
                 btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
                                                                                              BOT_SELECT_TIME,
                                                                                              listCalendarIds,
@@ -485,7 +485,7 @@ public class TgRecordBotService implements TgBotService {
      * @return true/false
      */
     private Boolean processBotSelectStaff(Long hours, Long mins, Long itemId, String calendarIds, InlineKeyboardMarkup keyboard) {
-        List<String> stringCalendarIds = Arrays.stream(calendarIds.split(String.valueOf(DELIMITER_CHAR))).toList();
+        List<String> stringCalendarIds = Arrays.stream(calendarIds.split(DELIMITER_CHAR)).toList();
         if (stringCalendarIds.isEmpty()) {
             return Boolean.FALSE;
         }
@@ -533,8 +533,7 @@ public class TgRecordBotService implements TgBotService {
             return Boolean.FALSE;
         }
 
-        fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
-        return Boolean.TRUE;
+        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
     }
 
     /**
@@ -543,7 +542,7 @@ public class TgRecordBotService implements TgBotService {
      * @param clientId client id
      * @param status status
      */
-    private void fillClientRecords(InlineKeyboardMarkup keyboard, Long clientId, String status) {
+    private Boolean fillClientRecords(InlineKeyboardMarkup keyboard, Long clientId, String status) {
         List<ClientRecord> clientRecords = clientRecordService.findAllByClientIdAndStatus(clientId, status);
         clientRecords.forEach(clientRecord -> {
             String dayOfWeek = TgUtils.getDayOfWeek(clientRecord.getUserCalendar().getDay(),
@@ -556,6 +555,8 @@ public class TgRecordBotService implements TgBotService {
                                                                    clientRecord.getUserItem().getName()))
                                     .callbackData(String.format("%s;%s", BOT_RECORD_SHOW, clientRecord.getId())));
         });
+
+        return keyboard.inlineKeyboard().length == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
     /**
@@ -570,8 +571,7 @@ public class TgRecordBotService implements TgBotService {
             return Boolean.FALSE;
         }
 
-        fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
-        return Boolean.TRUE;
+        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
     }
 
     /**
