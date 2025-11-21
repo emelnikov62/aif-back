@@ -27,7 +27,7 @@
                         name="staff-selected" id="staff-selected" onchange="selectStaff(this)">
                     <option value="-1" disabled selected>Выберите специалиста</option>
                     <option th:each="staff : ${staffs}" th:value="${staff.id}"
-                            th:text="${staff.name} + ' ' + ${staff.surname} + ' ' + ${staff.third}"></option>
+                            th:text="${staff.surname} + ' ' + ${staff.name} + ' ' + ${staff.third}"></option>
                 </select>
             </div>
         </div>

@@ -1,8 +1,10 @@
 package ru.aif.aifback.services.tg.client.bot.record;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.DELIMITER_CHAR;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BACK_TO_MAIN_MENU;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BACK_TO_GROUPS_MENU;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ACTIVE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ADD_RECORD;
@@ -11,6 +13,7 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_HISTORY;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ITEMS;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_RECORD_SHOW;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_DAY;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_MONTH;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BOT_SELECT_TIME;
@@ -21,12 +24,17 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_MONTH_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.RECORDS_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_SELECT_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.formatTime;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -51,6 +59,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
+import ru.aif.aifback.model.user.UserStaff;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.TgBotService;
@@ -105,7 +114,10 @@ public class TgRecordBotService implements TgBotService {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
             if (Objects.equals(webhookRequest.getText(), BOT_ACTIVE)) {
-                answer = MENU_TITLE;
+                answer = ACTIVE_TITLE;
+                if (!processBotActiveRecords(webhookRequest.getChatId(), keyboard)) {
+                    answer = RECORDS_EMPTY_TITLE;
+                }
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_MAIN_MENU));
             }
 
@@ -182,7 +194,10 @@ public class TgRecordBotService implements TgBotService {
                 String day = webhookRequest.getText().split(DELIMITER)[5];
                 String month = webhookRequest.getText().split(DELIMITER)[6];
                 String year = webhookRequest.getText().split(DELIMITER)[7];
-                answer = MENU_TITLE;
+                answer = STAFF_SELECT_TITLE;
+                if (!processBotSelectStaff(Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(itemId), calendarIds, keyboard)) {
+                    answer = STAFF_EMPTY_TITLE;
+                }
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, itemId)));
             }
 
@@ -191,7 +206,18 @@ public class TgRecordBotService implements TgBotService {
                 String mins = webhookRequest.getText().split(DELIMITER)[3];
                 String calendarId = webhookRequest.getText().split(DELIMITER)[1];
                 String itemId = webhookRequest.getText().split(DELIMITER)[4];
-                answer = MENU_TITLE;
+                String staffId = webhookRequest.getText().split(DELIMITER)[5];
+                answer = ACTIVE_TITLE;
+                if (!processBotConfirmRecord(Long.valueOf(hours),
+                                             Long.valueOf(mins),
+                                             Long.valueOf(itemId),
+                                             Long.valueOf(calendarId),
+                                             Long.valueOf(staffId),
+                                             Long.valueOf(webhookRequest.getId()),
+                                             webhookRequest.getChatId(),
+                                             keyboard)) {
+                    answer = CONFIRM_RECORD_ERROR_TITLE;
+                }
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(BACK_TO_MAIN_MENU));
             }
 
@@ -412,16 +438,17 @@ public class TgRecordBotService implements TgBotService {
                                                                     .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
                                                                     .toList()) {
             if (entry.getValue().size() == 1) {
-                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s",
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s",
                                                                                              BOT_CONFIRM_SELECT_TIME,
                                                                                              entry.getValue().get(0).getCalendarId(),
                                                                                              entry.getValue().get(0).getHours(),
                                                                                              entry.getValue().get(0).getMins(),
-                                                                                             userItemId)));
+                                                                                             userItemId,
+                                                                                             entry.getValue().get(0).getStaffId())));
             } else {
                 String listCalendarIds = Strings.join(entry.getValue().stream().map(ClientRecordTime::getCalendarId).toList(),
                                                       Constants.DELIMITER_CHAR);
-                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;{%s};%s;%s;%s;%s;%s;%s",
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
                                                                                              BOT_SELECT_TIME,
                                                                                              listCalendarIds,
                                                                                              entry.getValue().get(0).getHours(),
@@ -442,6 +469,105 @@ public class TgRecordBotService implements TgBotService {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
+        return Boolean.TRUE;
+    }
+
+    /**
+     * Process select staff.
+     * @param hours hours
+     * @param mins mins
+     * @param itemId itemId
+     * @param calendarIds calendar ids
+     * @param keyboard keyboard
+     * @return true/false
+     */
+    private Boolean processBotSelectStaff(Long hours, Long mins, Long itemId, String calendarIds, InlineKeyboardMarkup keyboard) {
+        List<String> stringCalendarIds = Arrays.stream(calendarIds.split(String.valueOf(DELIMITER_CHAR))).toList();
+        if (stringCalendarIds.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        for (String calendarId : stringCalendarIds) {
+            Optional<UserCalendar> userCalendar = userCalendarService.findById(Long.valueOf(calendarId));
+            if (userCalendar.isEmpty()) {
+                continue;
+            }
+
+            if (Objects.isNull(userCalendar.get().getStaff())) {
+                continue;
+            }
+
+            UserStaff userStaff = userCalendar.get().getStaff();
+            String staffFio = String.format("%s %s %s", userStaff.getSurname(), userStaff.getName(), userStaff.getThird());
+            keyboard.addRow(new InlineKeyboardButton(staffFio).callbackData(
+                    String.format("%s;%s;%s;%s;%s;%s", BOT_CONFIRM_SELECT_TIME, userCalendar.get().getId(), hours, mins, itemId, userStaff.getId())));
+        }
+
+        return keyboard.inlineKeyboard().length == 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+
+    /**
+     * Process confirm client record.
+     * @param hours hours
+     * @param mins mins
+     * @param itemId item id
+     * @param calendarId calendar id
+     * @param staffId staff id
+     * @param id user bot id
+     * @param clientTgId client tg id
+     * @param keyboard keyboard
+     * @return true/false
+     */
+    private Boolean processBotConfirmRecord(Long hours, Long mins, Long itemId, Long calendarId, Long staffId, Long id, String clientTgId,
+                                            InlineKeyboardMarkup keyboard) {
+        Long clientId = clientService.getClientIdOrCreate(clientTgId);
+        if (Objects.isNull(clientId)) {
+            return Boolean.FALSE;
+        }
+
+        Optional<Long> clientRecordId = clientRecordService.addClientRecord(clientId, id, itemId, calendarId, staffId, hours, mins);
+        if (clientRecordId.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
+        return Boolean.TRUE;
+    }
+
+    /**
+     * Fill client records.
+     * @param keyboard keyboard
+     * @param clientId client id
+     * @param status status
+     */
+    private void fillClientRecords(InlineKeyboardMarkup keyboard, Long clientId, String status) {
+        List<ClientRecord> clientRecords = clientRecordService.findAllByClientIdAndStatus(clientId, status);
+        clientRecords.forEach(clientRecord -> {
+            String dayOfWeek = TgUtils.getDayOfWeek(clientRecord.getUserCalendar().getDay(),
+                                                    clientRecord.getUserCalendar().getMonth(),
+                                                    clientRecord.getUserCalendar().getYear());
+            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %02d:%02d (%s)",
+                                                                   dayOfWeek,
+                                                                   clientRecord.getHours(),
+                                                                   clientRecord.getMins(),
+                                                                   clientRecord.getUserItem().getName()))
+                                    .callbackData(String.format("%s;%s", BOT_RECORD_SHOW, clientRecord.getId())));
+        });
+    }
+
+    /**
+     * Process active client records.
+     * @param clientTgId client tg id
+     * @param keyboard keyboard
+     * @return true/false
+     */
+    private Boolean processBotActiveRecords(String clientTgId, InlineKeyboardMarkup keyboard) {
+        Long clientId = clientService.getClientIdOrCreate(clientTgId);
+        if (Objects.isNull(clientId)) {
+            return Boolean.FALSE;
+        }
+
+        fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType());
         return Boolean.TRUE;
     }
 

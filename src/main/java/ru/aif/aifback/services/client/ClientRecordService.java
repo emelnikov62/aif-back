@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
-import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
+import ru.aif.aifback.services.user.UserStaffService;
 
 /**
  * Client record API service.
@@ -25,7 +25,7 @@ public class ClientRecordService {
 
     private final ClientRecordRepository clientRecordRepository;
     private final UserItemService userItemService;
-    private final UserCalendarService userCalendarService;
+    private final UserStaffService userStaffService;
 
     /**
      * Get client record by id.
@@ -78,6 +78,23 @@ public class ClientRecordService {
     public List<ClientRecord> findAllRecordsByStaffAndDayAndStatus(Long staffId, Long calendarId, Long userBotId, String status) {
         List<ClientRecord> records = clientRecordRepository.findAllRecordsByStaffIdAndCalendarIdAndUserBotId(staffId, calendarId, userBotId, status);
         records.forEach(record -> record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null)));
+
+        return records;
+    }
+
+    /**
+     * Find all by client id and status.
+     * @param clientId client id
+     * @param status status
+     * @return client records
+     */
+    public List<ClientRecord> findAllByClientIdAndStatus(Long clientId, String status) {
+        List<ClientRecord> records = clientRecordRepository.findAllByClientIdAndStatus(clientId, status);
+
+        records.forEach(record -> {
+            record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+            record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+        });
 
         return records;
     }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
+import ru.aif.aifback.model.user.UserStaff;
 
 /**
  * Client record model.
@@ -38,6 +39,8 @@ public class ClientRecord {
     private UserItem userItem;
     @Transient
     private UserCalendar userCalendar;
+    @Transient
+    private UserStaff userStaff;
 
     public ClientRecord(Long aifClientId, Long aifUserBotId, Long aifUserItemId, Long aifUserCalendarId, Long aifUserStaffId, Long hours, Long mins,
                         String status, LocalDateTime created) {

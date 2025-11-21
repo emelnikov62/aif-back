@@ -2,6 +2,7 @@ package ru.aif.aifback.services.user;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -132,6 +133,21 @@ public class UserCalendarService {
         calendars.forEach(calendar -> calendar.setStaff(userStaffService.getUserStaffById(calendar.getAifUserStaffId())));
 
         return calendars;
+    }
+
+    /**
+     * Find by id.
+     * @param id id
+     * @return user calendar
+     */
+    public Optional<UserCalendar> findById(Long id) {
+        Optional<UserCalendar> userCalendar = userCalendarRepository.findById(id);
+        if (userCalendar.isEmpty()) {
+            return Optional.empty();
+        }
+
+        userCalendar.get().setStaff(userStaffService.getUserStaffById(userCalendar.get().getAifUserStaffId()));
+        return userCalendar;
     }
 
 }

@@ -28,7 +28,11 @@ public final class TgClientBotRecordButtons {
     public static final String CALENDAR_SELECT_MONTH_TITLE = "\uD83D\uDCC6 %s - Выберите месяц";
     public static final String CALENDAR_SELECT_DAY_TITLE = "\uD83D\uDCC6 %s - Выберите день";
     public static final String CALENDAR_SELECT_TIME_TITLE = "\uD83D\uDCC6 %s - Выберите время";
+    public static final String STAFF_SELECT_TITLE = "\uD83D\uDC64 %s - Выберите специалиста";
     public static final String CALENDAR_EMPTY_TIME_TITLE = "\uD83D\uDEAB Свободных мест нет. Выберите другой день";
+    public static final String STAFF_EMPTY_TITLE = "\uD83D\uDEAB Свободных специалистов нет. Выберите другое время";
+    public static final String RECORDS_EMPTY_TITLE = "\uD83D\uDEAB Активных записей нет";
+    public static final String CONFIRM_RECORD_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запись. Попробуйте позже";
 
     public final static String BOT_ACTIVE = "bot_active";
     public final static String BOT_HISTORY = "bot_history";
@@ -42,8 +46,9 @@ public final class TgClientBotRecordButtons {
     public static final String BOT_SELECT_MONTH = "bot_select_month";
     public static final String BOT_SELECT_DAY = "bot_select_day";
     public static final String BOT_SELECT_TIME = "bot_select_time";
-    public static final String BOT_CONFIRM_SELECT_TIME = "back_confirm_select_time";
+    public static final String BOT_CONFIRM_SELECT_TIME = "bot_confirm_select_time";
     public static final String BOT_ADD_RECORD = "bot_add_record";
+    public static final String BOT_RECORD_SHOW = "bot_record_show";
 
     /**
      * Create main menu.
