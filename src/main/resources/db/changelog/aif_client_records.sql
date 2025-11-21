@@ -22,3 +22,6 @@ create index if not exists aif_client_records_user_calendar_idx on aif_client_re
 create index if not exists aif_client_records_hours_idx on aif_client_records(hours);
 create index if not exists aif_client_records_mins_idx on aif_client_records(mins);
 create index if not exists aif_client_records_status_idx on aif_client_records(status);
+
+alter table aif_client_records add if not exists aif_user_staff_id bigint not null constraint aif_client_records_user_staffs_fl references aif_user_staffs;
+create index if not exists aif_client_records_staff_idx on aif_client_records(aif_user_staff_id);

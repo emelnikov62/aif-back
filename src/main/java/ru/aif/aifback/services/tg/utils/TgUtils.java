@@ -1,10 +1,13 @@
 package ru.aif.aifback.services.tg.utils;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.Keyboard;
@@ -12,6 +15,8 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.model.client.ClientRecordTime;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 
@@ -92,12 +97,110 @@ public final class TgUtils {
      * Get format times by user calendar and user item.
      * @param userCalendar user calendar
      * @param userItem user item
-     * @param minTimeUserItem min time user item
+     * @param minUserItem min user item
+     * @param records client records
      * @return times
      */
-    public static Map<String, Pair<Long, Long>> formatTimeCalendar(UserCalendar userCalendar, UserItem userItem, Long minTimeUserItem) {
-        Long userItemTime = userItem.getHours() * 60L + userItem.getMins();
-        return Collections.emptyMap();
+    public static List<ClientRecordTime> formatTimeCalendar(UserCalendar userCalendar,
+                                                            UserItem userItem,
+                                                            UserItem minUserItem,
+                                                            List<ClientRecord> records) {
+        List<ClientRecordTime> times = new ArrayList<>();
+        long userItemTime = userItem.getHours() * 60 + userItem.getMins();
+
+        if (records.isEmpty()) {
+            long allTime = (((userCalendar.getHoursEnd() - userItem.getHours()) - userCalendar.getHoursStart()) * 60) - userItem.getMins();
+            int repeated = (int) Math.ceil((double) (allTime / userItemTime)) + 1;
+            fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, null, null)
+                    .ifPresent(times::addAll);
+        } else {
+            LocalDateTime startDate = LocalDateTime.of(Math.toIntExact(userCalendar.getYear()),
+                                                       Math.toIntExact(userCalendar.getMonth()),
+                                                       Math.toIntExact(userCalendar.getDay()),
+                                                       Math.toIntExact(userCalendar.getHoursStart()),
+                                                       Math.toIntExact(userCalendar.getMinsStart()));
+
+            for (ClientRecord record : records) {
+                LocalDateTime nextDate = LocalDateTime.of(Math.toIntExact(userCalendar.getYear()),
+                                                          Math.toIntExact(userCalendar.getMonth()),
+                                                          Math.toIntExact(userCalendar.getDay()),
+                                                          Math.toIntExact(record.getHours()),
+                                                          Math.toIntExact(record.getMins()));
+
+                long diff = ChronoUnit.MINUTES.between(startDate, nextDate);
+                if (diff >= userItemTime) {
+                    int repeated = (int) (diff / userItemTime);
+                    fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, userCalendar.getHoursStart(),
+                              userCalendar.getMinsStart()).ifPresent(times::addAll);
+                }
+
+                startDate = nextDate;
+                startDate = startDate.plusHours(record.getUserItem().getHours());
+                startDate = startDate.plusMinutes(record.getUserItem().getMins());
+            }
+
+            LocalDateTime endDate = LocalDateTime.of(Math.toIntExact(userCalendar.getYear()),
+                                                     Math.toIntExact(userCalendar.getMonth()),
+                                                     Math.toIntExact(userCalendar.getDay()),
+                                                     Math.toIntExact(userCalendar.getHoursEnd()),
+                                                     Math.toIntExact(userCalendar.getMinsEnd()));
+            long diff = ChronoUnit.MINUTES.between(startDate, endDate);
+            if (diff >= userItemTime) {
+                int repeated = (int) (diff / userItemTime);
+                fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, (long) startDate.getHour(),
+                          (long) startDate.getMinute()).ifPresent(times::addAll);
+            }
+        }
+
+        return times;
+    }
+
+    /**
+     * Fill times by count.
+     * @param count count
+     * @param hours hours
+     * @param mins mins
+     * @param userItemId user item id
+     * @param userCalendar user calendar
+     * @param hoursStart hours start
+     * @param minsStart mins start
+     * @return times
+     */
+    public static Optional<List<ClientRecordTime>> fillTimes(int count,
+                                                             long hours,
+                                                             long mins,
+                                                             Long userItemId,
+                                                             UserCalendar userCalendar,
+                                                             Long hoursStart,
+                                                             Long minsStart) {
+        if (count == 0) {
+            return Optional.empty();
+        }
+
+        List<ClientRecordTime> times = new ArrayList<>();
+        LocalDateTime startDate = LocalDateTime.of(Math.toIntExact(userCalendar.getYear()),
+                                                   Math.toIntExact(userCalendar.getMonth()),
+                                                   Math.toIntExact(userCalendar.getDay()),
+                                                   Math.toIntExact(Objects.isNull(hoursStart)
+                                                                   ? userCalendar.getHoursStart()
+                                                                   : hoursStart),
+                                                   Math.toIntExact(Objects.isNull(minsStart)
+                                                                   ? userCalendar.getMinsStart()
+                                                                   : minsStart));
+        for (int i = 1; i <= count; i++) {
+            times.add(ClientRecordTime.builder()
+                                      .hours(startDate.toLocalTime().getHour())
+                                      .mins(startDate.toLocalTime().getMinute())
+                                      .staffId(userCalendar.getAifUserStaffId())
+                                      .calendarId(userCalendar.getId())
+                                      .itemId(userItemId)
+                                      .build());
+
+            startDate = startDate.plusHours(hours);
+            startDate = startDate.plusMinutes(mins);
+        }
+
+        return Optional.of(times);
     }
 
     /**

@@ -27,12 +27,13 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -40,14 +41,18 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.model.client.ClientRecordTime;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
+import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.TgBotService;
 import ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons;
+import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
@@ -65,6 +70,7 @@ public class TgRecordBotService implements TgBotService {
     private final UserItemService userItemService;
     private final UserCalendarService userCalendarService;
     private final ClientService clientService;
+    private final ClientRecordService clientRecordService;
 
     /**
      * Webhook process.
@@ -158,8 +164,7 @@ public class TgRecordBotService implements TgBotService {
                                              Long.valueOf(year),
                                              Long.valueOf(month),
                                              Long.valueOf(day),
-                                             keyboard,
-                                             webhookRequest.getChatId())) {
+                                             keyboard)) {
                     answer = CALENDAR_EMPTY_TIME_TITLE;
                 }
 
@@ -344,12 +349,11 @@ public class TgRecordBotService implements TgBotService {
      * @param month month
      * @param day day
      * @param keyboard keyboard
-     * @param tgId tg id client
      * @return true/false
      */
-    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard, String tgId) {
-        Optional<UserCalendar> userCalendar = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
-        if (userCalendar.isEmpty()) {
+    private Boolean processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+        List<UserCalendar> calendars = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
+        if (calendars.isEmpty()) {
             return Boolean.FALSE;
         }
 
@@ -358,25 +362,36 @@ public class TgRecordBotService implements TgBotService {
             return Boolean.FALSE;
         }
 
-        Map<String, Pair<Long, Long>> times = TgUtils.formatTimeCalendar(userCalendar.get(), userItem.get(), userItemService.getMinTimeUserItem(id));
+        Map<String, List<ClientRecordTime>> times = new HashMap<>();
+        for (UserCalendar calendar : calendars) {
+            List<ClientRecord> records = clientRecordService.findAllRecordsByStaffAndDayAndStatus(
+                    calendar.getAifUserStaffId(), calendar.getId(), id, TgClientRecordType.ACTIVE.getType());
+
+            List<ClientRecordTime> timesList = TgUtils.formatTimeCalendar(calendar, userItem.get(), userItemService.getMinUserItem(id), records);
+            if (timesList.isEmpty()) {
+                continue;
+            }
+
+            timesList.forEach(time -> {
+                String key = String.format("%02d:%02d", time.getHours(), time.getMins());
+
+                if (!times.containsKey(key)) {
+                    times.put(key, new ArrayList<>());
+                }
+                times.get(key).add(time);
+            });
+        }
+
         if (times.isEmpty()) {
             return Boolean.FALSE;
         }
 
-        Long clientId = clientService.getClientIdOrCreate(tgId);
-        if (Objects.isNull(clientId)) {
-            return Boolean.FALSE;
-        }
-
-        times.forEach((key, value) -> keyboard.addRow(new InlineKeyboardButton(key).callbackData(
-                String.format("%s;%s;%s;%s;%s;%s;%s",
-                              BOT_SELECT_TIME,
-                              clientId,
-                              id,
-                              userItemId,
-                              userCalendar.get().getId(),
-                              value.getLeft(),
-                              value.getRight()))));
+        times.entrySet()
+             .stream()
+             .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
+             .forEach(time -> {
+                 keyboard.addRow(new InlineKeyboardButton(time.getKey()).callbackData(String.format("%s;%s", BOT_SELECT_TIME, userItemId)));
+             });
 
         return Boolean.TRUE;
     }

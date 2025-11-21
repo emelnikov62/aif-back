@@ -1,7 +1,5 @@
 package ru.aif.aifback.services.user;
 
-import static ru.aif.aifback.constants.Constants.MIN_TIME_ITEM;
-
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
@@ -228,12 +226,12 @@ public class UserItemService {
     }
 
     /**
-     * Get min time user item.
+     * Get min user item.
      * @param userBotId user bot id
-     * @return min time user item
+     * @return min user item
      */
-    public Long getMinTimeUserItem(Long userBotId) {
-        return userItemRepository.findMinimumItemTime(userBotId).orElse(MIN_TIME_ITEM);
+    public UserItem getMinUserItem(Long userBotId) {
+        return userItemRepository.findMinimumUserItem(userBotId).orElse(null);
     }
 
     /**

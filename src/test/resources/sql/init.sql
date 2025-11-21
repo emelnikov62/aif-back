@@ -1,0 +1,1 @@
+delete from aif_client_records where aif_client_id = 2;

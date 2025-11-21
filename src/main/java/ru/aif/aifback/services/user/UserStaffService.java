@@ -44,6 +44,15 @@ public class UserStaffService {
     }
 
     /**
+     * Get user staff by ud.
+     * @param id id
+     * @return user staffs
+     */
+    public UserStaff getUserStaffById(Long id) {
+        return userStaffRepository.findById(id).orElse(null);
+    }
+
+    /**
      * Add user staff.
      * @param userItemRequest userItemRequest
      * @return true/false

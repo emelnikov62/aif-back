@@ -3,6 +3,7 @@ package ru.aif.aifback.model.user;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
@@ -31,5 +32,8 @@ public class UserCalendar {
     private Long month;
     private Long year;
     private LocalDateTime created;
+
+    @Transient
+    private UserStaff staff;
 
 }
