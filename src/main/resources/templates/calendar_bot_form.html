@@ -15,7 +15,7 @@
 </head>
 <body class="full-width">
 <div class="main gradient-bs full-width full-height flex flex-row align-items-start justify-center padding-20 main-root">
-    <div class="flex flex-column gap-10 full-width align-items-center justify-center">
+    <div class="flex flex-column gap-10 full-width align-items-center justify-start relative full-height overflow">
         <div class="flex flex-column gap-10 full-width align-items-center justify-center">
             <span class="main orange fs-24 text-center">AIF</span>
             <span class="main fs-20 text-center">Настройка календаря записи</span>
@@ -31,7 +31,7 @@
                 </select>
             </div>
         </div>
-        <div class="flex flex-row full-width back back-static block gradient-ig hide-block calendar-content opacity-full">
+        <div class="flex flex-row overflow-y full-width back back-static block gradient-ig hide-block calendar-content opacity-full">
             <div class="flex flex-column gap-10 full-width padding-5">
                 <div class="flex flex-row gap-10 full-width align-items-center justify-space-between opacity-full">
                     <div class="prev-btn block back back-static padding-10 flex flex-row align-items-center justify-center cursor border-dashed"
@@ -62,7 +62,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="calendar-days flex flex-column gap-10 full-width back back-static gradient-empty block opacity-full padding-10">
+                <div class="calendar-days overflow-y flex flex-column gap-10 full-width back back-static gradient-empty block opacity-full padding-10">
                     <div class="flex flex-row align-items-center justify-center full-width gap-5 opacity-full week-1">
                         <div class="flex cursor block flex-1 flex-column align-items-center justify-start height-90 gradient-bs disabled-back day-container day-container-1">
                             <div class="flex flex-row full-width align-items-center justify-space-between padding-5" style="pointer-events: none">
