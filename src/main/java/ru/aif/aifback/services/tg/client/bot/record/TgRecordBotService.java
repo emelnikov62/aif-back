@@ -394,7 +394,7 @@ public class TgRecordBotService implements TgBotService {
                                                                     .toList()) {
             btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s", BOT_SELECT_TIME, userItemId)));
 
-            if (num++ % 5 == 0) {
+            if (++num % 5 == 0) {
                 keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
                 btns.clear();
             }
