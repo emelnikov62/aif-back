@@ -386,12 +386,23 @@ public class TgRecordBotService implements TgBotService {
             return Boolean.FALSE;
         }
 
-        times.entrySet()
-             .stream()
-             .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
-             .forEach(time -> {
-                 keyboard.addRow(new InlineKeyboardButton(time.getKey()).callbackData(String.format("%s;%s", BOT_SELECT_TIME, userItemId)));
-             });
+        List<InlineKeyboardButton> btns = new ArrayList<>();
+        int num = 0;
+        for (Map.Entry<String, List<ClientRecordTime>> entry : times.entrySet()
+                                                                    .stream()
+                                                                    .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
+                                                                    .toList()) {
+            btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s", BOT_SELECT_TIME, userItemId)));
+
+            if (num++ % 5 == 0) {
+                keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+                btns.clear();
+            }
+        }
+
+        if (!btns.isEmpty()) {
+            keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+        }
 
         return Boolean.TRUE;
     }

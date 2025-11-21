@@ -112,7 +112,7 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @param aifUserBotId user bot id
      * @return user calendar days
      */
-    @Query(value = "select a.day" +
+    @Query(value = "select distinct a.day" +
                    "  from aif_user_calendar a" +
                    " where a.year = :year" +
                    "   and a.month = :month" +
