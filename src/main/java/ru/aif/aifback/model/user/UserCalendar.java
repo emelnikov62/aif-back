@@ -22,6 +22,7 @@ public class UserCalendar {
     @Id
     private Long id;
     private Long aifUserBotId;
+    private Long aifUserStaffId;
     private Long hoursStart;
     private Long minsStart;
     private Long hoursEnd;

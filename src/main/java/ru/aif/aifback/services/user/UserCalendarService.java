@@ -38,7 +38,8 @@ public class UserCalendarService {
                                               userCalendarRequest.getMinsStart(),
                                               userCalendarRequest.getHoursEnd(),
                                               userCalendarRequest.getMinsEnd(),
-                                              userCalendarRequest.getId());
+                                              userCalendarRequest.getId(),
+                                              userCalendarRequest.getStaffId());
             });
             return Boolean.TRUE;
         } catch (Exception e) {
@@ -51,11 +52,12 @@ public class UserCalendarService {
      * @param id id
      * @param month month
      * @param year year
+     * @param staffId staff id
      * @return user calendar
      */
-    public List<UserCalendar> getUserCalendar(Long id, Long month, Long year) {
+    public List<UserCalendar> getUserCalendar(Long id, Long month, Long year, Long staffId) {
         try {
-            return userCalendarRepository.getUserCalendar(id, month, year);
+            return userCalendarRepository.getUserCalendar(id, month, year, staffId);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Collections.emptyList();

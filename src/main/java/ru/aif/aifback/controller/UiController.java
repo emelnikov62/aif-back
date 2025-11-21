@@ -62,6 +62,10 @@ public class UiController {
     @GetMapping(value = "/calendar-bot-form")
     public String calendarBotForm(@RequestParam(name = "id") String id, Model model) {
         model.addAttribute("id", id);
+
+        List<UserStaff> staffs = userStaffService.getUserStaffs(Long.valueOf(id));
+        model.addAttribute("staffs", staffs.stream().filter(UserStaff::isActive).toList());
+
         return "calendar_bot_form";
     }
 
@@ -191,13 +195,15 @@ public class UiController {
      * @param id user bot id
      * @param month month
      * @param year year
+     * @param staffId staff id
      * @return user calendar
      */
     @GetMapping(value = "/user-calendar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserCalendar>> getUserCalendar(@RequestParam(name = "id") Long id,
                                                               @RequestParam(name = "month") Long month,
-                                                              @RequestParam(name = "year") Long year) {
-        return ResponseEntity.ok(userCalendarService.getUserCalendar(id, month, year));
+                                                              @RequestParam(name = "year") Long year,
+                                                              @RequestParam(name = "staff_id") Long staffId) {
+        return ResponseEntity.ok(userCalendarService.getUserCalendar(id, month, year, staffId));
     }
 
     /**

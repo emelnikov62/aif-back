@@ -10,14 +10,12 @@ $(document).ready(function () {
         window.Telegram.WebApp.close();
     });
 
-    fillCalendar(today);
-
     $('.prev-btn').click(() => {
         if (selected.length === 0) {
             toggleLoading();
 
             today.setMonth(today.getMonth() - 1);
-            fillCalendar(today);
+            fillCalendar(today, $('#staff-selected').val());
 
             setTimeout(() => {
                 toggleLoading();
@@ -32,7 +30,7 @@ $(document).ready(function () {
             toggleLoading();
 
             today.setMonth(today.getMonth() + 1);
-            fillCalendar(today);
+            fillCalendar(today, $('#staff-selected').val());
 
             setTimeout(() => {
                 toggleLoading();
@@ -187,7 +185,7 @@ function confirmEditTime() {
             complete: (data) => {
                 if (data.responseText === 'true') {
                     showAlert('success', 'Календарь сохранен');
-                    fillCalendar(today);
+                    fillCalendar(today, $('#staff-selected').val());
                 } else {
                     showAlert('error', 'Произошла ошибка. Попробуйте позже');
                 }
@@ -218,7 +216,7 @@ function deleteTime() {
                     deleteSelected();
 
                     showAlert('success', 'Календарь сохранен');
-                    fillCalendar(today);
+                    fillCalendar(today, $('#staff-selected').val());
                 } else {
                     showAlert('error', 'Произошла ошибка. Попробуйте позже');
                 }
@@ -326,7 +324,7 @@ function confirmAddTime() {
             complete: (data) => {
                 if (data.responseText === 'true') {
                     showAlert('success', 'Календарь сохранен');
-                    fillCalendar(today);
+                    fillCalendar(today, $('#staff-selected').val());
                 } else {
                     showAlert('error', 'Произошла ошибка. Попробуйте позже');
                 }
@@ -372,22 +370,25 @@ function confirmWithoutSaved(back) {
         today.setMonth(today.getMonth() + 1);
     }
 
-    fillCalendar(today);
+    fillCalendar(today, $('#staff-selected').val());
     toggleLoading();
 }
 
-function fillCalendar(date) {
+function fillCalendar(date, staffId) {
+    $('.calendar-content').addClass('hide-block');
+    $('.calendar-btns').addClass('hide-block');
+    toggleLoading();
     changeCurrentDate(date);
-    fillMonthCalendar(date.getMonth(), date.getFullYear());
+    fillMonthCalendar(date.getMonth(), date.getFullYear(), staffId);
 }
 
 function changeCurrentDate(date) {
     $('.current-date').text(`${monthNames[date.getMonth()]} ${date.getFullYear()}`);
 }
 
-function fillMonthCalendar(month, year) {
+function fillMonthCalendar(month, year, staffId) {
     let id = $('#bot_id').val();
-    $.get(`/aif/admin/user-calendar?id=${id}&month=${month + 1}&year=${year}`).done((days) => {
+    $.get(`/aif/admin/user-calendar?id=${id}&month=${month + 1}&year=${year}&staff_id=${staffId}`).done((days) => {
         $('.days').text('');
         $('.time-calendar').remove();
         $('.day-container').addClass('disabled-back').off('click');
@@ -462,6 +463,10 @@ function fillMonthCalendar(month, year) {
 
             date.setDate(date.getDate() + 1);
         }
+
+        toggleLoading();
+        $('.calendar-content').removeClass('hide-block');
+        $('.calendar-btns').removeClass('hide-block');
     });
 }
 
@@ -494,4 +499,8 @@ function ifOnlyDays(set) {
     }
 
     return selected.findIndex(s => set ? !s.set : s.set) === -1;
+}
+
+function selectStaff(elem) {
+    fillCalendar(today, $(elem).val());
 }

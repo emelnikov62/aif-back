@@ -20,7 +20,18 @@
             <span class="main orange fs-24 text-center">AIF</span>
             <span class="main fs-20 text-center">Настройка календаря записи</span>
         </div>
-        <div class="flex flex-row full-width back back-static block gradient-ig calendar-content opacity-full">
+        <div class="flex full-width flex-column align-items-center justify-center gap-10">
+            <div class="fs-16 orange border-dashed padding-10">Специалист</div>
+            <div class="flex flex-rog align-items-center justify-center full-width">
+                <select class="staff-list input flex-1 back-static fs-16 full-width input-skin-price height-40 border-radius-10 full-width padding-left-right-10"
+                        name="staff-selected" id="staff-selected" onchange="selectStaff(this)">
+                    <option value="-1" disabled selected>Выберите специалиста</option>
+                    <option th:each="staff : ${staffs}" th:value="${staff.id}"
+                            th:text="${staff.name} + ' ' + ${staff.surname} + ' ' + ${staff.third}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="flex flex-row full-width back back-static block gradient-ig hide-block calendar-content opacity-full">
             <div class="flex flex-column gap-10 full-width padding-5">
                 <div class="flex flex-row gap-10 full-width align-items-center justify-space-between opacity-full">
                     <div class="prev-btn block back back-static padding-10 flex flex-row align-items-center justify-center cursor border-dashed"
@@ -319,7 +330,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-row align-items-center justify-space-between full-width">
+        <div class="flex flex-row hide-block align-items-center calendar-btns justify-space-between full-width">
             <div class="flex flex-row gap-10 align-items-center justify-center">
                 <div class="button gap-5 flex flex-row padding-10 back-static back block height-50 upper font-bold fs-16 border-[main-color] gradient-fresh-block"
                      id="work_select_button">Будни

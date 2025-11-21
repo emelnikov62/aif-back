@@ -28,10 +28,12 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      * @param hoursEnd hours end
      * @param minsEnd mins end
      * @param aifUserBotId user bot id
+     * @param aifUserStaffId user staff id
      * @return id
      */
-    @Query(value = "insert into aif_user_calendar (day, month, year, hours_start, mins_start, hours_end, mins_end, aif_user_bot_id)" +
-                   "     values(:day, :month, :year, :hours_start, :mins_start, :hours_end, :mins_end, :aif_user_bot_id)")
+    @Query(value =
+            "insert into aif_user_calendar (day, month, year, hours_start, mins_start, hours_end, mins_end, aif_user_bot_id, aif_user_staff_id)" +
+            "     values(:day, :month, :year, :hours_start, :mins_start, :hours_end, :mins_end, :aif_user_bot_id, :aif_user_staff_id)")
     @Modifying
     Long addDay(@Param("day") Long day,
                 @Param("month") Long month,
@@ -40,19 +42,24 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
                 @Param("mins_start") Long minsStart,
                 @Param("hours_end") Long hoursEnd,
                 @Param("mins_end") Long minsEnd,
-                @Param("aif_user_bot_id") Long aifUserBotId);
+                @Param("aif_user_bot_id") Long aifUserBotId,
+                @Param("aif_user_staff_id") Long aifUserStaffId);
 
     /**
      * Get user calendar.
      * @param aifUserBotId user bot id
      * @param month month
      * @param year year
+     * @param aifUserStaffId user staff id
      * @return user calendar
      */
-    @Query(value = "select * from aif_user_calendar a where a.aif_user_bot_id = :aif_user_bot_id and a.month = :month and a.year = :year")
+    @Query(value = "select *" +
+                   "  from aif_user_calendar a" +
+                   " where a.aif_user_bot_id = :aif_user_bot_id and a.aif_user_staff_id = :aif_user_staff_id and a.month = :month and a.year = :year")
     List<UserCalendar> getUserCalendar(@Param("aif_user_bot_id") Long aifUserBotId,
                                        @Param("month") Long month,
-                                       @Param("year") Long year);
+                                       @Param("year") Long year,
+                                       @Param("aif_user_staff_id") Long aifUserStaffId);
 
     /**
      * Delete days from calendar.

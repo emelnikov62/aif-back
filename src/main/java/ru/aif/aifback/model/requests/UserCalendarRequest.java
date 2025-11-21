@@ -35,4 +35,6 @@ public class UserCalendarRequest {
 
     private Long year;
 
+    private Long staffId;
+
 }
