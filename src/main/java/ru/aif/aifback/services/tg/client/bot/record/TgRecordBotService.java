@@ -3,6 +3,7 @@ package ru.aif.aifback.services.tg.client.bot.record;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.DELIMITER_CHAR;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
+import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.BACK_TO_GROUPS_MENU;
@@ -187,6 +188,7 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT_TIME)) {
+                TgUtils.sendMessage(TG_LOG_ID, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN));
                 String hours = webhookRequest.getText().split(DELIMITER)[2];
                 String mins = webhookRequest.getText().split(DELIMITER)[3];
                 String calendarIds = webhookRequest.getText().split(DELIMITER)[1];
@@ -202,6 +204,7 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_CONFIRM_SELECT_TIME)) {
+                TgUtils.sendMessage(TG_LOG_ID, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN));
                 String hours = webhookRequest.getText().split(DELIMITER)[2];
                 String mins = webhookRequest.getText().split(DELIMITER)[3];
                 String calendarId = webhookRequest.getText().split(DELIMITER)[1];

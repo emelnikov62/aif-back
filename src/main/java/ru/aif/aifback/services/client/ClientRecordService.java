@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
+import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 import ru.aif.aifback.services.user.UserStaffService;
 
@@ -26,6 +27,7 @@ public class ClientRecordService {
     private final ClientRecordRepository clientRecordRepository;
     private final UserItemService userItemService;
     private final UserStaffService userStaffService;
+    private final UserCalendarService userCalendarService;
 
     /**
      * Get client record by id.
@@ -94,6 +96,7 @@ public class ClientRecordService {
         records.forEach(record -> {
             record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
             record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+            record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
         });
 
         return records;
