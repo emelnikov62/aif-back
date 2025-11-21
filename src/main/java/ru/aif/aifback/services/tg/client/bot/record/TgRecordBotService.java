@@ -27,6 +27,8 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ITEMS_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.RECORDS_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_EMPTY_TITLE;
@@ -123,7 +125,7 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (Objects.equals(webhookRequest.getText(), BOT_GROUP) || Objects.equals(webhookRequest.getText(), BACK_TO_GROUPS_MENU)) {
-                answer = MENU_TITLE;
+                answer = ITEMS_TITLE;
                 if (!processBotGroups(userBot, keyboard)) {
                     answer = GROUP_EMPTY_TITLE;
                 }
@@ -131,11 +133,8 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_ITEMS)) {
-                answer = MENU_TITLE;
                 String groupId = webhookRequest.getText().split(DELIMITER)[1];
-                if (!processBotGroupItems(Long.valueOf(groupId), keyboard)) {
-                    answer = GROUP_EMPTY_TITLE;
-                }
+                answer = processBotGroupItems(Long.valueOf(groupId), keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientBotRecordButtons.BACK_TO_GROUPS_MENU));
             }
 
@@ -188,7 +187,6 @@ public class TgRecordBotService implements TgBotService {
             }
 
             if (webhookRequest.getText().contains(BOT_SELECT_TIME)) {
-                TgUtils.sendMessage(TG_LOG_ID, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN));
                 String hours = webhookRequest.getText().split(DELIMITER)[2];
                 String mins = webhookRequest.getText().split(DELIMITER)[3];
                 String calendarIds = webhookRequest.getText().split(DELIMITER)[1];
@@ -277,7 +275,7 @@ public class TgRecordBotService implements TgBotService {
      * @param keyboard keyboard
      * @return true/false
      */
-    private boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
+    private Boolean processBotGroups(UserBot userBot, InlineKeyboardMarkup keyboard) {
         List<UserItemGroup> groups = userItemService.getUserItemGroupsAndActive(userBot.getId());
         if (groups.isEmpty()) {
             return Boolean.FALSE;
@@ -294,15 +292,20 @@ public class TgRecordBotService implements TgBotService {
      * @param keyboard keyboard
      * @return true/false
      */
-    private boolean processBotGroupItems(Long groupId, InlineKeyboardMarkup keyboard) {
+    private String processBotGroupItems(Long groupId, InlineKeyboardMarkup keyboard) {
+        Optional<UserItemGroup> userItemGroup = userItemService.findUserItemGroupByItemId(groupId);
+        if (userItemGroup.isEmpty()) {
+            return GROUP_EMPTY_TITLE;
+        }
+
         List<UserItem> items = userItemService.getUserItemsByGroupIdAndActive(groupId);
         if (items.isEmpty()) {
-            return Boolean.FALSE;
+            return GROUP_EMPTY_TITLE;
         }
 
         items.forEach(item -> keyboard.addRow(TgClientBotRecordButtons.createGroupItemsBotMenu(item)));
 
-        return Boolean.TRUE;
+        return String.format(GROUP_TITLE, userItemGroup.get().getName());
     }
 
     /**
