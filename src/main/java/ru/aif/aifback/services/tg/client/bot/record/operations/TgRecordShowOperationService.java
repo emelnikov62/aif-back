@@ -18,7 +18,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.tg.TgBotOperationService;
+import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.tg.utils.TgUtils;
@@ -31,7 +31,7 @@ import ru.aif.aifback.services.user.UserItemService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgRecordShowOperationService implements TgBotOperationService {
+public class TgRecordShowOperationService implements TgClientBotOperationService {
 
     private final ClientRecordService clientRecordService;
     private final UserItemService userItemService;

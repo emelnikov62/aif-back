@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Client type bot.
+ * Bot type.
  * @author emelnikov
  */
 @Getter
 @RequiredArgsConstructor
-public enum TgClientTypeBot {
+public enum TgBotType {
 
     BOT_ADMIN("admin"),
     BOT_RECORD("recording_clients");

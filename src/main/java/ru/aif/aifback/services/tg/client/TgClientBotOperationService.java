@@ -1,4 +1,4 @@
-package ru.aif.aifback.services.tg;
+package ru.aif.aifback.services.tg.client;
 
 import com.pengrad.telegrambot.TelegramBot;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
@@ -9,7 +9,7 @@ import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
  * Common TG Bot operation interface.
  * @author emelnikov
  */
-public interface TgBotOperationService {
+public interface TgClientBotOperationService {
 
     /**
      * Main processing.

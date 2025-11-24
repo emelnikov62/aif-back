@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
+import ru.aif.aifback.services.tg.enums.TgBotType;
 
 /**
  * TG client buttons.
@@ -39,7 +39,7 @@ public final class TgClientBotRecordButtons {
      * @return main menu
      */
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
-        if (Objects.equals(typeBot, TgClientTypeBot.BOT_RECORD.getType())) {
+        if (Objects.equals(typeBot, TgBotType.BOT_RECORD.getType())) {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
             keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE).callbackData(TgClientRecordBotOperationType.BOT_RECORD_ACTIVE.getType()));
             keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(TgClientRecordBotOperationType.BOT_GROUP.getType()));

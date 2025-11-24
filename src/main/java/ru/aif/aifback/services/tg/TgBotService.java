@@ -2,7 +2,7 @@ package ru.aif.aifback.services.tg;
 
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
-import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
+import ru.aif.aifback.services.tg.enums.TgBotType;
 
 /**
  * Common TG Bot interface.
@@ -36,6 +36,6 @@ public interface TgBotService {
      * Get bot type.
      * @return bot type
      */
-    TgClientTypeBot getBotType();
+    TgBotType getBotType();
 
 }

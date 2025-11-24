@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
-import ru.aif.aifback.services.tg.TgBotOperationService;
+import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.tg.utils.TgUtils;
@@ -21,7 +21,7 @@ import ru.aif.aifback.services.tg.utils.TgUtils;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgMainOperationService implements TgBotOperationService {
+public class TgMainOperationService implements TgClientBotOperationService {
 
     /**
      * Main processing.

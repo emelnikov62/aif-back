@@ -27,7 +27,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.tg.TgBotOperationService;
+import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
@@ -42,7 +42,7 @@ import ru.aif.aifback.services.user.UserItemService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgSelectDayOperationService implements TgBotOperationService {
+public class TgSelectDayOperationService implements TgClientBotOperationService {
 
     private final UserCalendarService userCalendarService;
     private final UserItemService userItemService;

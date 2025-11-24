@@ -1,8 +1,11 @@
 package ru.aif.aifback.services.tg.admin.bot;
 
-import com.pengrad.telegrambot.model.WebAppInfo;
+import java.util.Objects;
+
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
+import ru.aif.aifback.services.tg.enums.TgBotType;
 
 /**
  * TG admin buttons.
@@ -26,16 +29,7 @@ public final class TgAdminBotButtons {
     public static final String DELETE_BOT_SUCCESS_ANSWER = "✅ Бот удален";
     public static final String CREATE_BOT_ERROR_ANSWER = "⛔ Не удалось создать бота. Попробуйте еще раз";
     public static final String CREATE_BOT_SUCCESS_ANSWER = "✅ Бот создан";
-
-    public final static String BOT_SELECT = "bot_select";
-    public final static String MY_BOTS = "my_bots";
-    public final static String BUY_BOT = "buy_bot";
-    public final static String BOT_DELETE = "bot_delete";
-    public final static String BOT_STATS = "bot_stats";
-    public static final String BACK_TO_MAIN_MENU = "back_to_main_menu";
-    public static final String BOT_CREATE = "bot_create";
-    public static final String BACK_TO_BUY_BOTS_MENU = "back_to_buy_bots_menu";
-    public static final String BACK_TO_MY_BOTS_MENU = "back_to_my_bots_menu";
+    public static final String BOTS_TO_CREATE_EMPTY_TITLE = "\uD83D\uDCAD В данный момент нельзя подключить ботов";
 
     /**
      * Create main menu.
@@ -43,8 +37,8 @@ public final class TgAdminBotButtons {
      */
     public static InlineKeyboardMarkup createMainMenuKeyboard() {
         return new InlineKeyboardMarkup(
-                new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(BUY_BOT),
-                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(MY_BOTS)
+                new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(TgAdminBotOperationType.BOT_CREATE.getType()),
+                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(TgAdminBotOperationType.BOTS_BOTS.getType())
         );
     }
 
@@ -58,48 +52,17 @@ public final class TgAdminBotButtons {
     }
 
     /**
-     * Create link bot button.
-     * @param id id
-     * @return link bot button
+     * Get bot icon.
+     * @param type type
+     * @return bot icon
      */
-    public static InlineKeyboardButton createLinkBotButton(String id) {
-        return new InlineKeyboardButton(LINK_TOKEN_TITLE)
-                .webApp(new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot-form?id=" + id));
-    }
+    public static String getBotIconByType(String type) {
+        String icon = "\uD83C\uDF10";
 
-    /**
-     * Create delete bot button.
-     * @param id id
-     * @return delete bot button
-     */
-    public static InlineKeyboardButton createDeleteBotButton(String id) {
-        return new InlineKeyboardButton(DELETE_BOT_TITLE).callbackData(String.format("%s;%s", BOT_DELETE, id));
-    }
+        if (Objects.equals(type, TgBotType.BOT_RECORD.getType())) {
+            icon = "\uD83D\uDCDD";
+        }
 
-    /**
-     * Create selected bot menu.
-     * @param id id
-     * @return selected bot menu
-     */
-    public static InlineKeyboardButton[] createSelectedBotMenu(String id) {
-        return new InlineKeyboardButton[] {
-                new InlineKeyboardButton(BOT_STATS_TITLE).callbackData(String.format("%s;%s", BOT_STATS, id)),
-                new InlineKeyboardButton(BOT_ITEMS_TITLE).webApp(
-                        new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + id))
-        };
-    }
-
-    /**
-     * Create calendar and staff bot buttons.
-     * @param id id
-     * @return calendar and staff bot buttons
-     */
-    public static InlineKeyboardButton[] createCalendarStaffBotButtons(String id) {
-        return new InlineKeyboardButton[] {
-                new InlineKeyboardButton(BOT_STAFF_TITLE).webApp(
-                        new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/staff-bot-form?id=" + id)),
-                new InlineKeyboardButton(BOT_CALENDAR_TITLE).webApp(
-                        new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/calendar-bot-form?id=" + id))
-        };
+        return icon;
     }
 }

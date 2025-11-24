@@ -15,9 +15,9 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
-import ru.aif.aifback.services.tg.TgBotOperationService;
+import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.TgBotService;
-import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
+import ru.aif.aifback.services.tg.enums.TgBotType;
 import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
@@ -31,7 +31,7 @@ import ru.aif.aifback.services.user.UserItemService;
 @RequiredArgsConstructor
 public class TgRecordBotService implements TgBotService {
 
-    private final List<TgBotOperationService> operations;
+    private final List<TgClientBotOperationService> operations;
     private final UserItemService userItemService;
     private final UserCalendarService userCalendarService;
     private final ClientService clientService;
@@ -63,10 +63,10 @@ public class TgRecordBotService implements TgBotService {
     public void processCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
         TelegramBot bot = new TelegramBot(userBot.getToken());
         try {
-            TgBotOperationService operation = operations.stream()
-                                                        .filter(f -> webhookRequest.getText().contains(f.getOperationType().getType()))
-                                                        .findFirst()
-                                                        .orElse(null);
+            TgClientBotOperationService operation = operations.stream()
+                                                              .filter(f -> webhookRequest.getText().contains(f.getOperationType().getType()))
+                                                              .findFirst()
+                                                              .orElse(null);
             if (Objects.isNull(operation)) {
                 TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()),
                                     MENU_TITLE,
@@ -99,8 +99,8 @@ public class TgRecordBotService implements TgBotService {
      * @return bot type
      */
     @Override
-    public TgClientTypeBot getBotType() {
-        return TgClientTypeBot.BOT_RECORD;
+    public TgBotType getBotType() {
+        return TgBotType.BOT_RECORD;
     }
 
 }
