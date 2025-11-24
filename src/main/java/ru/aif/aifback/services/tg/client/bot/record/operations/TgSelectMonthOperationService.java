@@ -3,6 +3,13 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_DAY_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_DAY;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_MONTH;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_YEAR;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 
 /**
@@ -51,12 +56,9 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
                                                Long.valueOf(year),
                                                Long.valueOf(month),
                                                keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s",
-                                                                                TgClientRecordBotOperationType.BOT_SELECT_YEAR.getType(),
-                                                                                year,
-                                                                                itemId)));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), year, itemId)));
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -76,9 +78,9 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
         List<InlineKeyboardButton> btns = new ArrayList<>();
         int num = 0;
         while (num < days.size()) {
-            String title = String.format("%s (%s)", days.get(num), TgUtils.getDayOfWeek(days.get(num), month, year));
+            String title = String.format("%s (%s)", days.get(num), getDayOfWeek(days.get(num), month, year));
             InlineKeyboardButton btn = new InlineKeyboardButton(title).callbackData(
-                    String.format("%s;%s;%s;%s;%s", TgClientRecordBotOperationType.BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId));
+                    String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId));
             btns.add(btn);
 
             num++;
@@ -93,7 +95,7 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(month), year);
+        return String.format(CALENDAR_SELECT_DAY_TITLE, getMonthByNumber(month), year);
     }
 
     /**
@@ -102,6 +104,6 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_SELECT_MONTH;
+        return BOT_SELECT_MONTH;
     }
 }

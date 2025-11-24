@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,9 +45,9 @@ public class UserCalendarService {
                                               userCalendarRequest.getId(),
                                               userCalendarRequest.getStaffId());
             });
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -73,9 +76,9 @@ public class UserCalendarService {
     public Boolean deleteDays(UserCalendarRequest userCalendarRequest) {
         try {
             userCalendarRepository.deleteDays(userCalendarRequest.getIds(), userCalendarRequest.getId());
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -93,9 +96,9 @@ public class UserCalendarService {
                                                userCalendarRequest.getHoursEnd(),
                                                userCalendarRequest.getMinsEnd());
             });
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 

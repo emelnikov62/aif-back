@@ -3,6 +3,8 @@ package ru.aif.aifback.services.tg.admin.bot;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createMainMenuKeyboard;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +20,6 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.TgBotService;
 import ru.aif.aifback.services.tg.admin.TgAdminBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgBotType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 
 /**
  * TG Admin API service.
@@ -70,17 +71,14 @@ public class TgAdminBotService implements TgBotService {
                                                              .findFirst()
                                                              .orElse(null);
             if (Objects.isNull(operation)) {
-                TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()),
-                                    TgAdminBotButtons.MENU_TITLE,
-                                    TgAdminBotButtons.createMainMenuKeyboard(),
-                                    bot);
+                sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(), bot);
                 return;
             }
 
             operation.process(webhookRequest, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            TgUtils.sendMessage(TG_LOG_ID, e.getMessage(), bot);
+            sendMessage(TG_LOG_ID, e.getMessage(), bot);
         }
     }
 
@@ -91,7 +89,7 @@ public class TgAdminBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, TgAdminBotButtons.createMainMenuKeyboard(), bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(), bot);
     }
 
     /**

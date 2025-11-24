@@ -4,6 +4,12 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.DELIMITER_CHAR;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_SELECT_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_DAY;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_TIME;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +28,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserStaff;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 
 /**
@@ -63,14 +67,9 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
                                               Long.valueOf(itemId),
                                               calendarIds,
                                               keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s;%s",
-                                                                                TgClientRecordBotOperationType.BOT_SELECT_DAY.getType(),
-                                                                                day,
-                                                                                month,
-                                                                                year,
-                                                                                itemId)));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), day, month, year, itemId)));
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -105,7 +104,7 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
             UserStaff userStaff = userCalendar.get().getStaff();
             String staffFio = String.format("%s %s %s", userStaff.getSurname(), userStaff.getName(), userStaff.getThird());
             keyboard.addRow(new InlineKeyboardButton(staffFio).callbackData(String.format("%s;%s;%s;%s;%s;%s",
-                                                                                          TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME.getType(),
+                                                                                          BOT_CONFIRM_SELECT_TIME.getType(),
                                                                                           userCalendar.get().getId(),
                                                                                           hours,
                                                                                           mins,
@@ -115,7 +114,7 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
 
         return keyboard.inlineKeyboard().length == 0
                ? STAFF_EMPTY_TITLE
-               : String.format(STAFF_SELECT_TITLE, TgUtils.getDayOfWeek(day, month, year), hours, mins, day, month, year);
+               : String.format(STAFF_SELECT_TITLE, getDayOfWeek(day, month, year), hours, mins, day, month, year);
     }
 
     /**
@@ -124,6 +123,6 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_SELECT_TIME;
+        return BOT_SELECT_TIME;
     }
 }

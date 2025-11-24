@@ -2,6 +2,9 @@ package ru.aif.aifback.services.tg.client.bot.record;
 
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
+import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,10 +18,9 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
-import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.TgBotService;
+import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgBotType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 
@@ -68,17 +70,14 @@ public class TgRecordBotService implements TgBotService {
                                                               .findFirst()
                                                               .orElse(null);
             if (Objects.isNull(operation)) {
-                TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()),
-                                    MENU_TITLE,
-                                    TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()),
-                                    bot);
+                sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
                 return;
             }
 
             operation.process(webhookRequest, userBot, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            TgUtils.sendMessage(TG_LOG_ID, e.getMessage(), bot);
+            sendMessage(TG_LOG_ID, e.getMessage(), bot);
         }
     }
 
@@ -90,8 +89,7 @@ public class TgRecordBotService implements TgBotService {
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
         TelegramBot bot = new TelegramBot(userBot.getToken());
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE,
-                            TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()), bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
     }
 
     /**
@@ -100,7 +98,7 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public TgBotType getBotType() {
-        return TgBotType.BOT_RECORD;
+        return BOT_RECORD;
     }
 
 }

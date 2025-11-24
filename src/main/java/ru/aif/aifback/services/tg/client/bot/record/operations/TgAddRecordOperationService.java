@@ -2,6 +2,10 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_YEAR;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.time.LocalDate;
 
@@ -17,7 +21,6 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 
 /**
  * TG Add record operation API service.
@@ -44,14 +47,12 @@ public class TgAddRecordOperationService implements TgClientBotOperationService 
         int nextYear = currentYear + 1;
 
         keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear)).callbackData(
-                                String.format("%s;%s;%s", TgClientRecordBotOperationType.BOT_SELECT_YEAR.getType(), currentYear, itemId)),
+                                String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), currentYear, itemId)),
                         new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
-                                String.format("%s;%s;%s", TgClientRecordBotOperationType.BOT_SELECT_YEAR.getType(), nextYear, itemId)));
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s",
-                                                                                TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL.getType(),
-                                                                                itemId)));
+                                String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), nextYear, itemId)));
+        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL.getType(), itemId)));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot);
     }
 
     /**
@@ -60,6 +61,6 @@ public class TgAddRecordOperationService implements TgClientBotOperationService 
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_ADD_RECORD;
+        return BOT_ADD_RECORD;
     }
 }

@@ -3,6 +3,15 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_TIME_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_DAY;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_MONTH;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_TIME;
+import static ru.aif.aifback.services.tg.utils.TgUtils.formatTimeCalendar;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,10 +37,8 @@ import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 
@@ -68,13 +75,9 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
                                                 Long.valueOf(month),
                                                 Long.valueOf(day),
                                                 keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s",
-                                                                                TgClientRecordBotOperationType.BOT_SELECT_MONTH.getType(),
-                                                                                month,
-                                                                                year,
-                                                                                itemId)));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), month, year, itemId)));
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -103,7 +106,7 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
             List<ClientRecord> records = clientRecordService.findAllRecordsByStaffAndDayAndStatus(
                     calendar.getAifUserStaffId(), calendar.getId(), id, TgClientRecordType.ACTIVE.getType());
 
-            List<ClientRecordTime> timesList = TgUtils.formatTimeCalendar(calendar, userItem.get(), userItemService.getMinUserItem(id), records);
+            List<ClientRecordTime> timesList = formatTimeCalendar(calendar, userItem.get(), userItemService.getMinUserItem(id), records);
             if (timesList.isEmpty()) {
                 continue;
             }
@@ -130,7 +133,7 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
                                                                     .toList()) {
             if (entry.getValue().size() == 1) {
                 btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s",
-                                                                                             TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME.getType(),
+                                                                                             BOT_CONFIRM_SELECT_TIME.getType(),
                                                                                              entry.getValue().get(0).getCalendarId(),
                                                                                              entry.getValue().get(0).getHours(),
                                                                                              entry.getValue().get(0).getMins(),
@@ -140,7 +143,7 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
                 String listCalendarIds = Strings.join(entry.getValue().stream().map(ClientRecordTime::getCalendarId).toList(),
                                                       Constants.DELIMITER_CHAR.charAt(0));
                 btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
-                                                                                             TgClientRecordBotOperationType.BOT_SELECT_TIME.getType(),
+                                                                                             BOT_SELECT_TIME.getType(),
                                                                                              listCalendarIds,
                                                                                              entry.getValue().get(0).getHours(),
                                                                                              entry.getValue().get(0).getMins(),
@@ -160,7 +163,7 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return String.format(CALENDAR_SELECT_TIME_TITLE, TgUtils.getDayOfWeek(day, month, year), day, TgUtils.getMonthByNumber(month), year);
+        return String.format(CALENDAR_SELECT_TIME_TITLE, getDayOfWeek(day, month, year), day, getMonthByNumber(month), year);
     }
 
     /**
@@ -169,6 +172,6 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_SELECT_DAY;
+        return BOT_SELECT_DAY;
     }
 }

@@ -1,11 +1,13 @@
 package ru.aif.aifback.services.tg.admin.bot;
 
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CREATE;
+import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+
 import java.util.Objects;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
-import ru.aif.aifback.services.tg.enums.TgBotType;
 
 /**
  * TG admin buttons.
@@ -37,8 +39,8 @@ public final class TgAdminBotButtons {
      */
     public static InlineKeyboardMarkup createMainMenuKeyboard() {
         return new InlineKeyboardMarkup(
-                new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(TgAdminBotOperationType.BOT_CREATE.getType()),
-                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(TgAdminBotOperationType.BOTS_BOTS.getType())
+                new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(BOT_CREATE.getType()),
+                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOTS_BOTS.getType())
         );
     }
 
@@ -59,7 +61,7 @@ public final class TgAdminBotButtons {
     public static String getBotIconByType(String type) {
         String icon = "\uD83C\uDF10";
 
-        if (Objects.equals(type, TgBotType.BOT_RECORD.getType())) {
+        if (Objects.equals(type, BOT_RECORD.getType())) {
             icon = "\uD83D\uDCDD";
         }
 

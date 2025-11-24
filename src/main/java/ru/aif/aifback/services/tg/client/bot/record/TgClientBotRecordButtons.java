@@ -1,11 +1,15 @@
 package ru.aif.aifback.services.tg.client.bot.record;
 
+import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_HISTORY;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SETTINGS;
+
 import java.util.Objects;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.enums.TgBotType;
 
 /**
  * TG client buttons.
@@ -39,12 +43,12 @@ public final class TgClientBotRecordButtons {
      * @return main menu
      */
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
-        if (Objects.equals(typeBot, TgBotType.BOT_RECORD.getType())) {
+        if (Objects.equals(typeBot, BOT_RECORD.getType())) {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-            keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE).callbackData(TgClientRecordBotOperationType.BOT_RECORD_ACTIVE.getType()));
-            keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(TgClientRecordBotOperationType.BOT_GROUP.getType()));
-            keyboard.addRow(new InlineKeyboardButton(HISTORY_TITLE).callbackData(TgClientRecordBotOperationType.BOT_HISTORY.getType()));
-            keyboard.addRow(new InlineKeyboardButton(SETTINGS_TITLE).callbackData(TgClientRecordBotOperationType.BOT_SETTINGS.getType()));
+            keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE).callbackData(BOT_RECORD_ACTIVE.getType()));
+            keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_GROUP.getType()));
+            keyboard.addRow(new InlineKeyboardButton(HISTORY_TITLE).callbackData(BOT_HISTORY.getType()));
+            keyboard.addRow(new InlineKeyboardButton(SETTINGS_TITLE).callbackData(BOT_SETTINGS.getType()));
             return keyboard;
         }
 

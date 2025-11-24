@@ -2,6 +2,12 @@ package ru.aif.aifback.services.tg.admin.bot.operations;
 
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_TO_CREATE_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.SELECT_BOT_TITLE;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.getBotIconByType;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CONFIRM_CREATE;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CREATE;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 
@@ -15,9 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.dictionary.Bot;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.tg.admin.TgAdminBotOperationService;
-import ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons;
 import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.BotService;
 
 /**
@@ -45,17 +49,12 @@ public class TgBotCreateOperationService implements TgAdminBotOperationService {
         if (bots.isEmpty()) {
             answer = BOTS_TO_CREATE_EMPTY_TITLE;
         } else {
-            bots.forEach(b -> keyboard.addRow(new InlineKeyboardButton(String.format("%s %s",
-                                                                                     TgAdminBotButtons.getBotIconByType(b.getType()),
-                                                                                     b.getDescription()))
-                                                      .callbackData(String.format("%s;%s",
-                                                                                  TgAdminBotOperationType.BOT_CONFIRM_CREATE.getType(),
-                                                                                  b.getId()))));
+            bots.forEach(b -> keyboard.addRow(new InlineKeyboardButton(String.format("%s %s", getBotIconByType(b.getType()), b.getDescription()))
+                                                      .callbackData(String.format("%s;%s", BOT_CONFIRM_CREATE.getType(), b.getId()))));
         }
 
-        keyboard.addRow(TgAdminBotButtons.createBackButton(TgAdminBotOperationType.BOT_MAIN.getType()));
-
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -64,6 +63,6 @@ public class TgBotCreateOperationService implements TgAdminBotOperationService {
      */
     @Override
     public TgAdminBotOperationType getOperationType() {
-        return TgAdminBotOperationType.BOT_CREATE;
+        return BOT_CREATE;
     }
 }

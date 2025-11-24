@@ -1,6 +1,10 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SETTINGS_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SETTINGS;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import org.springframework.stereotype.Service;
 
@@ -11,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 
 /**
  * TG Settings operation API service.
@@ -33,9 +35,9 @@ public class TgSettingsOperationService implements TgClientBotOperationService {
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_MAIN.getType()));
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), SETTINGS_TITLE, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), SETTINGS_TITLE, keyboard, bot);
     }
 
     /**
@@ -44,6 +46,6 @@ public class TgSettingsOperationService implements TgClientBotOperationService {
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_SETTINGS;
+        return BOT_SETTINGS;
     }
 }

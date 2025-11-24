@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +81,9 @@ public class UserBotService {
     public Boolean deleteUserBot(Long id) {
         try {
             userBotRepository.deleteById(id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -94,19 +97,15 @@ public class UserBotService {
         try {
             Optional<User> user = userService.getUserByTgIdOrCreate(tgId);
             if (user.isEmpty()) {
-                return Boolean.FALSE;
+                return FALSE;
             }
 
-            UserBot userBot = new UserBot(user.get().getId(),
-                                          botId,
-                                          Boolean.FALSE,
-                                          null,
-                                          LocalDateTime.now());
+            UserBot userBot = new UserBot(user.get().getId(), botId, FALSE, null, LocalDateTime.now());
             userBotRepository.save(userBot);
 
-            return Objects.nonNull(userBot.getId()) ? Boolean.TRUE : Boolean.FALSE;
+            return Objects.nonNull(userBot.getId()) ? TRUE : FALSE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -126,9 +125,9 @@ public class UserBotService {
                                               token,
                                               id),
                                       String.class);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 }

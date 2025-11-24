@@ -4,6 +4,11 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_ERROR_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_SUCCESS_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_DELETE;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import org.springframework.stereotype.Service;
 
@@ -14,9 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.tg.admin.TgAdminBotOperationService;
-import ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons;
 import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserBotService;
 
 /**
@@ -43,13 +46,13 @@ public class TgBotDeleteOperationService implements TgAdminBotOperationService {
         String answer;
         if (userBotService.deleteUserBot(botId)) {
             answer = DELETE_BOT_SUCCESS_ANSWER;
-            keyboard.addRow(new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(TgAdminBotOperationType.BOTS_BOTS.getType()));
+            keyboard.addRow(new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOTS_BOTS.getType()));
         } else {
             answer = DELETE_BOT_ERROR_ANSWER;
-            keyboard.addRow(TgAdminBotButtons.createBackButton(TgAdminBotOperationType.BOT_MAIN.getType()));
+            keyboard.addRow(createBackButton(BOT_MAIN.getType()));
         }
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -58,6 +61,6 @@ public class TgBotDeleteOperationService implements TgAdminBotOperationService {
      */
     @Override
     public TgAdminBotOperationType getOperationType() {
-        return TgAdminBotOperationType.BOT_DELETE;
+        return BOT_DELETE;
     }
 }

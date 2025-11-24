@@ -1,6 +1,9 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import org.springframework.stereotype.Service;
 
@@ -10,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 
 /**
  * TG Main operation API service.
@@ -31,10 +32,7 @@ public class TgMainOperationService implements TgClientBotOperationService {
      */
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()),
-                            MENU_TITLE,
-                            TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()),
-                            bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
     }
 
     /**
@@ -43,6 +41,6 @@ public class TgMainOperationService implements TgClientBotOperationService {
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_MAIN;
+        return BOT_MAIN;
     }
 }

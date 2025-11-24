@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
@@ -65,10 +68,10 @@ public class UserItemService {
                                                      userItemRequest.getAmount(),
                                                      userItemRequest.getId(),
                                                      fileData);
-            return Objects.isNull(id) ? Boolean.FALSE : Boolean.TRUE;
+            return Objects.isNull(id) ? FALSE : TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -153,10 +156,10 @@ public class UserItemService {
     public Boolean deleteUserItem(Long id) {
         try {
             userItemRepository.deleteUserItem(id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -169,10 +172,10 @@ public class UserItemService {
         try {
             userItemRepository.deleteUserItemsByGroupId(id);
             userItemGroupRepository.deleteUserItemGroup(id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -185,10 +188,10 @@ public class UserItemService {
     public Boolean updateUserItemActive(Long id, boolean active) {
         try {
             userItemRepository.updateUserItemActive(active, id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -201,10 +204,10 @@ public class UserItemService {
     public Boolean updateUserItemGroupActive(Long id, boolean active) {
         try {
             userItemGroupRepository.updateUserItemGroupActive(active, id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -215,13 +218,13 @@ public class UserItemService {
      */
     public Boolean addUserGroupItem(UserItemRequest userItemRequest) {
         try {
-            UserItemGroup userItemGroup = new UserItemGroup(userItemRequest.getId(), userItemRequest.getName(), Boolean.FALSE, LocalDateTime.now());
+            UserItemGroup userItemGroup = new UserItemGroup(userItemRequest.getId(), userItemRequest.getName(), FALSE, LocalDateTime.now());
             userItemGroupRepository.save(userItemGroup);
 
-            return Objects.isNull(userItemGroup.getId()) ? Boolean.FALSE : Boolean.TRUE;
+            return Objects.isNull(userItemGroup.getId()) ? FALSE : TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 

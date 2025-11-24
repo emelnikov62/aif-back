@@ -3,6 +3,11 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ITEMS_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEMS;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 
@@ -17,9 +22,7 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -44,9 +47,9 @@ public class TgItemGroupsOperationService implements TgClientBotOperationService
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
         String answer = processBotGroups(userBot, keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_MAIN.getType()));
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -62,9 +65,7 @@ public class TgItemGroupsOperationService implements TgClientBotOperationService
         }
 
         groups.forEach(group -> keyboard.addRow(new InlineKeyboardButton(String.format(GROUP_TITLE, group.getName()))
-                                                        .callbackData(String.format("%s;%s",
-                                                                                    TgClientRecordBotOperationType.BOT_ITEMS.getType(),
-                                                                                    group.getId()))));
+                                                        .callbackData(String.format("%s;%s", BOT_ITEMS.getType(), group.getId()))));
         return ITEMS_TITLE;
     }
 
@@ -74,6 +75,6 @@ public class TgItemGroupsOperationService implements TgClientBotOperationService
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_GROUP;
+        return BOT_GROUP;
     }
 }

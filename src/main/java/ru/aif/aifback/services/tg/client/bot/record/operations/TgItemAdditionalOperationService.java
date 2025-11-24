@@ -3,6 +3,13 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ADD_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEMS;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendPhoto;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -19,9 +26,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -63,13 +68,11 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
                         + String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.get().getHours(), userItem.get().getMins())
                         + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
 
-        keyboard.addRow(new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s",
-                                                                                              TgClientRecordBotOperationType.BOT_ADD_RECORD.getType(),
-                                                                                              userItem.get().getId())));
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(
-                String.format("%s;%s", TgClientRecordBotOperationType.BOT_ITEMS.getType(), group.get().getId())));
+        keyboard.addRow(
+                new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.get().getId())));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.get().getId())));
 
-        TgUtils.sendPhoto(Long.valueOf(webhookRequest.getChatId()), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
+        sendPhoto(Long.valueOf(webhookRequest.getChatId()), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
     }
 
     /**
@@ -79,8 +82,8 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
      * @param bot telegram bot
      */
     private void sendErrorMessage(InlineKeyboardMarkup keyboard, Long chatId, TelegramBot bot) {
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_MAIN.getType()));
-        TgUtils.sendMessage(chatId, SHOW_ERROR_TITLE, keyboard, bot);
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
+        sendMessage(chatId, SHOW_ERROR_TITLE, keyboard, bot);
     }
 
     /**
@@ -89,6 +92,6 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
+        return BOT_ITEM_ADDITIONAL;
     }
 }

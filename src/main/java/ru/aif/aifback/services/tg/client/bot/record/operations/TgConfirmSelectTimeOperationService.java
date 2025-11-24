@@ -1,8 +1,19 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +32,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.enums.TgClientRecordType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 
 /**
  * TG Confirm select time operation API service.
@@ -61,9 +69,9 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
                                                 Long.valueOf(webhookRequest.getId()),
                                                 webhookRequest.getChatId(),
                                                 keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_MAIN.getType()));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -90,7 +98,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
             return CONFIRM_RECORD_ERROR_TITLE;
         }
 
-        return fillClientRecords(keyboard, clientId, TgClientRecordType.ACTIVE.getType()) ? ACTIVE_TITLE : CONFIRM_RECORD_ERROR_TITLE;
+        return fillClientRecords(keyboard, clientId, ACTIVE.getType()) ? ACTIVE_TITLE : CONFIRM_RECORD_ERROR_TITLE;
     }
 
     /**
@@ -102,23 +110,21 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
     private Boolean fillClientRecords(InlineKeyboardMarkup keyboard, Long clientId, String status) {
         List<ClientRecord> clientRecords = clientRecordService.findAllByClientIdAndStatus(clientId, status);
         clientRecords.forEach(clientRecord -> {
-            String dayOfWeek = TgUtils.getDayOfWeek(clientRecord.getUserCalendar().getDay(),
-                                                    clientRecord.getUserCalendar().getMonth(),
-                                                    clientRecord.getUserCalendar().getYear());
+            String dayOfWeek = getDayOfWeek(clientRecord.getUserCalendar().getDay(),
+                                            clientRecord.getUserCalendar().getMonth(),
+                                            clientRecord.getUserCalendar().getYear());
             keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %s %s %s %02d:%02d (%s)",
                                                                    dayOfWeek,
                                                                    clientRecord.getUserCalendar().getDay(),
-                                                                   TgUtils.getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
+                                                                   getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
                                                                    clientRecord.getUserCalendar().getYear(),
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
                                                                    clientRecord.getUserItem().getName()))
-                                    .callbackData(String.format("%s;%s",
-                                                                TgClientRecordBotOperationType.BOT_RECORD_SHOW.getType(),
-                                                                clientRecord.getId())));
+                                    .callbackData(String.format("%s;%s", BOT_RECORD_SHOW.getType(), clientRecord.getId())));
         });
 
-        return keyboard.inlineKeyboard().length == 0 ? Boolean.FALSE : Boolean.TRUE;
+        return keyboard.inlineKeyboard().length == 0 ? FALSE : TRUE;
     }
 
     /**
@@ -127,6 +133,6 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
+        return BOT_CONFIRM_SELECT_TIME;
     }
 }

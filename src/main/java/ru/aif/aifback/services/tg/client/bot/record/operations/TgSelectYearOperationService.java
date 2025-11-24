@@ -3,6 +3,12 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_MONTH_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_MONTH;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_YEAR;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 
 /**
@@ -46,11 +50,9 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
         String year = webhookRequest.getText().split(DELIMITER)[1];
         String itemId = webhookRequest.getText().split(DELIMITER)[2];
         String answer = processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s",
-                                                                                TgClientRecordBotOperationType.BOT_ADD_RECORD.getType(),
-                                                                                itemId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ADD_RECORD.getType(), itemId)));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -69,9 +71,8 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
         List<InlineKeyboardButton> btns = new ArrayList<>();
         int num = 0;
         while (num < months.size()) {
-            InlineKeyboardButton btn = new InlineKeyboardButton(TgUtils.getMonthByNumber(months.get(num)))
-                    .callbackData(String.format("%s;%s;%s;%s", TgClientRecordBotOperationType.BOT_SELECT_MONTH.getType(), months.get(num), year,
-                                                userItemId));
+            InlineKeyboardButton btn = new InlineKeyboardButton(getMonthByNumber(months.get(num)))
+                    .callbackData(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), months.get(num), year, userItemId));
             btns.add(btn);
 
             num++;
@@ -95,6 +96,6 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_SELECT_YEAR;
+        return BOT_SELECT_YEAR;
     }
 }

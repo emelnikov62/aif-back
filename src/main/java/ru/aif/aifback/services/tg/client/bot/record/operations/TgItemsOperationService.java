@@ -4,6 +4,11 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ITEM_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEMS;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +25,7 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -48,9 +51,9 @@ public class TgItemsOperationService implements TgClientBotOperationService {
 
         String groupId = webhookRequest.getText().split(DELIMITER)[1];
         String answer = processBotGroupItems(Long.valueOf(groupId), keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_GROUP.getType()));
+        keyboard.addRow(createBackButton(BOT_GROUP.getType()));
 
-        TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 
     /**
@@ -76,7 +79,7 @@ public class TgItemsOperationService implements TgClientBotOperationService {
                                                                                      item.getHours(),
                                                                                      item.getMins()))
                                                       .callbackData(String.format("%s;%s",
-                                                                                  TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL.getType(),
+                                                                                  BOT_ITEM_ADDITIONAL.getType(),
                                                                                   item.getId()))));
 
         return String.format(GROUP_TITLE, userItemGroup.get().getName());
@@ -88,6 +91,6 @@ public class TgItemsOperationService implements TgClientBotOperationService {
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return TgClientRecordBotOperationType.BOT_ITEMS;
+        return BOT_ITEMS;
     }
 }

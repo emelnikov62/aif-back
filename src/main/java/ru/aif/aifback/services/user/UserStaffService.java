@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -63,20 +66,20 @@ public class UserStaffService {
                                                 userItemRequest.getName(),
                                                 userItemRequest.getSurname(),
                                                 userItemRequest.getThird(),
-                                                Boolean.FALSE,
+                                                FALSE,
                                                 LocalDateTime.now());
             userStaffRepository.save(userStaff);
 
             if (Objects.isNull(userStaff.getId())) {
-                return Boolean.FALSE;
+                return FALSE;
             }
 
             userItemRequest.getServices().forEach(service -> userStaffItemRepository.addLinkToItem(userStaff.getId(), service));
 
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -89,10 +92,10 @@ public class UserStaffService {
     public Boolean updateUserStaffActive(Long id, boolean active) {
         try {
             userStaffRepository.updateUserStaffActive(active, id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -105,10 +108,10 @@ public class UserStaffService {
     public Boolean updateUserStaffItemActive(Long id, boolean active) {
         try {
             userStaffItemRepository.updateUserStaffItemActive(active, id);
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
@@ -121,10 +124,10 @@ public class UserStaffService {
     public Boolean updateUserStaffItems(Long id, List<Long> services) {
         try {
             services.forEach(service -> userStaffItemRepository.addLinkToItem(id, service));
-            return Boolean.TRUE;
+            return TRUE;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Boolean.FALSE;
+            return FALSE;
         }
     }
 
