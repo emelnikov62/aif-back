@@ -185,7 +185,14 @@ public class TgRecordBotService implements TgBotService {
                 String day = webhookRequest.getText().split(DELIMITER)[5];
                 String month = webhookRequest.getText().split(DELIMITER)[6];
                 String year = webhookRequest.getText().split(DELIMITER)[7];
-                answer = processBotSelectStaff(Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(itemId), calendarIds, keyboard);
+                answer = processBotSelectStaff(Long.valueOf(day),
+                                               Long.valueOf(month),
+                                               Long.valueOf(year),
+                                               Long.valueOf(hours),
+                                               Long.valueOf(mins),
+                                               Long.valueOf(itemId),
+                                               calendarIds,
+                                               keyboard);
                 keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY, day, month, year, itemId)));
             }
 
@@ -470,6 +477,9 @@ public class TgRecordBotService implements TgBotService {
 
     /**
      * Process select staff.
+     * @param day day
+     * @param month
+     * @param year
      * @param hours hours
      * @param mins mins
      * @param itemId itemId
@@ -477,7 +487,8 @@ public class TgRecordBotService implements TgBotService {
      * @param keyboard keyboard
      * @return answer
      */
-    private String processBotSelectStaff(Long hours, Long mins, Long itemId, String calendarIds, InlineKeyboardMarkup keyboard) {
+    private String processBotSelectStaff(Long day, Long month, Long year, Long hours, Long mins, Long itemId, String calendarIds,
+                                         InlineKeyboardMarkup keyboard) {
         List<String> stringCalendarIds = Arrays.stream(calendarIds.split(DELIMITER_CHAR)).toList();
         if (stringCalendarIds.isEmpty()) {
             return STAFF_EMPTY_TITLE;
@@ -499,7 +510,9 @@ public class TgRecordBotService implements TgBotService {
                     String.format("%s;%s;%s;%s;%s;%s", BOT_CONFIRM_SELECT_TIME, userCalendar.get().getId(), hours, mins, itemId, userStaff.getId())));
         }
 
-        return keyboard.inlineKeyboard().length == 0 ? STAFF_EMPTY_TITLE : STAFF_SELECT_TITLE;
+        return keyboard.inlineKeyboard().length == 0
+               ? STAFF_EMPTY_TITLE
+               : String.format(STAFF_SELECT_TITLE, TgUtils.getDayOfWeek(day, month, year), hours, mins, day, month, year);
     }
 
     /**
