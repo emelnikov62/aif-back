@@ -94,9 +94,9 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getHours(),
                                                     clientRecord.getMins()));
 
-        keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить запись")
+        keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
                                 .callbackData(String.format("%s;%s", BOT_RECORD_EDIT, clientRecord.getId())),
-                        new InlineKeyboardButton("\uD83D\uDEAB Отменить запись")
+                        new InlineKeyboardButton("\uD83D\uDEAB Отменить")
                                 .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL, clientRecord.getId())));
 
         keyboard.addRow(createBackButton(BOT_RECORD_ACTIVE.getType()));
