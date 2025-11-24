@@ -554,12 +554,13 @@ public class TgRecordBotService implements TgBotService {
             String dayOfWeek = TgUtils.getDayOfWeek(clientRecord.getUserCalendar().getDay(),
                                                     clientRecord.getUserCalendar().getMonth(),
                                                     clientRecord.getUserCalendar().getYear());
-            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %s %s %02d:%02d (%s)",
+            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %s %s %s %02d:%02d (%s)",
                                                                    dayOfWeek,
                                                                    clientRecord.getUserCalendar().getDay(),
                                                                    TgUtils.getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
+                                                                   clientRecord.getUserCalendar().getYear(),
                                                                    clientRecord.getUserItem().getName()))
                                     .callbackData(String.format("%s;%s", BOT_RECORD_SHOW, clientRecord.getId())));
         });
