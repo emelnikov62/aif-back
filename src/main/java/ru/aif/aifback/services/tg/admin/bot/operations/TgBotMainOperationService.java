@@ -20,7 +20,7 @@ import ru.aif.aifback.services.tg.utils.TgUtils;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgMainOperationService implements TgAdminBotOperationService {
+public class TgBotMainOperationService implements TgAdminBotOperationService {
 
     /**
      * Main processing.

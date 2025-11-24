@@ -1,7 +1,6 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
-import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BACK_TO_MAIN_MENU;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 
@@ -62,7 +61,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
                                                 Long.valueOf(webhookRequest.getId()),
                                                 webhookRequest.getChatId(),
                                                 keyboard);
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(BACK_TO_MAIN_MENU));
+        keyboard.addRow(TgClientBotRecordButtons.createBackButton(TgClientRecordBotOperationType.BOT_MAIN.getType()));
 
         TgUtils.sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
