@@ -11,7 +11,7 @@ import ru.aif.aifback.services.tg.enums.TgClientTypeBot;
 public interface TgBotService {
 
     /**
-     * Main proccessing.
+     * Main processing.
      * @param webhookRequest webhookRequest
      * @param userBot user bot
      * @return true/false

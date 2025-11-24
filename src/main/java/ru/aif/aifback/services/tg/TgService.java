@@ -9,7 +9,7 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 public interface TgService {
 
     /**
-     * Main proccessing.
+     * Main processing.
      * @param webhookRequest webhookRequest
      * @return true/false
      */
