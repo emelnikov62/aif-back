@@ -24,7 +24,9 @@ public enum TgClientRecordBotOperationType {
     BOT_SELECT_TIME("bot_select_time"),
     BOT_CONFIRM_SELECT_TIME("bot_confirm_select_time"),
     BOT_ADD_RECORD("bot_add_record"),
-    BOT_RECORD_SHOW("bot_record_show");
+    BOT_RECORD_SHOW("bot_record_show"),
+    BOT_RECORD_CANCEL("bot_record_cancel"),
+    BOT_RECORD_EDIT("bot_record_edit");
 
     private final String type;
 

@@ -34,8 +34,17 @@ public class ClientRecordService {
      * @param id id
      * @return client record data
      */
-    public Optional<ClientRecord> getClientRecordById(Long id) {
-        return clientRecordRepository.findById(id);
+    public ClientRecord getClientRecordById(Long id) {
+        Optional<ClientRecord> record = clientRecordRepository.findById(id);
+        if (record.isEmpty()) {
+            return null;
+        }
+
+        record.get().setUserItem(userItemService.findUserItemById(record.get().getAifUserItemId()).orElse(null));
+        record.get().setUserStaff(userStaffService.getUserStaffById(record.get().getAifUserStaffId()));
+        record.get().setUserCalendar(userCalendarService.findById(record.get().getAifUserCalendarId()).orElse(null));
+
+        return record.get();
     }
 
     /**
