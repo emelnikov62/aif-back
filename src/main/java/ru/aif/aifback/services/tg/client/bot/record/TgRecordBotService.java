@@ -472,7 +472,7 @@ public class TgRecordBotService implements TgBotService {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return String.format(CALENDAR_SELECT_TIME_TITLE, day, month, year);
+        return String.format(CALENDAR_SELECT_TIME_TITLE, TgUtils.getDayOfWeek(day, month, year), day, month, year);
     }
 
     /**
