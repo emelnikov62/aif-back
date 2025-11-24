@@ -558,9 +558,9 @@ public class TgRecordBotService implements TgBotService {
                                                                    dayOfWeek,
                                                                    clientRecord.getUserCalendar().getDay(),
                                                                    TgUtils.getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
+                                                                   clientRecord.getUserCalendar().getYear(),
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
-                                                                   clientRecord.getUserCalendar().getYear(),
                                                                    clientRecord.getUserItem().getName()))
                                     .callbackData(String.format("%s;%s", BOT_RECORD_SHOW, clientRecord.getId())));
         });
