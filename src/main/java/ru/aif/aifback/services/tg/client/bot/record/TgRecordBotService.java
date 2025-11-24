@@ -386,7 +386,7 @@ public class TgRecordBotService implements TgBotService {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(month));
+        return String.format(CALENDAR_SELECT_DAY_TITLE, TgUtils.getMonthByNumber(month), year);
     }
 
     /**
@@ -472,7 +472,7 @@ public class TgRecordBotService implements TgBotService {
             keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
         }
 
-        return String.format(CALENDAR_SELECT_TIME_TITLE, day);
+        return String.format(CALENDAR_SELECT_TIME_TITLE, day, month, year);
     }
 
     /**
