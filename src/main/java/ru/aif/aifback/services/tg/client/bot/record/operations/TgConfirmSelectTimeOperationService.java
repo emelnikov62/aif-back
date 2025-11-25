@@ -121,7 +121,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
                                                                    clientRecord.getUserItem().getName()))
-                                    .callbackData(String.format("%s;%s", BOT_RECORD_SHOW.getType(), clientRecord.getId())));
+                                    .callbackData(String.format("%s;%s;%s", BOT_RECORD_SHOW.getType(), clientRecord.getId(), ACTIVE.getType())));
         });
 
         return keyboard.inlineKeyboard().length == 0 ? FALSE : TRUE;
