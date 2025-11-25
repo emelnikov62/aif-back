@@ -55,7 +55,7 @@ public class TgClientStarOperationService implements TgClientBotOperationService
 
         ClientRecord clientRecord = clientRecordService.getClientRecordById(Long.valueOf(recordId));
         if (Objects.isNull(clientRecord)) {
-            sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), SHOW_ERROR_TITLE, keyboard, bot, TRUE);
+            sendErrorMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), recordId, keyboard, bot);
             return;
         }
 
@@ -64,12 +64,25 @@ public class TgClientStarOperationService implements TgClientBotOperationService
                                                            clientRecord.getAifUserItemId(),
                                                            clientRecord.getAifUserStaffId(),
                                                            Long.valueOf(star)))) {
-            sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), SHOW_ERROR_TITLE, keyboard, bot, TRUE);
+            sendErrorMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), recordId, keyboard, bot);
             return;
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_RECORD_SHOW, recordId, NO_ACTIVE.getType())));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), SUCCESS_CLIENT_STAR, keyboard, bot, TRUE);
+    }
+
+    /**
+     * Send error message.
+     * @param chatId chat id
+     * @param messageId message id
+     * @param recordId record id
+     * @param keyboard keyboard
+     * @param bot bot
+     */
+    private void sendErrorMessage(String chatId, int messageId, String recordId, InlineKeyboardMarkup keyboard, TelegramBot bot) {
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_RECORD_SHOW, recordId, NO_ACTIVE.getType())));
+        sendMessage(chatId, messageId, SHOW_ERROR_TITLE, keyboard, bot, TRUE);
     }
 
     /**

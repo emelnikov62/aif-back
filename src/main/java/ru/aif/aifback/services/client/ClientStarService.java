@@ -52,6 +52,7 @@ public class ClientStarService {
 
             return Objects.isNull(clientStar.getId()) ? null : clientStar.getId();
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return null;
         }
     }

@@ -35,7 +35,6 @@ import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.client.ClientStarService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
@@ -51,7 +50,6 @@ import ru.aif.aifback.services.user.UserItemService;
 @RequiredArgsConstructor
 public class TgRecordShowOperationService implements TgClientBotOperationService {
 
-    private final ClientService clientService;
     private final ClientStarService clientStarService;
     private final ClientRecordService clientRecordService;
     private final UserItemService userItemService;
