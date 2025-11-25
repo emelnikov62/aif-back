@@ -1,7 +1,6 @@
 package ru.aif.aifback.services.client;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -50,7 +49,7 @@ public class ClientStarService {
             ClientStar clientStar = new ClientStar(clientId, userBotId, userItemId, staffId, value, LocalDateTime.now());
             clientStarRepository.save(clientStar);
 
-            return Objects.isNull(clientStar.getId()) ? null : clientStar.getId();
+            return clientStar.getId();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;

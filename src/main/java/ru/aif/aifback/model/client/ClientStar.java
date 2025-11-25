@@ -28,7 +28,7 @@ public class ClientStar {
     private Long aifClientId;
     private Long aifUserBotId;
     private Long aifUserItemId;
-    private Long aifUserStaffId;
+    private Long aifStaffId;
     private Long value;
     private LocalDateTime created;
 
@@ -39,11 +39,11 @@ public class ClientStar {
     @Transient
     private UserStaff userStaff;
 
-    public ClientStar(Long aifClientId, Long aifUserBotId, Long aifUserItemId, Long aifUserStaffId, Long value, LocalDateTime created) {
+    public ClientStar(Long aifClientId, Long aifUserBotId, Long aifUserItemId, Long aifStaffId, Long value, LocalDateTime created) {
         this.aifClientId = aifClientId;
         this.aifUserBotId = aifUserBotId;
         this.aifUserItemId = aifUserItemId;
-        this.aifUserStaffId = aifUserStaffId;
+        this.aifStaffId = aifStaffId;
         this.value = value;
         this.created = created;
     }
