@@ -3,10 +3,12 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_EDIT;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
@@ -15,7 +17,6 @@ import static ru.aif.aifback.services.tg.utils.TgUtils.sendPhoto;
 
 import java.util.Base64;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -66,24 +67,24 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
             return;
         }
 
-        Optional<UserItem> userItem = userItemService.findUserItemById(clientRecord.getAifUserItemId());
-        if (userItem.isEmpty()) {
+        UserItem userItem = userItemService.findUserItemById(clientRecord.getAifUserItemId()).orElse(null);
+        if (Objects.isNull(userItem)) {
             sendErrorMessage(keyboard, chatId, bot, status);
             return;
         }
 
-        Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
-        if (group.isEmpty()) {
+        UserItemGroup group = userItemService.findUserItemGroupByItemId(userItem.getAifUserItemGroupId()).orElse(null);
+        if (Objects.isNull(group)) {
             sendErrorMessage(keyboard, chatId, bot, status);
             return;
         }
 
         TgClientRecordType recordStatus = findByType(clientRecord.getStatus());
-        String answer = String.format(String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName()) +
-                                      String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName()) +
-                                      String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.get().getHours(),
-                                                    userItem.get().getMins()) +
-                                      String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount())) +
+        String answer = String.format(String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.getName()) +
+                                      String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.getName()) +
+                                      String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n",
+                                                    userItem.getHours(), userItem.getMins()) +
+                                      String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.getAmount())) +
                                       String.format("\uD83D\uDC64 <b>Специалист:</b> %s %s %s\n\n",
                                                     clientRecord.getUserStaff().getSurname(),
                                                     clientRecord.getUserStaff().getName(),
@@ -99,13 +100,18 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getMins()) +
                                       String.format("%s <b>Статус:</b> %s", recordStatus.getIcon(), recordStatus.getName()));
 
-        keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
-                                .callbackData(String.format("%s;%s", BOT_RECORD_EDIT.getType(), clientRecord.getId())),
-                        new InlineKeyboardButton("\uD83D\uDEAB Отменить")
-                                .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
+        if (Objects.equals(status, ACTIVE.getType())) {
+            keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
+                                    .callbackData(String.format("%s;%s", BOT_RECORD_EDIT.getType(), clientRecord.getId())),
+                            new InlineKeyboardButton("\uD83D\uDEAB Отменить")
+                                    .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
+        } else {
+            keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
+                                    .callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.getId())));
+        }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
-        sendPhoto(chatId, Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
+        sendPhoto(chatId, Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
     }
 
     /**
