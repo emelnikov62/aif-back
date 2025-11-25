@@ -2,35 +2,33 @@ package ru.aif.aifback.services.tg.admin.bot.operations;
 
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS_SELECT;
-import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.ALL;
-import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.MONTH;
-import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.YEAR;
+import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.services.tg.admin.TgAdminBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
+import ru.aif.aifback.services.tg.enums.TgAdminStatsType;
 
 /**
- * TG Admin Bot stats operation API service.
+ * TG Admin Bot stats selected operation API service.
  * @author emelnikov
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgBotStatsOperationService implements TgAdminBotOperationService {
+public class TgBotStatsSelectedOperationService implements TgAdminBotOperationService {
 
     /**
      * Main processing.
@@ -41,13 +39,15 @@ public class TgBotStatsOperationService implements TgAdminBotOperationService {
     public void process(TgWebhookRequest webhookRequest, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        keyboard.addRow(
-                new InlineKeyboardButton(MONTH.getName()).callbackData(String.format("%s;%s", BOT_STATS_SELECT.getType(), MONTH.getType())),
-                new InlineKeyboardButton(YEAR.getName()).callbackData(String.format("%s;%s", BOT_STATS_SELECT.getType(), YEAR.getType())),
-                new InlineKeyboardButton(ALL.getName()).callbackData(String.format("%s;%s", BOT_STATS_SELECT.getType(), ALL.getType())));
+        TgAdminStatsType type = findByType(webhookRequest.getText().split(DELIMITER)[1]);
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), BOT_STATS_TITLE, keyboard, bot, TRUE);
+        sendMessage(webhookRequest.getChatId(),
+                    Integer.parseInt(webhookRequest.getMessageId()),
+                    String.format("%s: %s", BOT_STATS_TITLE, type.getName()),
+                    keyboard,
+                    bot,
+                    TRUE);
     }
 
     /**
