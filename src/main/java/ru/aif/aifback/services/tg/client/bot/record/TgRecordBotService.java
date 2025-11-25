@@ -70,14 +70,14 @@ public class TgRecordBotService implements TgBotService {
                             MENU_TITLE,
                             createMainMenuKeyboard(userBot.getBot().getType()),
                             bot,
-                            TRUE);
+                            FALSE);
                 return;
             }
 
             operation.process(webhookRequest, userBot, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sendMessage(TG_LOG_ID, 0, e.getMessage(), bot, FALSE);
+            sendMessage(TG_LOG_ID, Integer.parseInt(webhookRequest.getMessageId()), e.getMessage(), bot, FALSE);
         }
     }
 
@@ -93,7 +93,7 @@ public class TgRecordBotService implements TgBotService {
                     MENU_TITLE,
                     createMainMenuKeyboard(userBot.getBot().getType()),
                     new TelegramBot(userBot.getToken()),
-                    TRUE);
+                    FALSE);
     }
 
     /**

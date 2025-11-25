@@ -1,6 +1,6 @@
 package ru.aif.aifback.services.tg.admin.bot.operations;
 
-import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.FALSE;
 
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createMainMenuKeyboard;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
@@ -37,7 +37,7 @@ public class TgBotMainOperationService implements TgAdminBotOperationService {
                             MENU_TITLE,
                             createMainMenuKeyboard(),
                             bot,
-                            TRUE);
+                            FALSE);
     }
 
     /**

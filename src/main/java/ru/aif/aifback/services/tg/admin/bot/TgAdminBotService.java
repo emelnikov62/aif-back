@@ -79,14 +79,14 @@ public class TgAdminBotService implements TgBotService {
                             MENU_TITLE,
                             createMainMenuKeyboard(),
                             bot,
-                            TRUE);
+                            FALSE);
                 return;
             }
 
             operation.process(webhookRequest, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sendMessage(TG_LOG_ID, 0, e.getMessage(), bot, FALSE);
+            sendMessage(TG_LOG_ID, Integer.parseInt(webhookRequest.getMessageId()), e.getMessage(), bot, FALSE);
         }
     }
 
@@ -97,7 +97,7 @@ public class TgAdminBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, createMainMenuKeyboard(), bot, TRUE);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, createMainMenuKeyboard(), bot, FALSE);
     }
 
     /**
