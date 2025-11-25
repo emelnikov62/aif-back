@@ -79,7 +79,7 @@ public class TgAdminBotService implements TgBotService {
                             MENU_TITLE,
                             createMainMenuKeyboard(),
                             bot,
-                            FALSE);
+                            TRUE);
                 return;
             }
 
@@ -97,7 +97,7 @@ public class TgAdminBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, createMainMenuKeyboard(), bot, FALSE);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, createMainMenuKeyboard(), bot, TRUE);
     }
 
     /**

@@ -2,8 +2,8 @@ package ru.aif.aifback.services.tg.admin.bot.operations;
 
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
-import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -37,7 +37,7 @@ public class TgBotStatsOperationService implements TgAdminBotOperationService {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, keyboard, bot, TRUE);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), BOT_STATS_TITLE, keyboard, bot, TRUE);
     }
 
     /**

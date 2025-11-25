@@ -14,7 +14,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.DeleteMessage;
-import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.extern.slf4j.Slf4j;
@@ -58,11 +57,13 @@ public final class TgUtils {
     /**
      * Send photo.
      * @param chatId chat id
+     * @param messageId message id
      * @param file file
      * @param keyboard keyboard
      * @param bot bot
      */
-    public static void sendPhoto(String chatId, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
+    public static void sendPhoto(String chatId, int messageId, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
+        deleteMessage(chatId, messageId, bot);
         bot.execute(new SendPhoto(chatId, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard));
     }
 
@@ -86,10 +87,10 @@ public final class TgUtils {
      */
     public static void sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
         if (update) {
-            bot.execute(new EditMessageText(chatId, messageId, text));
-        } else {
-            bot.execute(new SendMessage(chatId, text));
+            deleteMessage(chatId, messageId, bot);
         }
+
+        bot.execute(new SendMessage(chatId, text));
     }
 
     /**
@@ -103,10 +104,10 @@ public final class TgUtils {
      */
     public static void sendMessage(String chatId, int messageId, String text, InlineKeyboardMarkup keyboard, TelegramBot bot, Boolean update) {
         if (update) {
-            bot.execute(new EditMessageText(chatId, messageId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
-        } else {
-            bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
+            deleteMessage(chatId, messageId, bot);
         }
+
+        bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
     }
 
     /**

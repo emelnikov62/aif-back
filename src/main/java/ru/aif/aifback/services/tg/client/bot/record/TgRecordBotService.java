@@ -70,7 +70,7 @@ public class TgRecordBotService implements TgBotService {
                             MENU_TITLE,
                             createMainMenuKeyboard(userBot.getBot().getType()),
                             bot,
-                            FALSE);
+                            TRUE);
                 return;
             }
 
@@ -93,7 +93,7 @@ public class TgRecordBotService implements TgBotService {
                     MENU_TITLE,
                     createMainMenuKeyboard(userBot.getBot().getType()),
                     new TelegramBot(userBot.getToken()),
-                    FALSE);
+                    TRUE);
     }
 
     /**
