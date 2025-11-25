@@ -108,7 +108,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                     .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
         } else {
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
-                                    .callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
+                                    .callbackData(String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
