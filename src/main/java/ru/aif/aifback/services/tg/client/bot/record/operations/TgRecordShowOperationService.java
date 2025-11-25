@@ -84,6 +84,9 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
             return;
         }
 
+        Float calcStar = clientStarService.calcByStaffAndUserItem(Long.valueOf(webhookRequest.getId()),
+                                                                  clientRecord.getAifUserStaffId(),
+                                                                  clientRecord.getAifUserItemId());
         TgClientRecordType recordStatus = findByType(clientRecord.getStatus());
         String answer = String.format(String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.getName()) +
                                       String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.getName()) +
@@ -103,7 +106,8 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getUserCalendar().getYear(),
                                                     clientRecord.getHours(),
                                                     clientRecord.getMins()) +
-                                      String.format("%s <b>Статус:</b> %s", recordStatus.getIcon(), recordStatus.getName()));
+                                      String.format("%s <b>Статус:</b> %s\n\n", recordStatus.getIcon(), recordStatus.getName()) +
+                                      String.format("⭐<b>Оценка:</b> %.2f", calcStar));
 
         if (Objects.equals(status, ACTIVE.getType())) {
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
@@ -121,11 +125,6 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                         new InlineKeyboardButton("⭐ 3").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 3, clientRecord.getId())),
                         new InlineKeyboardButton("⭐ 4").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 4, clientRecord.getId())),
                         new InlineKeyboardButton("⭐ 5").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 5, clientRecord.getId())));
-            } else {
-                Float calcStar = clientStarService.calcByStaffAndUserItem(Long.valueOf(webhookRequest.getId()),
-                                                                          clientRecord.getAifUserStaffId(),
-                                                                          clientRecord.getAifUserItemId());
-                answer += String.format("\n\n⭐<b>Оценка:</b> %.2f", calcStar);
             }
 
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
