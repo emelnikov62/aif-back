@@ -117,6 +117,23 @@ public class ClientRecordService {
     }
 
     /**
+     * Find all completed by client id.
+     * @param clientId client id
+     * @return client records
+     */
+    public List<ClientRecord> findAllCompletedByClientId(Long clientId) {
+        List<ClientRecord> records = clientRecordRepository.findAllCompletedByClientId(clientId);
+
+        records.forEach(record -> {
+            record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+            record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+            record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
+        });
+
+        return records;
+    }
+
+    /**
      * Cancel record.
      * @param id id
      * @return true/false

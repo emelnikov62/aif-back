@@ -3,13 +3,16 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.HISTORY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.RECORDS_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.NO_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -31,6 +34,7 @@ import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
+import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 
 /**
  * TG Records active operation API service.
@@ -39,7 +43,7 @@ import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TgRecordsActiveOperationService implements TgClientBotOperationService {
+public class TgRecordsOperationService implements TgClientBotOperationService {
 
     private final ClientRecordService clientRecordService;
     private final ClientService clientService;
@@ -54,7 +58,8 @@ public class TgRecordsActiveOperationService implements TgClientBotOperationServ
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String answer = processBotActiveRecords(webhookRequest.getChatId(), keyboard);
+        String status = webhookRequest.getText().split(DELIMITER)[1];
+        String answer = processBotRecords(webhookRequest.getChatId(), status, keyboard);
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
         sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
@@ -63,16 +68,19 @@ public class TgRecordsActiveOperationService implements TgClientBotOperationServ
     /**
      * Process active client records.
      * @param clientTgId client tg id
+     * @param status status
      * @param keyboard keyboard
      * @return answer
      */
-    private String processBotActiveRecords(String clientTgId, InlineKeyboardMarkup keyboard) {
+    private String processBotRecords(String clientTgId, String status, InlineKeyboardMarkup keyboard) {
         Long clientId = clientService.getClientIdOrCreate(clientTgId);
         if (Objects.isNull(clientId)) {
             return RECORDS_EMPTY_TITLE;
         }
 
-        return fillClientRecords(keyboard, clientId, ACTIVE.getType()) ? ACTIVE_TITLE : RECORDS_EMPTY_TITLE;
+        return fillClientRecords(keyboard, clientId, status)
+               ? (Objects.equals(status, NO_ACTIVE.getType()) ? HISTORY_TITLE : ACTIVE_TITLE)
+               : RECORDS_EMPTY_TITLE;
     }
 
     /**
@@ -80,14 +88,20 @@ public class TgRecordsActiveOperationService implements TgClientBotOperationServ
      * @param keyboard keyboard
      * @param clientId client id
      * @param status status
+     * @return true/false
      */
     private Boolean fillClientRecords(InlineKeyboardMarkup keyboard, Long clientId, String status) {
-        List<ClientRecord> clientRecords = clientRecordService.findAllByClientIdAndStatus(clientId, status);
+        List<ClientRecord> clientRecords = Objects.equals(status, NO_ACTIVE.getType())
+                                           ? clientRecordService.findAllCompletedByClientId(clientId)
+                                           : clientRecordService.findAllByClientIdAndStatus(clientId, status);
+
         clientRecords.forEach(clientRecord -> {
             String dayOfWeek = getDayOfWeek(clientRecord.getUserCalendar().getDay(),
                                             clientRecord.getUserCalendar().getMonth(),
                                             clientRecord.getUserCalendar().getYear());
-            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDCC5 %s %s %s %s %02d:%02d (%s)",
+            TgClientRecordType recordStatus = findByType(clientRecord.getStatus());
+            keyboard.addRow(new InlineKeyboardButton(String.format("%s \uD83D\uDCC5 %s %s %s %s %02d:%02d (%s)",
+                                                                   recordStatus.getIcon(),
                                                                    dayOfWeek,
                                                                    clientRecord.getUserCalendar().getDay(),
                                                                    getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
@@ -95,9 +109,10 @@ public class TgRecordsActiveOperationService implements TgClientBotOperationServ
                                                                    clientRecord.getHours(),
                                                                    clientRecord.getMins(),
                                                                    clientRecord.getUserItem().getName()))
-                                    .callbackData(String.format("%s;%s",
+                                    .callbackData(String.format("%s;%s;%s",
                                                                 BOT_RECORD_SHOW.getType(),
-                                                                clientRecord.getId())));
+                                                                clientRecord.getId(),
+                                                                status)));
         });
 
         return keyboard.inlineKeyboard().length == 0 ? FALSE : TRUE;
@@ -109,6 +124,6 @@ public class TgRecordsActiveOperationService implements TgClientBotOperationServ
      */
     @Override
     public TgClientRecordBotOperationType getOperationType() {
-        return BOT_RECORD_ACTIVE;
+        return BOT_RECORDS;
     }
 }

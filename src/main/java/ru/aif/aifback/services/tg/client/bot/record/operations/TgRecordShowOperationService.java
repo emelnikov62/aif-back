@@ -3,7 +3,7 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_EDIT;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
@@ -56,24 +56,25 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         Long recordId = Long.valueOf(webhookRequest.getText().split(DELIMITER)[1]);
+        String status = webhookRequest.getText().split(DELIMITER)[2];
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         Long chatId = Long.valueOf(webhookRequest.getChatId());
 
         ClientRecord clientRecord = clientRecordService.getClientRecordById(recordId);
         if (Objects.isNull(clientRecord)) {
-            sendErrorMessage(keyboard, chatId, bot);
+            sendErrorMessage(keyboard, chatId, bot, status);
             return;
         }
 
         Optional<UserItem> userItem = userItemService.findUserItemById(clientRecord.getAifUserItemId());
         if (userItem.isEmpty()) {
-            sendErrorMessage(keyboard, chatId, bot);
+            sendErrorMessage(keyboard, chatId, bot, status);
             return;
         }
 
         Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
         if (group.isEmpty()) {
-            sendErrorMessage(keyboard, chatId, bot);
+            sendErrorMessage(keyboard, chatId, bot, status);
             return;
         }
 
@@ -103,7 +104,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                         new InlineKeyboardButton("\uD83D\uDEAB Отменить")
                                 .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
 
-        keyboard.addRow(createBackButton(BOT_RECORD_ACTIVE.getType()));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
         sendPhoto(chatId, Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
     }
 
@@ -112,9 +113,10 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
      * @param keyboard keyboard
      * @param chatId chat id
      * @param bot telegram bot
+     * @param status status
      */
-    private void sendErrorMessage(InlineKeyboardMarkup keyboard, Long chatId, TelegramBot bot) {
-        keyboard.addRow(createBackButton(BOT_RECORD_ACTIVE.getType()));
+    private void sendErrorMessage(InlineKeyboardMarkup keyboard, Long chatId, TelegramBot bot, String status) {
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
         sendMessage(chatId, SHOW_ERROR_TITLE, keyboard, bot);
     }
 

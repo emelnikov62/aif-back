@@ -2,9 +2,10 @@ package ru.aif.aifback.services.tg.client.bot.record;
 
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_HISTORY;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SETTINGS;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.NO_ACTIVE;
 
 import java.util.Objects;
 
@@ -34,7 +35,7 @@ public final class TgClientBotRecordButtons {
     public static final String STAFF_SELECT_TITLE = "\uD83D\uDC64 %s %02d:%02d %02d.%02d.%04d - Выберите специалиста";
     public static final String CALENDAR_EMPTY_TIME_TITLE = "\uD83D\uDEAB Свободных мест нет. Выберите другой день";
     public static final String STAFF_EMPTY_TITLE = "\uD83D\uDEAB Свободных специалистов нет. Выберите другое время";
-    public static final String RECORDS_EMPTY_TITLE = "\uD83D\uDEAB Активных записей нет";
+    public static final String RECORDS_EMPTY_TITLE = "\uD83D\uDEAB Записей нет";
     public static final String CONFIRM_RECORD_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запись. Попробуйте позже";
     public static final String SHOW_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запрос. Попробуйте позже";
     public static final String SUCCESS_CANCEL_RECORD = "✅ Ваша запись отменена";
@@ -46,9 +47,11 @@ public final class TgClientBotRecordButtons {
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
         if (Objects.equals(typeBot, BOT_RECORD.getType())) {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-            keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE).callbackData(BOT_RECORD_ACTIVE.getType()));
+            keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE)
+                                    .callbackData(String.format("%s;%s", BOT_RECORDS.getType(), ACTIVE.getType())));
             keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_GROUP.getType()));
-            keyboard.addRow(new InlineKeyboardButton(HISTORY_TITLE).callbackData(BOT_HISTORY.getType()));
+            keyboard.addRow(new InlineKeyboardButton(HISTORY_TITLE)
+                                    .callbackData(String.format("%s;%s", BOT_RECORDS.getType(), NO_ACTIVE.getType())));
             keyboard.addRow(new InlineKeyboardButton(SETTINGS_TITLE).callbackData(BOT_SETTINGS.getType()));
             return keyboard;
         }

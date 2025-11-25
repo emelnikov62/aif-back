@@ -59,6 +59,18 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
     List<ClientRecord> findAllByClientIdAndStatus(@Param("client_id") Long clientId, @Param("status") String status);
 
     /**
+     * Find all completed by client id.
+     * @param clientId client id
+     * @return client records
+     */
+    @Query(value = "select r.*" +
+                   "  from aif_client_records r" +
+                   " where r.aif_client_id = :client_id" +
+                   "   and r.status != 'active'" +
+                   " order by r.hours")
+    List<ClientRecord> findAllCompletedByClientId(@Param("client_id") Long clientId);
+
+    /**
      * Cancel record.
      * @param id id
      * @param status status

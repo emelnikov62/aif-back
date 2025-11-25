@@ -4,8 +4,9 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SUCCESS_CANCEL_RECORD;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class TgRecordCancelOperationService implements TgClientBotOperationServi
             answer = SHOW_ERROR_TITLE;
         }
 
-        keyboard.addRow(createBackButton(BOT_RECORD_ACTIVE.getType()));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), ACTIVE.getType())));
         sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
     }
 

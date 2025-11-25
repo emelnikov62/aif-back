@@ -16,7 +16,8 @@ public enum TgClientRecordType {
 
     ACTIVE("active", "активная", "\uD83D\uDD35"),
     CANCEL("cancel", "отменена", "❌"),
-    FINISHED("finished", "завершена", "✅");
+    FINISHED("finished", "завершена", "✅"),
+    NO_ACTIVE("no_active", null, null);
 
     private final String type;
     private final String name;

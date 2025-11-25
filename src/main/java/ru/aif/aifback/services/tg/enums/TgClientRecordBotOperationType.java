@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TgClientRecordBotOperationType {
 
-    BOT_RECORD_ACTIVE("bot_record_active"),
+    BOT_RECORDS("bot_records"),
     BOT_HISTORY("bot_history"),
     BOT_SETTINGS("bot_settings"),
     BOT_GROUP("bot_group"),
