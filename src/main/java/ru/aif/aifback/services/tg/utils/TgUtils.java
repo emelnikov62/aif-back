@@ -10,8 +10,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,29 @@ public final class TgUtils {
             Map.entry(6, "Сб"),
             Map.entry(7, "Вс")
     );
+
+    /**
+     * Update message.
+     * @param chatId chat id
+     * @param messageId message id
+     * @param text text
+     * @param bot bot
+     */
+    public static void updateMessage(String chatId, int messageId, String text, TelegramBot bot) {
+        log.info("{}", bot.execute(new EditMessageText(chatId, messageId, text)));
+    }
+
+    /**
+     * Update message.
+     * @param chatId chat id
+     * @param messageId message id
+     * @param text text
+     * @param keyboard keyboard
+     * @param bot bot
+     */
+    public static void updateMessage(String chatId, int messageId, String text, InlineKeyboardMarkup keyboard, TelegramBot bot) {
+        log.info("{}", bot.execute(new EditMessageText(chatId, messageId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard)));
+    }
 
     /**
      * Send photo.

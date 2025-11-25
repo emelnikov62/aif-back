@@ -19,6 +19,9 @@ public class TgWebhookRequest {
     @JsonProperty("chat_id")
     private String chatId;
 
+    @JsonProperty("message_id")
+    private String messageId;
+
     private String text;
 
     private boolean callback;

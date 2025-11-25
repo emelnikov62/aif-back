@@ -15,7 +15,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordType.NO_ACTIVE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
-import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
+import static ru.aif.aifback.services.tg.utils.TgUtils.updateMessage;
 
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +62,8 @@ public class TgRecordsOperationService implements TgClientBotOperationService {
         String answer = processBotRecords(webhookRequest.getChatId(), status, keyboard);
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        //sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        updateMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot);
     }
 
     /**
