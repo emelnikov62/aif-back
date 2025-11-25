@@ -53,9 +53,10 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
      */
     @Query(value = "select r.*" +
                    "  from aif_client_records r" +
+                   "  join aif_user_calendar uc on uc.id = r.aif_user_calendar_id" +
                    " where r.aif_client_id = :client_id" +
                    "   and r.status = :status" +
-                   " order by r.hours")
+                   " order by uc.day, uc.month, uc.year, r.hours, r.mins")
     List<ClientRecord> findAllByClientIdAndStatus(@Param("client_id") Long clientId, @Param("status") String status);
 
     /**
@@ -65,9 +66,10 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
      */
     @Query(value = "select r.*" +
                    "  from aif_client_records r" +
+                   "  join aif_user_calendar uc on uc.id = r.aif_user_calendar_id" +
                    " where r.aif_client_id = :client_id" +
                    "   and r.status != 'active'" +
-                   " order by r.hours")
+                   " order by uc.day, uc.month, uc.year, r.hours, r.mins")
     List<ClientRecord> findAllCompletedByClientId(@Param("client_id") Long clientId);
 
     /**
