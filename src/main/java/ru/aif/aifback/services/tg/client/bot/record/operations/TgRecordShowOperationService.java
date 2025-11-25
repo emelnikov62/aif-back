@@ -107,7 +107,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getHours(),
                                                     clientRecord.getMins()) +
                                       String.format("%s <b>Статус:</b> %s\n\n", recordStatus.getIcon(), recordStatus.getName()) +
-                                      String.format("⭐<b>Оценка:</b> %.2f", calcStar));
+                                      String.format("⭐ <b>Оценка:</b> %.2f", calcStar));
 
         if (Objects.equals(status, ACTIVE.getType())) {
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
