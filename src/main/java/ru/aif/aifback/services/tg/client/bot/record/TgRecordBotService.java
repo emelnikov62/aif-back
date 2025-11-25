@@ -16,13 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
-import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.tg.TgBotService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgBotType;
-import ru.aif.aifback.services.user.UserCalendarService;
-import ru.aif.aifback.services.user.UserItemService;
 
 /**
  * TG Client API service.
@@ -34,10 +30,6 @@ import ru.aif.aifback.services.user.UserItemService;
 public class TgRecordBotService implements TgBotService {
 
     private final List<TgClientBotOperationService> operations;
-    private final UserItemService userItemService;
-    private final UserCalendarService userCalendarService;
-    private final ClientService clientService;
-    private final ClientRecordService clientRecordService;
 
     /**
      * Webhook process.
@@ -88,8 +80,10 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        TelegramBot bot = new TelegramBot(userBot.getToken());
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
+        sendMessage(Long.valueOf(webhookRequest.getChatId()),
+                    MENU_TITLE,
+                    createMainMenuKeyboard(userBot.getBot().getType()),
+                    new TelegramBot(userBot.getToken()));
     }
 
     /**

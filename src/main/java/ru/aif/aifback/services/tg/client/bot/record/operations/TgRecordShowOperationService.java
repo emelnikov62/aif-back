@@ -95,9 +95,9 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getMins()));
 
         keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
-                                .callbackData(String.format("%s;%s", BOT_RECORD_EDIT, clientRecord.getId())),
+                                .callbackData(String.format("%s;%s", BOT_RECORD_EDIT.getType(), clientRecord.getId())),
                         new InlineKeyboardButton("\uD83D\uDEAB Отменить")
-                                .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL, clientRecord.getId())));
+                                .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
 
         keyboard.addRow(createBackButton(BOT_RECORD_ACTIVE.getType()));
         sendPhoto(chatId, Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
