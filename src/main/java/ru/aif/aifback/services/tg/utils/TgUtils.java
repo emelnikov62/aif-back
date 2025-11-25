@@ -63,8 +63,8 @@ public final class TgUtils {
      * @param bot bot
      */
     public static void sendPhoto(String chatId, int messageId, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
-        deleteMessage(chatId, messageId, bot);
         bot.execute(new SendPhoto(chatId, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard));
+        deleteMessage(chatId, messageId, bot);
     }
 
     /**
@@ -86,11 +86,11 @@ public final class TgUtils {
      * @param update update
      */
     public static void sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
+        bot.execute(new SendMessage(chatId, text));
+
         if (update) {
             deleteMessage(chatId, messageId, bot);
         }
-
-        bot.execute(new SendMessage(chatId, text));
     }
 
     /**
@@ -103,11 +103,11 @@ public final class TgUtils {
      * @param update update
      */
     public static void sendMessage(String chatId, int messageId, String text, InlineKeyboardMarkup keyboard, TelegramBot bot, Boolean update) {
+        bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
+
         if (update) {
             deleteMessage(chatId, messageId, bot);
         }
-
-        bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
     }
 
     /**
