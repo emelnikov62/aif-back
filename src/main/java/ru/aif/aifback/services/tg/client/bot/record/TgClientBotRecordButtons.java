@@ -2,6 +2,7 @@ package ru.aif.aifback.services.tg.client.bot.record;
 
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SETTINGS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
@@ -65,8 +66,11 @@ public final class TgClientBotRecordButtons {
      * @param callback callback
      * @return back button
      */
-    public static InlineKeyboardButton createBackButton(String callback) {
-        return new InlineKeyboardButton(BACK_BUTTON_TITLE).callbackData(callback);
+    public static InlineKeyboardButton[] createBackButton(String callback) {
+        return new InlineKeyboardButton[] {
+                new InlineKeyboardButton(BACK_BUTTON_TITLE).callbackData(callback),
+                new InlineKeyboardButton(MENU_TITLE).callbackData(BOT_MAIN.getType())
+        };
     }
 
 }
