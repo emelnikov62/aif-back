@@ -13,6 +13,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
@@ -62,7 +63,17 @@ public final class TgUtils {
      * @param bot bot
      */
     public static void sendPhoto(String chatId, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendPhoto(chatId, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard)));
+        bot.execute(new SendPhoto(chatId, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard));
+    }
+
+    /**
+     * Delete message.
+     * @param chatId chat id
+     * @param messageId message id
+     * @param bot bot
+     */
+    public static void deleteMessage(String chatId, int messageId, TelegramBot bot) {
+        bot.execute(new DeleteMessage(chatId, messageId));
     }
 
     /**

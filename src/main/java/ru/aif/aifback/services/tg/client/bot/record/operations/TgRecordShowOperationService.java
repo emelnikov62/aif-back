@@ -12,6 +12,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BO
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
+import static ru.aif.aifback.services.tg.utils.TgUtils.deleteMessage;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -112,6 +113,8 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
+
+        deleteMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
         sendPhoto(webhookRequest.getChatId(), Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
     }
 

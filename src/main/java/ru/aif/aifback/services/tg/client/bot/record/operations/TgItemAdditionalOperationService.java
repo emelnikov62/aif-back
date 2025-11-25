@@ -10,6 +10,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BO
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEMS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.deleteMessage;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendPhoto;
 
@@ -74,6 +75,7 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
                 new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.get().getId())));
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.get().getId())));
 
+        deleteMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
         sendPhoto(webhookRequest.getChatId(), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
     }
 
