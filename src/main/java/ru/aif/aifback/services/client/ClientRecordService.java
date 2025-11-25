@@ -1,5 +1,10 @@
 package ru.aif.aifback.services.client;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -109,6 +114,21 @@ public class ClientRecordService {
         });
 
         return records;
+    }
+
+    /**
+     * Cancel record.
+     * @param id id
+     * @return true/false
+     */
+    public Boolean cancelRecord(Long id) {
+        try {
+            clientRecordRepository.cancelRecord(id, CANCEL.getType());
+            return TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return FALSE;
+        }
     }
 
 }

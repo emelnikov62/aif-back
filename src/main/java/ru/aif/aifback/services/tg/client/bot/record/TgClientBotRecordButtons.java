@@ -37,6 +37,7 @@ public final class TgClientBotRecordButtons {
     public static final String RECORDS_EMPTY_TITLE = "\uD83D\uDEAB Активных записей нет";
     public static final String CONFIRM_RECORD_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запись. Попробуйте позже";
     public static final String SHOW_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запрос. Попробуйте позже";
+    public static final String SUCCESS_CANCEL_RECORD = "✅ Ваша запись отменена";
 
     /**
      * Create main menu.

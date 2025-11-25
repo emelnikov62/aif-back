@@ -3,6 +3,7 @@ package ru.aif.aifback.repository.client;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -57,4 +58,12 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
                    " order by r.hours")
     List<ClientRecord> findAllByClientIdAndStatus(@Param("client_id") Long clientId, @Param("status") String status);
 
+    /**
+     * Cancel record.
+     * @param id id
+     * @param status status
+     */
+    @Query(value = "update aif_client_records set status = :status where id = :id")
+    @Modifying
+    void cancelRecord(@Param("id") Long id, @Param("status") String status);
 }
