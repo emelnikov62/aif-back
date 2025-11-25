@@ -7,6 +7,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BO
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_EDIT;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -31,6 +32,7 @@ import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
+import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -75,6 +77,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
             return;
         }
 
+        TgClientRecordType recordStatus = findByType(clientRecord.getStatus());
         String answer = String.format(String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName()) +
                                       String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName()) +
                                       String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.get().getHours(),
@@ -92,7 +95,8 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
                                                     clientRecord.getUserCalendar().getYear(),
                                                     clientRecord.getHours(),
-                                                    clientRecord.getMins()));
+                                                    clientRecord.getMins()) +
+                                      String.format("%s <b>Статус:</b> %s", recordStatus.getIcon(), recordStatus.getName()));
 
         keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
                                 .callbackData(String.format("%s;%s", BOT_RECORD_EDIT.getType(), clientRecord.getId())),

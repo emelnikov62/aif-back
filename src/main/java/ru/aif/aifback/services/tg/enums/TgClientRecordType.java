@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.tg.enums;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,10 +14,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TgClientRecordType {
 
-    ACTIVE("active"),
-    CANCEL("cancel"),
-    FINISHED("finished");
+    ACTIVE("active", "активная", "\uD83D\uDD35"),
+    CANCEL("cancel", "отменена", "❌"),
+    FINISHED("finished", "завершена", "✅");
 
     private final String type;
+    private final String name;
+    private final String icon;
+
+    public static TgClientRecordType findByType(String type) {
+        return Arrays.stream(values()).filter(v -> Objects.equals(type, v.getType())).findFirst().orElse(FINISHED);
+    }
 
 }
