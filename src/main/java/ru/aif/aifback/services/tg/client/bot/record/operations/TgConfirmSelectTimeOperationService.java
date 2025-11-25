@@ -71,7 +71,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
                                                 keyboard);
 
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**

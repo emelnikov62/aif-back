@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.admin.bot.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_ERROR_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_SUCCESS_ANSWER;
@@ -52,7 +54,7 @@ public class TgBotDeleteOperationService implements TgAdminBotOperationService {
             keyboard.addRow(createBackButton(BOT_MAIN.getType()));
         }
 
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**

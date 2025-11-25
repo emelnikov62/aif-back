@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
@@ -32,7 +34,12 @@ public class TgMainOperationService implements TgClientBotOperationService {
      */
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
+        sendMessage(webhookRequest.getChatId(),
+                    Integer.parseInt(webhookRequest.getMessageId()),
+                    MENU_TITLE,
+                    createMainMenuKeyboard(userBot.getBot().getType()),
+                    bot,
+                    TRUE);
     }
 
     /**

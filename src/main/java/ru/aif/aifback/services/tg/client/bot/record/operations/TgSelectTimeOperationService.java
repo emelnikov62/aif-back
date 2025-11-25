@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.DELIMITER_CHAR;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.STAFF_EMPTY_TITLE;
@@ -69,7 +71,7 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
                                               keyboard);
 
         keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), day, month, year, itemId)));
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**

@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.tg.client.bot.record;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
@@ -45,7 +48,7 @@ public class TgRecordBotService implements TgBotService {
             processNoCallback(webhookRequest, userBot);
         }
 
-        return Boolean.TRUE;
+        return TRUE;
     }
 
     /**
@@ -62,14 +65,19 @@ public class TgRecordBotService implements TgBotService {
                                                               .findFirst()
                                                               .orElse(null);
             if (Objects.isNull(operation)) {
-                sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(userBot.getBot().getType()), bot);
+                sendMessage(webhookRequest.getChatId(),
+                            Integer.parseInt(webhookRequest.getMessageId()),
+                            MENU_TITLE,
+                            createMainMenuKeyboard(userBot.getBot().getType()),
+                            bot,
+                            TRUE);
                 return;
             }
 
             operation.process(webhookRequest, userBot, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sendMessage(TG_LOG_ID, e.getMessage(), bot);
+            sendMessage(TG_LOG_ID, 0, e.getMessage(), bot, FALSE);
         }
     }
 
@@ -80,10 +88,12 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        sendMessage(Long.valueOf(webhookRequest.getChatId()),
+        sendMessage(webhookRequest.getChatId(),
+                    Integer.parseInt(webhookRequest.getMessageId()),
                     MENU_TITLE,
                     createMainMenuKeyboard(userBot.getBot().getType()),
-                    new TelegramBot(userBot.getToken()));
+                    new TelegramBot(userBot.getToken()),
+                    TRUE);
     }
 
     /**

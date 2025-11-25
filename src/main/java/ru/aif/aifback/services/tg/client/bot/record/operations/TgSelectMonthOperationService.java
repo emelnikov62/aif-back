@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_DAY_TITLE;
@@ -58,7 +60,7 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
                                                keyboard);
 
         keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), year, itemId)));
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**

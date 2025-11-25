@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.GROUP_TITLE;
@@ -53,7 +55,7 @@ public class TgItemsOperationService implements TgClientBotOperationService {
         String answer = processBotGroupItems(Long.valueOf(groupId), keyboard);
         keyboard.addRow(createBackButton(BOT_GROUP.getType()));
 
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), answer, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**

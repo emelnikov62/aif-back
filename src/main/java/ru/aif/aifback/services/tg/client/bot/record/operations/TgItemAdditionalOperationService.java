@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ADD_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
@@ -53,13 +55,13 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
 
         Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
         if (userItem.isEmpty()) {
-            sendErrorMessage(keyboard, Long.valueOf(webhookRequest.getChatId()), bot);
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
 
         Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
         if (group.isEmpty()) {
-            sendErrorMessage(keyboard, Long.valueOf(webhookRequest.getChatId()), bot);
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
 
@@ -72,18 +74,19 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
                 new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.get().getId())));
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.get().getId())));
 
-        sendPhoto(Long.valueOf(webhookRequest.getChatId()), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
+        sendPhoto(webhookRequest.getChatId(), Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
     }
 
     /**
      * Send error message.
      * @param keyboard keyboard
      * @param chatId chat id
+     * @param messageId message id
      * @param bot telegram bot
      */
-    private void sendErrorMessage(InlineKeyboardMarkup keyboard, Long chatId, TelegramBot bot) {
+    private void sendErrorMessage(InlineKeyboardMarkup keyboard, String chatId, int messageId, TelegramBot bot) {
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
-        sendMessage(chatId, SHOW_ERROR_TITLE, keyboard, bot);
+        sendMessage(chatId, messageId, SHOW_ERROR_TITLE, keyboard, bot, TRUE);
     }
 
     /**

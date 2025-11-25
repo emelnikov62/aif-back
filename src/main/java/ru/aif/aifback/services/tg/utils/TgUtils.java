@@ -55,58 +55,47 @@ public final class TgUtils {
     );
 
     /**
-     * Update message.
-     * @param chatId chat id
-     * @param messageId message id
-     * @param text text
-     * @param bot bot
-     */
-    public static void updateMessage(String chatId, int messageId, String text, TelegramBot bot) {
-        log.info("{}", bot.execute(new EditMessageText(chatId, messageId, text)));
-    }
-
-    /**
-     * Update message.
-     * @param chatId chat id
-     * @param messageId message id
-     * @param text text
-     * @param keyboard keyboard
-     * @param bot bot
-     */
-    public static void updateMessage(String chatId, int messageId, String text, InlineKeyboardMarkup keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new EditMessageText(chatId, messageId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard)));
-    }
-
-    /**
      * Send photo.
-     * @param id id
+     * @param chatId chat id
      * @param file file
      * @param keyboard keyboard
      * @param bot bot
      */
-    public static void sendPhoto(Long id, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendPhoto(id, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard)));
+    public static void sendPhoto(String chatId, byte[] file, String caption, Keyboard keyboard, TelegramBot bot) {
+        log.info("{}", bot.execute(new SendPhoto(chatId, file).parseMode(ParseMode.HTML).caption(caption).replyMarkup(keyboard)));
     }
 
     /**
      * Send message.
-     * @param id id
+     * @param chatId chat id
+     * @param messageId message id
      * @param text text
      * @param bot bot
+     * @param update update
      */
-    public static void sendMessage(Long id, String text, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendMessage(id, text)));
+    public static void sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
+        if (update) {
+            bot.execute(new EditMessageText(chatId, messageId, text));
+        } else {
+            bot.execute(new SendMessage(chatId, text));
+        }
     }
 
     /**
      * Send message with keyboard.
-     * @param id id
+     * @param chatId chat id
+     * @param messageId message id
      * @param text text
      * @param keyboard keyboard
      * @param bot bot
+     * @param update update
      */
-    public static void sendMessage(Long id, String text, Keyboard keyboard, TelegramBot bot) {
-        log.info("{}", bot.execute(new SendMessage(id, text).parseMode(ParseMode.HTML).replyMarkup(keyboard)));
+    public static void sendMessage(String chatId, int messageId, String text, InlineKeyboardMarkup keyboard, TelegramBot bot, Boolean update) {
+        if (update) {
+            bot.execute(new EditMessageText(chatId, messageId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
+        } else {
+            bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML).replyMarkup(keyboard));
+        }
     }
 
     /**

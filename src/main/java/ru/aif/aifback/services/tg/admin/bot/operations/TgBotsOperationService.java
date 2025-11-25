@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.admin.bot.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_EMPTY_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
@@ -56,7 +58,12 @@ public class TgBotsOperationService implements TgAdminBotOperationService {
         });
 
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), userBots.isEmpty() ? BOTS_EMPTY_TITLE : MY_BOTS_TITLE, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(),
+                    Integer.parseInt(webhookRequest.getMessageId()),
+                    userBots.isEmpty() ? BOTS_EMPTY_TITLE : MY_BOTS_TITLE,
+                    keyboard,
+                    bot,
+                    TRUE);
     }
 
     /**

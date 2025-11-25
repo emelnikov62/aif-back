@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
@@ -59,23 +61,22 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
         Long recordId = Long.valueOf(webhookRequest.getText().split(DELIMITER)[1]);
         String status = webhookRequest.getText().split(DELIMITER)[2];
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        Long chatId = Long.valueOf(webhookRequest.getChatId());
 
         ClientRecord clientRecord = clientRecordService.getClientRecordById(recordId);
         if (Objects.isNull(clientRecord)) {
-            sendErrorMessage(keyboard, chatId, bot, status);
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, status);
             return;
         }
 
         UserItem userItem = userItemService.findUserItemById(clientRecord.getAifUserItemId()).orElse(null);
         if (Objects.isNull(userItem)) {
-            sendErrorMessage(keyboard, chatId, bot, status);
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, status);
             return;
         }
 
         UserItemGroup group = userItemService.findUserItemGroupByItemId(userItem.getAifUserItemGroupId()).orElse(null);
         if (Objects.isNull(group)) {
-            sendErrorMessage(keyboard, chatId, bot, status);
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, status);
             return;
         }
 
@@ -111,19 +112,20 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
-        sendPhoto(chatId, Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
+        sendPhoto(webhookRequest.getChatId(), Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
     }
 
     /**
      * Send error message.
      * @param keyboard keyboard
      * @param chatId chat id
+     * @param messageId message id
      * @param bot telegram bot
      * @param status status
      */
-    private void sendErrorMessage(InlineKeyboardMarkup keyboard, Long chatId, TelegramBot bot, String status) {
+    private void sendErrorMessage(InlineKeyboardMarkup keyboard, String chatId, int messageId, TelegramBot bot, String status) {
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
-        sendMessage(chatId, SHOW_ERROR_TITLE, keyboard, bot);
+        sendMessage(chatId, messageId, SHOW_ERROR_TITLE, keyboard, bot, TRUE);
     }
 
     /**

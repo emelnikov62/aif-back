@@ -1,5 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
@@ -52,7 +54,7 @@ public class TgAddRecordOperationService implements TgClientBotOperationService 
                                 String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), nextYear, itemId)));
         keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL.getType(), itemId)));
 
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot, TRUE);
     }
 
     /**

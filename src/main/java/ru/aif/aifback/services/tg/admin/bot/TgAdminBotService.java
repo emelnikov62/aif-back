@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.tg.admin.bot;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MENU_TITLE;
@@ -55,7 +58,7 @@ public class TgAdminBotService implements TgBotService {
             processNoCallback(webhookRequest, userBot);
         }
 
-        return Boolean.TRUE;
+        return TRUE;
     }
 
     /**
@@ -71,14 +74,19 @@ public class TgAdminBotService implements TgBotService {
                                                              .findFirst()
                                                              .orElse(null);
             if (Objects.isNull(operation)) {
-                sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(), bot);
+                sendMessage(webhookRequest.getChatId(),
+                            Integer.parseInt(webhookRequest.getMessageId()),
+                            MENU_TITLE,
+                            createMainMenuKeyboard(),
+                            bot,
+                            TRUE);
                 return;
             }
 
             operation.process(webhookRequest, bot);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sendMessage(TG_LOG_ID, e.getMessage(), bot);
+            sendMessage(TG_LOG_ID, 0, e.getMessage(), bot, FALSE);
         }
     }
 
@@ -89,7 +97,7 @@ public class TgAdminBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        sendMessage(Long.valueOf(webhookRequest.getChatId()), MENU_TITLE, createMainMenuKeyboard(), bot);
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), MENU_TITLE, createMainMenuKeyboard(), bot, TRUE);
     }
 
     /**
