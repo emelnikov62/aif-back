@@ -3,6 +3,7 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
@@ -107,7 +108,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                     .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
         } else {
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
-                                    .callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.getId())));
+                                    .callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
