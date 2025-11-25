@@ -19,7 +19,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 public final class TgClientBotRecordButtons {
 
     public static final String MENU_TITLE = "\uD83D\uDCCB Меню";
-    public static final String ACTIVE_TITLE = "✅ Активные записи";
+    public static final String ACTIVE_TITLE = "\uD83D\uDD35 Активные записи";
     public static final String HISTORY_TITLE = "⏳ История записей";
     public static final String SETTINGS_TITLE = "\uD83D\uDD27 Настройки";
     public static final String ITEMS_TITLE = "\uD83D\uDCE6 Услуги";

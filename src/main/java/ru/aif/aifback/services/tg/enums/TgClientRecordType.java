@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TgClientRecordType {
 
-    ACTIVE("active", "активная", "\uD83D\uDD35"),
-    CANCEL("cancel", "отменена", "❌"),
-    FINISHED("finished", "завершена", "✅"),
+    ACTIVE("active", "Активная", "\uD83D\uDD35"),
+    CANCEL("cancel", "Отменена", "❌"),
+    FINISHED("finished", "Завершена", "✅"),
     NO_ACTIVE("no_active", null, null);
 
     private final String type;

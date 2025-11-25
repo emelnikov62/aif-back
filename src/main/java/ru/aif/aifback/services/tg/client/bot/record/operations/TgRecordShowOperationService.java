@@ -89,7 +89,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                                                     clientRecord.getUserStaff().getSurname(),
                                                     clientRecord.getUserStaff().getName(),
                                                     clientRecord.getUserStaff().getThird()) +
-                                      String.format("\uD83D\uDCC5 <b>Дата:</b> %s %02d %s %s %02d:%02d",
+                                      String.format("\uD83D\uDCC5 <b>Дата:</b> %s %02d %s %s %02d:%02d\n\n",
                                                     getDayOfWeek(clientRecord.getUserCalendar().getDay(),
                                                                  clientRecord.getUserCalendar().getMonth(),
                                                                  clientRecord.getUserCalendar().getYear()),
