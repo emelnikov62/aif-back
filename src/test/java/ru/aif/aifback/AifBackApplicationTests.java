@@ -62,7 +62,8 @@ class AifBackApplicationTests {
                                                                             108L,
                                                                             17L,
                                                                             12L,
-                                                                            0L);
+                                                                            0L,
+                                                                            null);
         Assertions.assertNotNull(clientRecordId);
 
         Map<String, List<ClientRecordTime>> times = new HashMap<>();

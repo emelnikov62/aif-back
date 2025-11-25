@@ -54,13 +54,15 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String hours = webhookRequest.getText().split(DELIMITER)[2];
-        String mins = webhookRequest.getText().split(DELIMITER)[3];
-        String calendarIds = webhookRequest.getText().split(DELIMITER)[1];
-        String itemId = webhookRequest.getText().split(DELIMITER)[4];
-        String day = webhookRequest.getText().split(DELIMITER)[5];
-        String month = webhookRequest.getText().split(DELIMITER)[6];
-        String year = webhookRequest.getText().split(DELIMITER)[7];
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String hours = params[2];
+        String mins = params[3];
+        String calendarIds = params[1];
+        String itemId = params[4];
+        String day = params[5];
+        String month = params[6];
+        String year = params[7];
+        String recordId = params[8];
         String answer = processBotSelectStaff(Long.valueOf(day),
                                               Long.valueOf(month),
                                               Long.valueOf(year),
@@ -68,9 +70,10 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
                                               Long.valueOf(mins),
                                               Long.valueOf(itemId),
                                               calendarIds,
+                                              recordId,
                                               keyboard);
 
-        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), day, month, year, itemId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), day, month, year, itemId, recordId)));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
@@ -83,11 +86,12 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
      * @param mins mins
      * @param itemId itemId
      * @param calendarIds calendar ids
+     * @param recordId record id
      * @param keyboard keyboard
      * @return answer
      */
     private String processBotSelectStaff(Long day, Long month, Long year, Long hours, Long mins, Long itemId, String calendarIds,
-                                         InlineKeyboardMarkup keyboard) {
+                                         String recordId, InlineKeyboardMarkup keyboard) {
         List<String> stringCalendarIds = Arrays.stream(calendarIds.split(DELIMITER_CHAR)).toList();
         if (stringCalendarIds.isEmpty()) {
             return STAFF_EMPTY_TITLE;
@@ -105,13 +109,14 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
 
             UserStaff userStaff = userCalendar.get().getStaff();
             String staffFio = String.format("%s %s %s", userStaff.getSurname(), userStaff.getName(), userStaff.getThird());
-            keyboard.addRow(new InlineKeyboardButton(staffFio).callbackData(String.format("%s;%s;%s;%s;%s;%s",
+            keyboard.addRow(new InlineKeyboardButton(staffFio).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s",
                                                                                           BOT_CONFIRM_SELECT_TIME.getType(),
                                                                                           userCalendar.get().getId(),
                                                                                           hours,
                                                                                           mins,
                                                                                           itemId,
-                                                                                          userStaff.getId())));
+                                                                                          userStaff.getId(),
+                                                                                          recordId)));
         }
 
         return keyboard.inlineKeyboard().length == 0

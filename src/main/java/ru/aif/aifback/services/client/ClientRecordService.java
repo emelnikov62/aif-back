@@ -7,6 +7,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -61,22 +62,40 @@ public class ClientRecordService {
      * @param userStaffId user staff id
      * @param hours hours
      * @param mins mins
+     * @param recordId record id
      * @return id
      */
     public Optional<Long> addClientRecord(Long clientId, Long userBotId, Long userItemId, Long userCalendarId, Long userStaffId, Long hours,
-                                          Long mins) {
+                                          Long mins, Long recordId) {
         try {
-            ClientRecord clientRecord = new ClientRecord(clientId,
-                                                         userBotId,
-                                                         userItemId,
-                                                         userCalendarId,
-                                                         userStaffId,
-                                                         hours,
-                                                         mins,
-                                                         TgClientRecordType.ACTIVE.getType(),
-                                                         LocalDateTime.now());
-            clientRecordRepository.save(clientRecord);
+            ClientRecord clientRecord;
 
+            if (Objects.nonNull(recordId)) {
+                clientRecord = clientRecordRepository.findById(recordId).orElse(null);
+
+                if (Objects.isNull(clientRecord)) {
+                    return Optional.empty();
+                }
+
+                clientRecord.setHours(hours);
+                clientRecord.setMins(mins);
+                clientRecord.setAifUserCalendarId(userCalendarId);
+                clientRecord.setAifUserStaffId(userStaffId);
+                clientRecord.setStatus(TgClientRecordType.ACTIVE.getType());
+                clientRecord.setCreated(LocalDateTime.now());
+            } else {
+                clientRecord = new ClientRecord(clientId,
+                                                userBotId,
+                                                userItemId,
+                                                userCalendarId,
+                                                userStaffId,
+                                                hours,
+                                                mins,
+                                                TgClientRecordType.ACTIVE.getType(),
+                                                LocalDateTime.now());
+            }
+
+            clientRecordRepository.save(clientRecord);
             return Optional.of(clientRecord.getId());
         } catch (Exception e) {
             return Optional.empty();

@@ -3,6 +3,7 @@ package ru.aif.aifback.services.tg.client.bot.record.operations;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ADD_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
@@ -14,7 +15,7 @@ import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendPhoto;
 
 import java.util.Base64;
-import java.util.Optional;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -53,29 +54,30 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         String itemId = webhookRequest.getText().split(DELIMITER)[1];
 
-        Optional<UserItem> userItem = userItemService.findUserItemById(Long.valueOf(itemId));
-        if (userItem.isEmpty()) {
+        UserItem userItem = userItemService.findUserItemById(Long.valueOf(itemId)).orElse(null);
+        if (Objects.isNull(userItem)) {
             sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
 
-        Optional<UserItemGroup> group = userItemService.findUserItemGroupByItemId(userItem.get().getAifUserItemGroupId());
-        if (group.isEmpty()) {
+        UserItemGroup group = userItemService.findUserItemGroupByItemId(userItem.getAifUserItemGroupId()).orElse(null);
+        if (Objects.isNull(group)) {
             sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
 
-        String answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.get().getName())
-                        + String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.get().getName())
-                        + String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.get().getHours(), userItem.get().getMins())
-                        + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.get().getAmount()));
+        String answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.getName())
+                        + String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.getName())
+                        + String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.getHours(), userItem.getMins())
+                        + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.getAmount()));
 
         keyboard.addRow(
-                new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(String.format("%s;%s", BOT_ADD_RECORD.getType(), userItem.get().getId())));
-        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.get().getId())));
+                new InlineKeyboardButton(ADD_RECORD_TITLE).callbackData(
+                        String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.getId())));
 
         sendPhoto(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()),
-                  Base64.getDecoder().decode(userItem.get().getFileData()), answer, keyboard, bot);
+                  Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
     }
 
     /**

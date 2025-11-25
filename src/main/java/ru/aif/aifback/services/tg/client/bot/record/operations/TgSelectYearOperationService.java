@@ -49,10 +49,12 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String year = webhookRequest.getText().split(DELIMITER)[1];
-        String itemId = webhookRequest.getText().split(DELIMITER)[2];
-        String answer = processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), keyboard);
-        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ADD_RECORD.getType(), itemId)));
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String year = params[1];
+        String itemId = params[2];
+        String recordId = params[3];
+        String answer = processBotCalendarMonths(Long.valueOf(itemId), Long.valueOf(webhookRequest.getId()), Long.valueOf(year), recordId, keyboard);
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), itemId, recordId)));
 
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
@@ -62,9 +64,10 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
      * @param userItemId user item id
      * @param id id
      * @param year year
+     * @param recordId record id
      * @param keyboard keyboard
      */
-    private String processBotCalendarMonths(Long userItemId, Long id, Long year, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarMonths(Long userItemId, Long id, Long year, String recordId, InlineKeyboardMarkup keyboard) {
         List<Long> months = userCalendarService.findAllMonthsByYear(year, id);
         if (months.isEmpty()) {
             return CALENDAR_EMPTY_TIME_TITLE;
@@ -74,7 +77,7 @@ public class TgSelectYearOperationService implements TgClientBotOperationService
         int num = 0;
         while (num < months.size()) {
             InlineKeyboardButton btn = new InlineKeyboardButton(getMonthByNumber(months.get(num)))
-                    .callbackData(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), months.get(num), year, userItemId));
+                    .callbackData(String.format("%s;%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), months.get(num), year, userItemId, recordId));
             btns.add(btn);
 
             num++;

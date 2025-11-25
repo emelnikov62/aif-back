@@ -8,7 +8,6 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_EDIT;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.findByType;
@@ -103,7 +102,7 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
 
         if (Objects.equals(status, ACTIVE.getType())) {
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDCDD Изменить")
-                                    .callbackData(String.format("%s;%s", BOT_RECORD_EDIT.getType(), clientRecord.getId())),
+                                    .callbackData(String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), clientRecord.getId())),
                             new InlineKeyboardButton("\uD83D\uDEAB Отменить")
                                     .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
         } else {

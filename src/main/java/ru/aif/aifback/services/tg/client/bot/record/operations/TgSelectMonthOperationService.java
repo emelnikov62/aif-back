@@ -50,16 +50,19 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String month = webhookRequest.getText().split(DELIMITER)[1];
-        String year = webhookRequest.getText().split(DELIMITER)[2];
-        String itemId = webhookRequest.getText().split(DELIMITER)[3];
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String month = params[1];
+        String year = params[2];
+        String itemId = params[3];
+        String recordId = params[4];
         String answer = processBotCalendarDays(Long.valueOf(itemId),
                                                Long.valueOf(webhookRequest.getId()),
                                                Long.valueOf(year),
                                                Long.valueOf(month),
+                                               recordId,
                                                keyboard);
 
-        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), year, itemId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), year, itemId, recordId)));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
@@ -69,9 +72,10 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
      * @param id id
      * @param year year
      * @param month month
+     * @param recordId record id
      * @param keyboard keyboard
      */
-    private String processBotCalendarDays(Long userItemId, Long id, Long year, Long month, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarDays(Long userItemId, Long id, Long year, Long month, String recordId, InlineKeyboardMarkup keyboard) {
         List<Long> days = userCalendarService.findAllDaysByMonthAndYear(year, month, id);
         if (days.isEmpty()) {
             return CALENDAR_EMPTY_TIME_TITLE;
@@ -82,7 +86,7 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
         while (num < days.size()) {
             String title = String.format("%s (%s)", days.get(num), getDayOfWeek(days.get(num), month, year));
             InlineKeyboardButton btn = new InlineKeyboardButton(title).callbackData(
-                    String.format("%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId));
+                    String.format("%s;%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId, recordId));
             btns.add(btn);
 
             num++;

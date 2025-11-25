@@ -67,18 +67,21 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String day = webhookRequest.getText().split(DELIMITER)[1];
-        String month = webhookRequest.getText().split(DELIMITER)[2];
-        String year = webhookRequest.getText().split(DELIMITER)[3];
-        String itemId = webhookRequest.getText().split(DELIMITER)[4];
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String day = params[1];
+        String month = params[2];
+        String year = params[3];
+        String itemId = params[4];
+        String recordId = params[5];
         String answer = processBotCalendarTimes(Long.valueOf(itemId),
                                                 Long.valueOf(webhookRequest.getId()),
                                                 Long.valueOf(year),
                                                 Long.valueOf(month),
                                                 Long.valueOf(day),
+                                                recordId,
                                                 keyboard);
 
-        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), month, year, itemId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_SELECT_MONTH.getType(), month, year, itemId, recordId)));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
@@ -89,10 +92,12 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
      * @param year year
      * @param month month
      * @param day day
+     * @param recordId record id
      * @param keyboard keyboard
      * @return answer
      */
-    private String processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, InlineKeyboardMarkup keyboard) {
+    private String processBotCalendarTimes(Long userItemId, Long id, Long year, Long month, Long day, String recordId,
+                                           InlineKeyboardMarkup keyboard) {
         List<UserCalendar> calendars = userCalendarService.findAllDaysByMonthAndYearAndDay(year, month, day, id);
         if (calendars.isEmpty()) {
             return CALENDAR_EMPTY_TIME_TITLE;
@@ -134,17 +139,18 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
                                                                     .sorted(Comparator.comparingInt(o -> o.getValue().get(0).getHours()))
                                                                     .toList()) {
             if (entry.getValue().size() == 1) {
-                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s",
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s",
                                                                                              BOT_CONFIRM_SELECT_TIME.getType(),
                                                                                              entry.getValue().get(0).getCalendarId(),
                                                                                              entry.getValue().get(0).getHours(),
                                                                                              entry.getValue().get(0).getMins(),
                                                                                              userItemId,
-                                                                                             entry.getValue().get(0).getStaffId())));
+                                                                                             entry.getValue().get(0).getStaffId(),
+                                                                                             recordId)));
             } else {
                 String listCalendarIds = Strings.join(entry.getValue().stream().map(ClientRecordTime::getCalendarId).toList(),
                                                       Constants.DELIMITER_CHAR.charAt(0));
-                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
+                btns.add(new InlineKeyboardButton(entry.getKey()).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s",
                                                                                              BOT_SELECT_TIME.getType(),
                                                                                              listCalendarIds,
                                                                                              entry.getValue().get(0).getHours(),
@@ -152,7 +158,8 @@ public class TgSelectDayOperationService implements TgClientBotOperationService 
                                                                                              userItemId,
                                                                                              day,
                                                                                              month,
-                                                                                             year)));
+                                                                                             year,
+                                                                                             recordId)));
             }
 
             if (++num % 5 == 0) {

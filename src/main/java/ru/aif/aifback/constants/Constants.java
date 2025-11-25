@@ -15,6 +15,7 @@ public final class Constants {
 
     public final static String TG_TOKEN_ADMIN = "7277396052:AAEIEaz200U8MXlRCy60aOsEkoFKC9Q2eds";
     public final static String TG_LOG_ID = "-1002391679452L";
+    public final static String EMPTY_PARAM = "empty";
 
     private Constants() {
         throw new AssertionError("Utility class cannot be created");

@@ -43,15 +43,18 @@ public class TgAddRecordOperationService implements TgClientBotOperationService 
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String itemId = webhookRequest.getText().split(DELIMITER)[1];
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String itemId = params[1];
+        String recordId = params[2];
+
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
         int nextYear = currentYear + 1;
 
         keyboard.addRow(new InlineKeyboardButton(String.valueOf(currentYear)).callbackData(
-                                String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), currentYear, itemId)),
+                                String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), currentYear, itemId, recordId)),
                         new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
-                                String.format("%s;%s;%s", BOT_SELECT_YEAR.getType(), nextYear, itemId)));
+                                String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), nextYear, itemId, recordId)));
         keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL.getType(), itemId)));
 
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot, TRUE);

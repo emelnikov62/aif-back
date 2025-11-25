@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
@@ -56,11 +57,13 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        String hours = webhookRequest.getText().split(DELIMITER)[2];
-        String mins = webhookRequest.getText().split(DELIMITER)[3];
-        String calendarId = webhookRequest.getText().split(DELIMITER)[1];
-        String itemId = webhookRequest.getText().split(DELIMITER)[4];
-        String staffId = webhookRequest.getText().split(DELIMITER)[5];
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String hours = params[2];
+        String mins = params[3];
+        String calendarId = params[1];
+        String itemId = params[4];
+        String staffId = params[5];
+        String recordId = params[6];
         String answer = processBotConfirmRecord(Long.valueOf(hours),
                                                 Long.valueOf(mins),
                                                 Long.valueOf(itemId),
@@ -68,6 +71,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
                                                 Long.valueOf(staffId),
                                                 Long.valueOf(webhookRequest.getId()),
                                                 webhookRequest.getChatId(),
+                                                recordId,
                                                 keyboard);
 
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
@@ -83,17 +87,19 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
      * @param staffId staff id
      * @param id user bot id
      * @param clientTgId client tg id
+     * @param recordId record id
      * @param keyboard keyboard
      * @return answer
      */
     private String processBotConfirmRecord(Long hours, Long mins, Long itemId, Long calendarId, Long staffId, Long id, String clientTgId,
-                                           InlineKeyboardMarkup keyboard) {
+                                           String recordId, InlineKeyboardMarkup keyboard) {
         Long clientId = clientService.getClientIdOrCreate(clientTgId);
         if (Objects.isNull(clientId)) {
             return CONFIRM_RECORD_ERROR_TITLE;
         }
 
-        Optional<Long> clientRecordId = clientRecordService.addClientRecord(clientId, id, itemId, calendarId, staffId, hours, mins);
+        Optional<Long> clientRecordId = clientRecordService.addClientRecord(
+                clientId, id, itemId, calendarId, staffId, hours, mins, Objects.equals(recordId, EMPTY_PARAM) ? null : Long.valueOf(recordId));
         if (clientRecordId.isEmpty()) {
             return CONFIRM_RECORD_ERROR_TITLE;
         }
