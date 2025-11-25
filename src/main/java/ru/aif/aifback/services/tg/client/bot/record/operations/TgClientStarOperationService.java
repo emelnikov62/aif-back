@@ -68,7 +68,7 @@ public class TgClientStarOperationService implements TgClientBotOperationService
             return;
         }
 
-        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_RECORD_SHOW, recordId, NO_ACTIVE.getType())));
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s", BOT_RECORD_SHOW.getType(), recordId, NO_ACTIVE.getType())));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), SUCCESS_CLIENT_STAR, keyboard, bot, TRUE);
     }
 

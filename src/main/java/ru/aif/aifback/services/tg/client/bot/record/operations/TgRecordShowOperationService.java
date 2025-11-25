@@ -121,6 +121,11 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                         new InlineKeyboardButton("⭐ 3").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 3, clientRecord.getId())),
                         new InlineKeyboardButton("⭐ 4").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 4, clientRecord.getId())),
                         new InlineKeyboardButton("⭐ 5").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 5, clientRecord.getId())));
+            } else {
+                Float calcStar = clientStarService.calcByStaffAndUserItem(Long.valueOf(webhookRequest.getId()),
+                                                                          clientRecord.getAifUserStaffId(),
+                                                                          clientRecord.getAifUserItemId());
+                answer += String.format("\n\n⭐<b>Оценка:</b> %.2f", calcStar);
             }
 
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
