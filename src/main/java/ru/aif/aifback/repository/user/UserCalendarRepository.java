@@ -98,7 +98,7 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
      */
     @Query(value = "select a.*" +
                    "  from (" +
-                   "    select distinct on (a.year) a.month" +
+                   "    select distinct on (a.year, a.month) a.month" +
                    "      from aif_user_calendar a" +
                    "     where a.year = :year and a.aif_user_bot_id = :aif_user_bot_id" +
                    "     ) a" +
