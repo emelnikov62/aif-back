@@ -1,5 +1,6 @@
 package ru.aif.aifback.repository.client;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
@@ -31,4 +32,20 @@ public interface ClientStarRepository extends CrudRepository<ClientStar, Long> {
     Optional<ClientStar> findByClientAndUserItemAndStaff(@Param("client_id") Long clientId,
                                                          @Param("user_item_id") Long userItemId,
                                                          @Param("staff_id") Long staffId);
+
+    /**
+     * Stars by staff and user item.
+     * @param userBotId user bot id
+     * @param staffId staff id
+     * @param userItemId user item id
+     * @return stars
+     */
+    @Query(value = "select s.value" +
+                   "  from aif_client_stars s" +
+                   " where s.aif_user_bot_id = :user_bot_id" +
+                   "   and s.aif_user_item_id = :user_item_id" +
+                   "   and s.aif_staff_id = :staff_id")
+    List<Integer> calcByStaffAndUserItem(@Param("user_bot_id") Long userBotId,
+                                         @Param("staff_id") Long staffId,
+                                         @Param("user_item_id") Long userItemId);
 }

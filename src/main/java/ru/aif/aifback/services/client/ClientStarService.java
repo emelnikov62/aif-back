@@ -1,6 +1,7 @@
 package ru.aif.aifback.services.client;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,20 @@ public class ClientStarService {
             log.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    /**
+     * Calc star by staff and user item.
+     * @param userBotId user bot id
+     * @param staffId staff id
+     * @param userItemId user item id
+     * @return calc star
+     */
+    public Float calcByStaffAndUserItem(Long userBotId, Long staffId, Long userItemId) {
+        List<Integer> stars = clientStarRepository.calcByStaffAndUserItem(userBotId, staffId, userItemId);
+        return stars.isEmpty()
+               ? 5f
+               : Math.round((float) stars.stream().mapToInt(Integer::intValue).sum() / stars.size());
     }
 
 }

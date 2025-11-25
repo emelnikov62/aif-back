@@ -16,7 +16,6 @@ import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +28,7 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserStaff;
+import ru.aif.aifback.services.client.ClientStarService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.user.UserCalendarService;
@@ -43,6 +43,7 @@ import ru.aif.aifback.services.user.UserCalendarService;
 public class TgSelectTimeOperationService implements TgClientBotOperationService {
 
     private final UserCalendarService userCalendarService;
+    private final ClientStarService clientStarService;
 
     /**
      * Main processing.
@@ -63,7 +64,8 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
         String month = params[6];
         String year = params[7];
         String recordId = params[8];
-        String answer = processBotSelectStaff(Long.valueOf(day),
+        String answer = processBotSelectStaff(Long.valueOf(webhookRequest.getId()),
+                                              Long.valueOf(day),
                                               Long.valueOf(month),
                                               Long.valueOf(year),
                                               Long.valueOf(hours),
@@ -79,6 +81,7 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
 
     /**
      * Process select staff.
+     * @param userBotId user bot id
      * @param day day
      * @param month month
      * @param year year
@@ -90,7 +93,7 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
      * @param keyboard keyboard
      * @return answer
      */
-    private String processBotSelectStaff(Long day, Long month, Long year, Long hours, Long mins, Long itemId, String calendarIds,
+    private String processBotSelectStaff(Long userBotId, Long day, Long month, Long year, Long hours, Long mins, Long itemId, String calendarIds,
                                          String recordId, InlineKeyboardMarkup keyboard) {
         List<String> stringCalendarIds = Arrays.stream(calendarIds.split(DELIMITER_CHAR)).toList();
         if (stringCalendarIds.isEmpty()) {
@@ -98,20 +101,21 @@ public class TgSelectTimeOperationService implements TgClientBotOperationService
         }
 
         for (String calendarId : stringCalendarIds) {
-            Optional<UserCalendar> userCalendar = userCalendarService.findById(Long.valueOf(calendarId));
-            if (userCalendar.isEmpty()) {
+            UserCalendar userCalendar = userCalendarService.findById(Long.valueOf(calendarId)).orElse(null);
+            if (Objects.isNull(userCalendar)) {
                 continue;
             }
 
-            if (Objects.isNull(userCalendar.get().getStaff())) {
+            if (Objects.isNull(userCalendar.getStaff())) {
                 continue;
             }
 
-            UserStaff userStaff = userCalendar.get().getStaff();
-            String staffFio = String.format("%s %s %s", userStaff.getSurname(), userStaff.getName(), userStaff.getThird());
+            UserStaff userStaff = userCalendar.getStaff();
+            Float calcStar = clientStarService.calcByStaffAndUserItem(userBotId, userStaff.getId(), itemId);
+            String staffFio = String.format("%s %s %s (⭐ %.2f)", userStaff.getSurname(), userStaff.getName(), userStaff.getThird(), calcStar);
             keyboard.addRow(new InlineKeyboardButton(staffFio).callbackData(String.format("%s;%s;%s;%s;%s;%s;%s",
                                                                                           BOT_CONFIRM_SELECT_TIME.getType(),
-                                                                                          userCalendar.get().getId(),
+                                                                                          userCalendar.getId(),
                                                                                           hours,
                                                                                           mins,
                                                                                           itemId,
