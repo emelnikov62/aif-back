@@ -7,6 +7,7 @@ import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CLIENT_STAR;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
@@ -28,11 +29,14 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.model.client.ClientStar;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.client.ClientRecordService;
+import ru.aif.aifback.services.client.ClientService;
+import ru.aif.aifback.services.client.ClientStarService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
@@ -47,6 +51,8 @@ import ru.aif.aifback.services.user.UserItemService;
 @RequiredArgsConstructor
 public class TgRecordShowOperationService implements TgClientBotOperationService {
 
+    private final ClientService clientService;
+    private final ClientStarService clientStarService;
     private final ClientRecordService clientRecordService;
     private final UserItemService userItemService;
 
@@ -107,6 +113,18 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
                             new InlineKeyboardButton("\uD83D\uDEAB Отменить")
                                     .callbackData(String.format("%s;%s", BOT_RECORD_CANCEL.getType(), clientRecord.getId())));
         } else {
+            ClientStar clientStar = clientStarService.findClientStarByUserItemAndStaff(clientRecord.getAifClientId(),
+                                                                                       clientRecord.getAifUserItemId(),
+                                                                                       clientRecord.getAifUserStaffId());
+            if (Objects.isNull(clientStar)) {
+                keyboard.addRow(
+                        new InlineKeyboardButton("⭐ 1").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 1, clientRecord.getId())),
+                        new InlineKeyboardButton("⭐ 2").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 2, clientRecord.getId())),
+                        new InlineKeyboardButton("⭐ 3").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 3, clientRecord.getId())),
+                        new InlineKeyboardButton("⭐ 4").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 4, clientRecord.getId())),
+                        new InlineKeyboardButton("⭐ 5").callbackData(String.format("%s;%s;%s", BOT_CLIENT_STAR.getType(), 5, clientRecord.getId())));
+            }
+
             keyboard.addRow(new InlineKeyboardButton("\uD83D\uDD04 Повторить")
                                     .callbackData(String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
         }

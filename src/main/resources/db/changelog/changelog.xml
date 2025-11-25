@@ -46,4 +46,8 @@
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_staff_items.sql" stripComments="true"/>
     </changeSet>
 
+    <changeSet author="emelnikov" id="create_table_aif_client_stars" context="prod" dbms="postgresql" runOnChange="true">
+        <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_client_stars.sql" stripComments="true"/>
+    </changeSet>
+
 </databaseChangeLog>
