@@ -5,7 +5,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS_SELECT;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -45,7 +45,7 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
 
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName());
 
-        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId)));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
