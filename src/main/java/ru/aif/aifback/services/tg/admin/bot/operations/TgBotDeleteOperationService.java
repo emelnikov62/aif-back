@@ -7,7 +7,7 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_SUCCESS_ANSWER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_DELETE;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -48,7 +48,7 @@ public class TgBotDeleteOperationService implements TgAdminBotOperationService {
         String answer;
         if (userBotService.deleteUserBot(botId)) {
             answer = DELETE_BOT_SUCCESS_ANSWER;
-            keyboard.addRow(new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOTS_BOTS.getType()));
+            keyboard.addRow(new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOT_BOTS.getType()));
         } else {
             answer = DELETE_BOT_ERROR_ANSWER;
             keyboard.addRow(createBackButton(BOT_MAIN.getType()));

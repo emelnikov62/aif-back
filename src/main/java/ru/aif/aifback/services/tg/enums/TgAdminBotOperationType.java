@@ -13,7 +13,7 @@ public enum TgAdminBotOperationType {
 
     BOT_MAIN("bot_main"),
     BOT_SELECT("bot_select"),
-    BOTS_BOTS("bot_bots"),
+    BOT_BOTS("bot_bots"),
     BOT_CREATE("bot_create"),
     BOT_DELETE("bot_delete"),
     BOT_STATS("bot_stats"),

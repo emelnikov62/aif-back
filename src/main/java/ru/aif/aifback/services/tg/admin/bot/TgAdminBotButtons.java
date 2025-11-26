@@ -1,6 +1,6 @@
 package ru.aif.aifback.services.tg.admin.bot;
 
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CREATE;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
 
@@ -40,7 +40,7 @@ public final class TgAdminBotButtons {
     public static InlineKeyboardMarkup createMainMenuKeyboard() {
         return new InlineKeyboardMarkup(
                 new InlineKeyboardButton(CONNECT_BOT_TITLE).callbackData(BOT_CREATE.getType()),
-                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOTS_BOTS.getType())
+                new InlineKeyboardButton(MY_BOTS_TITLE).callbackData(BOT_BOTS.getType())
         );
     }
 

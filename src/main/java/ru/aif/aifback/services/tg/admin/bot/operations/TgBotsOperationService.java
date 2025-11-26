@@ -6,7 +6,7 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_EMPTY_
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.MY_BOTS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.getBotIconByType;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -72,6 +72,6 @@ public class TgBotsOperationService implements TgAdminBotOperationService {
      */
     @Override
     public TgAdminBotOperationType getOperationType() {
-        return BOTS_BOTS;
+        return BOT_BOTS;
     }
 }

@@ -5,8 +5,8 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOTS_BOTS;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS_SELECT;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.findByType;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
@@ -39,15 +39,14 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
     public void process(TgWebhookRequest webhookRequest, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
-        TgAdminStatsType type = findByType(webhookRequest.getText().split(DELIMITER)[1]);
-        keyboard.addRow(createBackButton(BOTS_BOTS.getType()));
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        TgAdminStatsType type = findByType(params[1]);
+        String userBotId = params[2];
 
-        sendMessage(webhookRequest.getChatId(),
-                    Integer.parseInt(webhookRequest.getMessageId()),
-                    String.format("%s: %s", BOT_STATS_TITLE, type.getName()),
-                    keyboard,
-                    bot,
-                    TRUE);
+        String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName());
+
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
     /**
@@ -56,6 +55,6 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
      */
     @Override
     public TgAdminBotOperationType getOperationType() {
-        return BOT_STATS;
+        return BOT_STATS_SELECT;
     }
 }
