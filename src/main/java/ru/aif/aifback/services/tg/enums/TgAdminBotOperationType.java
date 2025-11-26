@@ -18,7 +18,7 @@ public enum TgAdminBotOperationType {
     BOT_DELETE("bot_delete"),
     BOT_STATS("bot_stats"),
     BOT_CONFIRM_CREATE("bot_confirm_create"),
-    BOT_STATS_SELECT("bot_select_stats");
+    BOT_STATS_SELECT("bot_show_stats");
 
     private final String type;
 
