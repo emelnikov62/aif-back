@@ -1,10 +1,8 @@
 package ru.aif.aifback.services.tg.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
-import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
@@ -40,8 +38,6 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
     @Override
     public void process(TgWebhookRequest webhookRequest, TelegramBot bot) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-
-        sendMessage(TG_LOG_ID, Integer.parseInt(webhookRequest.getMessageId()), webhookRequest.getText(), bot, FALSE);
 
         String[] params = webhookRequest.getText().split(DELIMITER);
         TgAdminStatsType type = findByType(params[1]);
