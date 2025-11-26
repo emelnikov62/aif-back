@@ -2,6 +2,7 @@ package ru.aif.aifback.services.tg.admin.bot;
 
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CREATE;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
 
 import java.util.Objects;
@@ -49,8 +50,11 @@ public final class TgAdminBotButtons {
      * @param callback callback
      * @return back button
      */
-    public static InlineKeyboardButton createBackButton(String callback) {
-        return new InlineKeyboardButton(BACK_BUTTON_TITLE).callbackData(callback);
+    public static InlineKeyboardButton[] createBackButton(String callback) {
+        return new InlineKeyboardButton[] {
+                new InlineKeyboardButton(BACK_BUTTON_TITLE).callbackData(callback),
+                new InlineKeyboardButton(MENU_TITLE).callbackData(BOT_MAIN.getType())
+        };
     }
 
     /**
