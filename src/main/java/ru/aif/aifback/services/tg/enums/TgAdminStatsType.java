@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 public enum TgAdminStatsType {
 
     ALL("all", "Общая", "\uD83D\uDCC5"),
-    MONTH("month", "Текущий месяц", "📅"),
-    YEAR("year", "Текущий год", "📅");
+    MONTH("month", "Месяц", "📅"),
+    YEAR("year", "Год", "📅");
 
     private final String type;
     private final String name;

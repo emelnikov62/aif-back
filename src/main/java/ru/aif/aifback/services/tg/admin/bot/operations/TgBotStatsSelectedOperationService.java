@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 import org.springframework.stereotype.Service;
 
@@ -46,8 +45,6 @@ import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 public class TgBotStatsSelectedOperationService implements TgAdminBotOperationService {
 
     private static final String SPACE = "    ";
-    private static final BiFunction<TgClientRecordType, Integer, String> FORMAT_SERVICE =
-            (type, count) -> String.format("%s%s: <b>%s</b>\n", SPACE, type.getNameStats(), count);
     private final ClientRecordService clientRecordService;
 
     /**
@@ -71,11 +68,11 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
                                                       .sum());
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
                         String.format("<b>Прибыль:</b> %s руб.\n\n", amount) +
-                        "<b>Услуг:</b>\n" +
-                        FORMAT_SERVICE.apply(ACTIVE, calcCountByType(records, ACTIVE)) +
-                        FORMAT_SERVICE.apply(CANCEL, calcCountByType(records, CANCEL)) +
-                        FORMAT_SERVICE.apply(FINISHED, calcCountByType(records, FINISHED)) +
-                        "\n<b>Специалисты:</b>\n" +
+                        String.format("<b>Услуг:</b> %s%s %s%s %s%s\n\n",
+                                      ACTIVE.getIcon(), calcCountByType(records, ACTIVE),
+                                      CANCEL.getIcon(), calcCountByType(records, CANCEL),
+                                      FINISHED.getIcon(), calcCountByType(records, FINISHED)) +
+                        "<b>Специалисты:</b>\n" +
                         fillRecordStaffs(records);
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId)));
@@ -102,9 +99,11 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
             staffs.append(String.format("%s<b>%s:</b>\n", SPACE, staff.getKey()))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
+                  .append(SPACE)
+                  .append(String.format("%s%s %s%s %s%s",
+                                        ACTIVE.getIcon(), calcCountByType(staff.getValue(), ACTIVE),
+                                        CANCEL.getIcon(), calcCountByType(staff.getValue(), CANCEL),
+                                        FINISHED.getIcon(), calcCountByType(staff.getValue(), FINISHED)));
         }
 
         return staffs.toString();
