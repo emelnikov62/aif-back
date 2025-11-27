@@ -7,6 +7,7 @@ import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.MONTH;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.YEAR;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -181,11 +182,11 @@ public class ClientRecordService {
         try {
             LocalDateTime startDate = LocalDateTime.of(1900, 1, 1, 0, 0);
             if (Objects.equals(period, MONTH)) {
-                startDate = LocalDateTime.now().minusDays(30);
+                startDate = LocalDateTime.of(2025, LocalDate.now().getMonth(), 1, 0, 0);
             }
 
             if (Objects.equals(period, YEAR)) {
-                startDate = LocalDateTime.now().minusYears(1);
+                startDate = LocalDateTime.of(LocalDate.now().getYear(), 1, 1, 0, 0);
             }
 
             List<ClientRecord> records = clientRecordRepository.findByPeriod(userBotId, startDate);
