@@ -61,7 +61,7 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         TgAdminStatsType type = findByType(params[1]);
         String userBotId = params[2];
 
-        List<ClientRecord> records = clientRecordService.findByPeriod(type, Long.valueOf(webhookRequest.getId()));
+        List<ClientRecord> records = clientRecordService.findByPeriod(type, Long.valueOf(userBotId));
 
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
                         "<b>Услуги:</b>\n" +
