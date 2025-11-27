@@ -101,10 +101,10 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         });
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
-            staffs.append(String.format("<b>%s:</b>\n", staff.getKey()))
-                  .append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
-                  .append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
-                  .append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
+            staffs.append(String.format("%s<b>%s:</b>\n", SPACE, staff.getKey()))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
         }
 
         return staffs.toString();
