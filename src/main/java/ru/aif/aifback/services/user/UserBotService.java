@@ -48,6 +48,12 @@ public class UserBotService {
             return Optional.empty();
         }
 
+        Optional<User> user = userService.findById(userBot.get().getAifUserId());
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+
+        userBot.get().setUser(user.get());
         userBot.get().setBot(botType.get());
         return userBot;
     }

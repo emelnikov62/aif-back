@@ -51,4 +51,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Find by id.
+     * @param id id
+     * @return user
+     */
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
 }

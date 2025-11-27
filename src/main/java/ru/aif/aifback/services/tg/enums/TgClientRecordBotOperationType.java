@@ -27,7 +27,7 @@ public enum TgClientRecordBotOperationType {
     BOT_RECORD_SHOW("bot_record_show"),
     BOT_RECORD_CANCEL("bot_record_cancel"),
     BOT_RECORD_EDIT("bot_record_edit"),
-    BOT_CLIENT_STAR("bot_client_star");
+    BOT_CLIENT_STAR("bot_client_star"),;
 
     private final String type;
 

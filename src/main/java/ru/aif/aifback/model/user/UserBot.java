@@ -30,6 +30,8 @@ public class UserBot {
     private LocalDateTime created;
     @Transient
     private Bot bot;
+    @Transient
+    private User user;
 
     public UserBot(Long id, Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created) {
         this.id = id;
