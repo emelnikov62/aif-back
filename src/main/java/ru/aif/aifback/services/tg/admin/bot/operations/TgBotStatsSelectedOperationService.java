@@ -68,7 +68,7 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
                                                       .sum());
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
                         String.format("<b>Прибыль:</b> %s руб.\n\n", amount) +
-                        String.format("<b>Услуг:</b> %s%s %s%s %s%s\n\n",
+                        String.format("<b>Услуг:</b> %s %s   %s %s   %s %s\n\n",
                                       ACTIVE.getIcon(), calcCountByType(records, ACTIVE),
                                       CANCEL.getIcon(), calcCountByType(records, CANCEL),
                                       FINISHED.getIcon(), calcCountByType(records, FINISHED)) +
@@ -99,8 +99,8 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
             staffs.append(String.format("%s<b>%s:</b>\n", SPACE, staff.getKey()))
-                  .append(SPACE)
-                  .append(String.format("%s%s %s%s %s%s",
+                  .append(SPACE).append(SPACE)
+                  .append(String.format("%s %s   %s %s   %s %s\n\n",
                                         ACTIVE.getIcon(), calcCountByType(staff.getValue(), ACTIVE),
                                         CANCEL.getIcon(), calcCountByType(staff.getValue(), CANCEL),
                                         FINISHED.getIcon(), calcCountByType(staff.getValue(), FINISHED)));
