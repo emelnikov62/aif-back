@@ -95,12 +95,13 @@ public class TgAdminNotificationService {
 
     private String fillRecordStaff(ClientRecord current, ClientRecord prev) {
         String staff = String.format("\uD83D\uDC64 <b>%s:</b> %s %s %s",
-                                     Objects.isNull(prev) ? "Специалист" : "Новый специалист",
+                                     Objects.nonNull(prev) && !Objects.equals(prev.getAifUserStaffId(), current.getAifUserStaffId())
+                                     ? "Новый специалист" : "Специалист",
                                      current.getUserStaff().getSurname(),
                                      current.getUserStaff().getName(),
                                      current.getUserStaff().getThird());
 
-        if (Objects.nonNull(prev)) {
+        if (Objects.nonNull(prev) && !Objects.equals(prev.getAifUserStaffId(), current.getAifUserStaffId())) {
             staff += String.format("\n\n❌ <b>Прошлый специалист:</b> %s %s %s",
                                    prev.getUserStaff().getSurname(),
                                    prev.getUserStaff().getName(),
