@@ -100,7 +100,7 @@ public class TgRecordsOperationService implements TgClientBotOperationService {
                                             clientRecord.getUserCalendar().getMonth(),
                                             clientRecord.getUserCalendar().getYear());
             TgClientRecordType recordStatus = findByType(clientRecord.getStatus());
-            keyboard.addRow(new InlineKeyboardButton(String.format("%s \uD83D\uDCC5 %s %s %s %s %02d:%02d (%s)",
+            keyboard.addRow(new InlineKeyboardButton(String.format("%s \uD83D\uDCC5 %s %02d %s %s %02d:%02d (%s)",
                                                                    recordStatus.getIcon(),
                                                                    dayOfWeek,
                                                                    clientRecord.getUserCalendar().getDay(),

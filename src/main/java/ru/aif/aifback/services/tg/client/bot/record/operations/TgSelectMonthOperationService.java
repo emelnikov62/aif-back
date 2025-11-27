@@ -84,7 +84,7 @@ public class TgSelectMonthOperationService implements TgClientBotOperationServic
         List<InlineKeyboardButton> btns = new ArrayList<>();
         int num = 0;
         while (num < days.size()) {
-            String title = String.format("%s (%s)", days.get(num), getDayOfWeek(days.get(num), month, year));
+            String title = String.format("%02d (%s)", days.get(num), getDayOfWeek(days.get(num), month, year));
             InlineKeyboardButton btn = new InlineKeyboardButton(title).callbackData(
                     String.format("%s;%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId, recordId));
             btns.add(btn);

@@ -125,7 +125,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
             return;
         }
 
-        String notification = String.format("\uD83D\uDD35 <b>Новая запись:</b> %s %02d %s %s %02d:%02d\n\n",
+        String notification = String.format("\uD83D\uDD35 <b>Новая запись:</b> %s %02d %s %s <b>%02d:%02d</b>\n\n",
                                             getDayOfWeek(clientRecord.getUserCalendar().getDay(),
                                                          clientRecord.getUserCalendar().getMonth(),
                                                          clientRecord.getUserCalendar().getYear()),

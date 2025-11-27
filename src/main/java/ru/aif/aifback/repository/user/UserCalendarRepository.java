@@ -117,7 +117,7 @@ public interface UserCalendarRepository extends CrudRepository<UserCalendar, Lon
                    " where a.year = :year" +
                    "   and a.month = :month" +
                    "   and a.aif_user_bot_id = :aif_user_bot_id" +
-                   "   and a.day > date_part('day', now())" +
+                   "   and to_date(a.day||'.'||a.month||'.'||a.year, 'dd.mm.yyyy') > now()" +
                    " order by a.day")
     List<Long> findAllDaysByMonthAndYear(@Param("year") Long year, @Param("month") Long month, @Param("aif_user_bot_id") Long aifUserBotId);
 
