@@ -8,6 +8,7 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_CANCEL;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordEventType.CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
+import ru.aif.aifback.services.tg.admin.TgAdminNotificationService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 
@@ -33,6 +35,7 @@ import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 public class TgRecordCancelOperationService implements TgClientBotOperationService {
 
     private final ClientRecordService clientRecordService;
+    private final TgAdminNotificationService tgAdminNotificationService;
 
     /**
      * Main processing.
@@ -49,6 +52,8 @@ public class TgRecordCancelOperationService implements TgClientBotOperationServi
         if (!clientRecordService.cancelRecord(recordId)) {
             answer = SHOW_ERROR_TITLE;
         }
+
+        tgAdminNotificationService.recordNotification(userBot, recordId, CANCEL);
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), ACTIVE.getType())));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);

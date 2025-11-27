@@ -5,15 +5,14 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
-import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
-import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
-import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORD_SHOW_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.ACTIVE_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CONFIRM_RECORD_ERROR_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORD_SHOW;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordEventType.EDIT;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordEventType.NEW;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
@@ -35,8 +34,8 @@ import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
+import ru.aif.aifback.services.tg.admin.TgAdminNotificationService;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 
 /**
@@ -50,6 +49,7 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
 
     private final ClientService clientService;
     private final ClientRecordService clientRecordService;
+    private final TgAdminNotificationService tgAdminNotificationService;
 
     /**
      * Main processing.
@@ -110,41 +110,8 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
             return CONFIRM_RECORD_ERROR_TITLE;
         }
 
-        sendNotification(userBot, clientRecordId.get());
+        tgAdminNotificationService.recordNotification(userBot, clientRecordId.get(), Objects.equals(recordId, EMPTY_PARAM) ? NEW : EDIT);
         return fillClientRecords(keyboard, clientId, ACTIVE.getType()) ? ACTIVE_TITLE : CONFIRM_RECORD_ERROR_TITLE;
-    }
-
-    /**
-     * Send notfication.
-     * @param userBot user bot
-     * @param clientRecordId client record id
-     */
-    private void sendNotification(UserBot userBot, Long clientRecordId) {
-        ClientRecord clientRecord = clientRecordService.getClientRecordById(clientRecordId);
-        if (Objects.isNull(clientRecord)) {
-            return;
-        }
-
-        String notification = String.format("\uD83D\uDD35 <b>Новая запись:</b> %s %02d %s %s <b>%02d:%02d</b>\n\n",
-                                            getDayOfWeek(clientRecord.getUserCalendar().getDay(),
-                                                         clientRecord.getUserCalendar().getMonth(),
-                                                         clientRecord.getUserCalendar().getYear()),
-                                            clientRecord.getUserCalendar().getDay(),
-                                            getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
-                                            clientRecord.getUserCalendar().getYear(),
-                                            clientRecord.getHours(),
-                                            clientRecord.getMins()) +
-                              String.format("\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", clientRecord.getUserItem().getName()) +
-                              String.format("\uD83D\uDC64 <b>Специалист:</b> %s %s %s",
-                                            clientRecord.getUserStaff().getSurname(),
-                                            clientRecord.getUserStaff().getName(),
-                                            clientRecord.getUserStaff().getThird());
-
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
-                new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE)
-                        .callbackData(String.format("%s;%s", TgAdminBotOperationType.BOT_RECORD_SHOW.getType(), clientRecordId)));
-
-        sendMessage(userBot.getUser().getTgId(), MESSAGE_ID_EMPTY, notification, keyboard, new TelegramBot(TG_TOKEN_ADMIN), FALSE);
     }
 
     /**
