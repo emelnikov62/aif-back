@@ -52,7 +52,7 @@ public class TgAdminNotificationService {
                                             event.getIcon(),
                                             event.getName()) +
                               fillRecordDate(clientRecord, prevStateRecord) +
-                              String.format("\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", clientRecord.getUserItem().getName()) +
+                              String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", clientRecord.getUserItem().getName()) +
                               fillRecordStaff(clientRecord, prevStateRecord);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
@@ -81,7 +81,7 @@ public class TgAdminNotificationService {
                                     current.getMins());
 
         if (Objects.nonNull(prev)) {
-            date += String.format("\n\n❌ <b>Прошлая дата:</b> %s %02d %s %s <b>%02d:%02d</b>\n\n",
+            date += String.format("\n\n❌ <b>Прошлая дата:</b> %s %02d %s %s <b>%02d:%02d</b>",
                                   getDayOfWeek(prev.getUserCalendar().getDay(), prev.getUserCalendar().getMonth(), prev.getUserCalendar().getYear()),
                                   prev.getUserCalendar().getDay(),
                                   getMonthByNumber(prev.getUserCalendar().getMonth()),
