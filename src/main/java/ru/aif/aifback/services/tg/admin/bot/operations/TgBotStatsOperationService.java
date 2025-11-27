@@ -5,7 +5,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS_SELECT;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.ALL;
@@ -57,7 +57,7 @@ public class TgBotStatsOperationService implements TgAdminBotOperationService {
                 new InlineKeyboardButton(statsName.apply(YEAR)).callbackData(callbackData.apply(YEAR, userBotId)),
                 new InlineKeyboardButton(statsName.apply(ALL)).callbackData(callbackData.apply(ALL, userBotId)));
 
-        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
 
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), BOT_STATS_TITLE, keyboard, bot, TRUE);
     }
