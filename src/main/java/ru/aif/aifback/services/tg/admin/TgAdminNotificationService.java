@@ -102,9 +102,9 @@ public class TgAdminNotificationService {
 
         if (Objects.nonNull(prev)) {
             staff += String.format("\n\n❌ <b>Прошлый специалист:</b> %s %s %s",
-                                   current.getUserStaff().getSurname(),
-                                   current.getUserStaff().getName(),
-                                   current.getUserStaff().getThird());
+                                   prev.getUserStaff().getSurname(),
+                                   prev.getUserStaff().getName(),
+                                   prev.getUserStaff().getThird());
         }
 
         return staff;
