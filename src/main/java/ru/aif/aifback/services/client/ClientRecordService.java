@@ -3,9 +3,12 @@ package ru.aif.aifback.services.client;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.MONTH;
+import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.YEAR;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
+import ru.aif.aifback.services.tg.enums.TgAdminStatsType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
@@ -164,6 +168,41 @@ public class ClientRecordService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return FALSE;
+        }
+    }
+
+    /**
+     * Find all by period.
+     * @param period period
+     * @param userBotId user bot id
+     * @return client records
+     */
+    public List<ClientRecord> findByPeriod(TgAdminStatsType period, Long userBotId) {
+        try {
+            LocalDateTime startDate = LocalDateTime.of(1900, 1, 1, 0, 0);
+            if (Objects.equals(period, MONTH)) {
+                startDate = LocalDateTime.now().minusDays(30);
+            }
+
+            if (Objects.equals(period, YEAR)) {
+                startDate = LocalDateTime.now().minusYears(1);
+            }
+
+            List<ClientRecord> records = clientRecordRepository.findByPeriod(userBotId, startDate);
+            if (records.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            records.forEach(record -> {
+                record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+                record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+                record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
+            });
+
+            return records;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Collections.emptyList();
         }
     }
 

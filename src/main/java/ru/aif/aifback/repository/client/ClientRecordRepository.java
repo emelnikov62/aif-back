@@ -1,5 +1,6 @@
 package ru.aif.aifback.repository.client;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,4 +81,17 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
     @Query(value = "update aif_client_records set status = :status where id = :id")
     @Modifying
     void cancelRecord(@Param("id") Long id, @Param("status") String status);
+
+    /**
+     * Find all records by period.
+     * @param userBotId user bot id
+     * @param startDate start date
+     * @return client records
+     */
+    @Query(value = "select r.*" +
+                   "  from aif_client_records r" +
+                   " where r.aif_user_bot_id = :user_bot_id" +
+                   "   and r.created between :start_date and now()")
+    List<ClientRecord> findByPeriod(@Param("user_bot_id") Long userBotId,
+                                    @Param("start_date") LocalDateTime startDate);
 }
