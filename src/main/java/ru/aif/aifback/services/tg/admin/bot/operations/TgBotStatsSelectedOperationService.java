@@ -47,7 +47,7 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
 
     private static final String SPACE = "    ";
     private static final BiFunction<TgClientRecordType, Integer, String> FORMAT_SERVICE =
-            (type, count) -> String.format("%s%s %s: <b>%s</b>\n\n", SPACE, type.getIcon(), type.getNameStats(), count);
+            (type, count) -> String.format("%s%s: <b>%s</b>\n", SPACE, type.getNameStats(), count);
     private final ClientRecordService clientRecordService;
 
     /**
@@ -71,7 +71,7 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
                                                       .sum());
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
                         String.format("<b>Прибыль:</b> %s руб.\n\n", amount) +
-                        "<b>Услуг:</b>\n\n" +
+                        "<b>Услуг:</b>\n" +
                         FORMAT_SERVICE.apply(ACTIVE, calcCountByType(records, ACTIVE)) +
                         FORMAT_SERVICE.apply(CANCEL, calcCountByType(records, CANCEL)) +
                         FORMAT_SERVICE.apply(FINISHED, calcCountByType(records, FINISHED)) +
@@ -101,10 +101,10 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         });
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
-            staffs.append(String.format("<b>%s:</b>\n\n", staff.getKey()))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
-                  .append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
+            staffs.append(String.format("<b>%s:</b>\n", staff.getKey()))
+                  .append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
+                  .append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
+                  .append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
         }
 
         return staffs.toString();
