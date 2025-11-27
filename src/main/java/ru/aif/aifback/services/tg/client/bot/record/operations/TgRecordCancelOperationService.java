@@ -53,7 +53,7 @@ public class TgRecordCancelOperationService implements TgClientBotOperationServi
             answer = SHOW_ERROR_TITLE;
         }
 
-        tgAdminNotificationService.recordNotification(userBot, recordId, CANCEL);
+        tgAdminNotificationService.recordNotification(userBot, recordId, null, CANCEL);
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), ACTIVE.getType())));
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);

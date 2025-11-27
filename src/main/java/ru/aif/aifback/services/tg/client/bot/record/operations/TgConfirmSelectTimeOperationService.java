@@ -104,13 +104,19 @@ public class TgConfirmSelectTimeOperationService implements TgClientBotOperation
             return CONFIRM_RECORD_ERROR_TITLE;
         }
 
+        ClientRecord clientRecordPrev = null;
+        if (!Objects.equals(recordId, EMPTY_PARAM)) {
+            clientRecordPrev = clientRecordService.getClientRecordById(Long.valueOf(recordId));
+        }
+
         Optional<Long> clientRecordId = clientRecordService.addClientRecord(
                 clientId, id, itemId, calendarId, staffId, hours, mins, Objects.equals(recordId, EMPTY_PARAM) ? null : Long.valueOf(recordId));
         if (clientRecordId.isEmpty()) {
             return CONFIRM_RECORD_ERROR_TITLE;
         }
 
-        tgAdminNotificationService.recordNotification(userBot, clientRecordId.get(), Objects.equals(recordId, EMPTY_PARAM) ? NEW : EDIT);
+        tgAdminNotificationService.recordNotification(
+                userBot, clientRecordId.get(), clientRecordPrev, Objects.equals(recordId, EMPTY_PARAM) ? NEW : EDIT);
         return fillClientRecords(keyboard, clientId, ACTIVE.getType()) ? ACTIVE_TITLE : CONFIRM_RECORD_ERROR_TITLE;
     }
 

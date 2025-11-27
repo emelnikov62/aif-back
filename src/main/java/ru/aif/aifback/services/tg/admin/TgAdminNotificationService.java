@@ -39,35 +39,74 @@ public class TgAdminNotificationService {
      * Send notification about record.
      * @param userBot user bot
      * @param recordId client record id
+     * @param prevStateRecord previous client record state
+     * @param event record event type
      */
-    public void recordNotification(UserBot userBot, Long recordId, TgClientRecordEventType event) {
+    public void recordNotification(UserBot userBot, Long recordId, ClientRecord prevStateRecord, TgClientRecordEventType event) {
         ClientRecord clientRecord = clientRecordService.getClientRecordById(recordId);
         if (Objects.isNull(clientRecord)) {
             return;
         }
 
-        String notification = String.format("%s <b>%s:</b> %s %02d %s %s <b>%02d:%02d</b>\n\n",
+        String notification = String.format("%s <b>%s</b>\n\n",
                                             event.getIcon(),
-                                            event.getName(),
-                                            getDayOfWeek(clientRecord.getUserCalendar().getDay(),
-                                                         clientRecord.getUserCalendar().getMonth(),
-                                                         clientRecord.getUserCalendar().getYear()),
-                                            clientRecord.getUserCalendar().getDay(),
-                                            getMonthByNumber(clientRecord.getUserCalendar().getMonth()),
-                                            clientRecord.getUserCalendar().getYear(),
-                                            clientRecord.getHours(),
-                                            clientRecord.getMins()) +
+                                            event.getName()) +
+                              fillRecordDate(clientRecord, prevStateRecord) +
                               String.format("\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", clientRecord.getUserItem().getName()) +
-                              String.format("\uD83D\uDC64 <b>Специалист:</b> %s %s %s",
-                                            clientRecord.getUserStaff().getSurname(),
-                                            clientRecord.getUserStaff().getName(),
-                                            clientRecord.getUserStaff().getThird());
+                              fillRecordStaff(clientRecord, prevStateRecord);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE)
                         .callbackData(String.format("%s;%s", TgAdminBotOperationType.BOT_RECORD_SHOW.getType(), recordId)));
 
         sendMessage(userBot.getUser().getTgId(), MESSAGE_ID_EMPTY, notification, keyboard, new TelegramBot(TG_TOKEN_ADMIN), FALSE);
+    }
 
+    /**
+     * Fill record date.
+     * @param current current state record
+     * @param prev previous state record
+     * @return record date
+     */
+    private String fillRecordDate(ClientRecord current, ClientRecord prev) {
+        String date = String.format("\uD83D\uDCC5 <b>%s:</b> %s %02d %s %s <b>%02d:%02d</b>",
+                                    Objects.isNull(prev) ? "Дата" : "Новая дата",
+                                    getDayOfWeek(current.getUserCalendar().getDay(),
+                                                 current.getUserCalendar().getMonth(),
+                                                 current.getUserCalendar().getYear()),
+                                    current.getUserCalendar().getDay(),
+                                    getMonthByNumber(current.getUserCalendar().getMonth()),
+                                    current.getUserCalendar().getYear(),
+                                    current.getHours(),
+                                    current.getMins());
+
+        if (Objects.nonNull(prev)) {
+            date += String.format("\n\n❌ <b>Прошлая дата:</b> %s %02d %s %s <b>%02d:%02d</b>\n\n",
+                                  getDayOfWeek(prev.getUserCalendar().getDay(), prev.getUserCalendar().getMonth(), prev.getUserCalendar().getYear()),
+                                  prev.getUserCalendar().getDay(),
+                                  getMonthByNumber(prev.getUserCalendar().getMonth()),
+                                  prev.getUserCalendar().getYear(),
+                                  prev.getHours(),
+                                  prev.getMins());
+        }
+
+        return date;
+    }
+
+    private String fillRecordStaff(ClientRecord current, ClientRecord prev) {
+        String staff = String.format("\uD83D\uDC64 <b>%s:</b> %s %s %s",
+                                     Objects.isNull(prev) ? "Специалист" : "Новый специалист",
+                                     current.getUserStaff().getSurname(),
+                                     current.getUserStaff().getName(),
+                                     current.getUserStaff().getThird());
+
+        if (Objects.nonNull(prev)) {
+            staff += String.format("\n\n❌ <b>Прошлый специалист:</b> %s %s %s",
+                                   current.getUserStaff().getSurname(),
+                                   current.getUserStaff().getName(),
+                                   current.getUserStaff().getThird());
+        }
+
+        return staff;
     }
 }
