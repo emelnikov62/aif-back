@@ -44,8 +44,9 @@ import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 @RequiredArgsConstructor
 public class TgBotStatsSelectedOperationService implements TgAdminBotOperationService {
 
+    private static final String SPACE = "    ";
     private static final BiFunction<TgClientRecordType, Integer, String> FORMAT_SERVICE =
-            (type, count) -> String.format("\t%s %s: <b>%s</b>\n", type.getIcon(), type.getName(), count);
+            (type, count) -> String.format("%s%s %s: <b>%s</b>\n\n", SPACE, type.getIcon(), type.getNameStats(), count);
     private final ClientRecordService clientRecordService;
 
     /**
@@ -64,11 +65,11 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         List<ClientRecord> records = clientRecordService.findByPeriod(type, Long.valueOf(userBotId));
 
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
-                        "<b>Услуги:</b>\n" +
+                        "<b>Услуг:</b>\n\n" +
                         FORMAT_SERVICE.apply(ACTIVE, calcCountByType(records, ACTIVE)) +
                         FORMAT_SERVICE.apply(CANCEL, calcCountByType(records, CANCEL)) +
                         FORMAT_SERVICE.apply(FINISHED, calcCountByType(records, FINISHED)) +
-                        "<b>Специалисты:</b>\n" +
+                        "\n<b>Специалисты:</b>\n\n" +
                         fillRecordStaffs(records);
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId)));
@@ -94,10 +95,10 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         });
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
-            staffs.append(String.format("\t%s:\n", staff.getKey()))
-                  .append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
-                  .append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
-                  .append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
+            staffs.append(String.format("%s%s:\n", SPACE, staff.getKey()))
+                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
+                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
+                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
         }
 
         return staffs.toString();

@@ -14,14 +14,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TgClientRecordType {
 
-    ACTIVE("active", "Активная", "\uD83D\uDD35"),
-    CANCEL("cancel", "Отменена", "❌"),
-    FINISHED("finished", "Завершена", "✅"),
-    NO_ACTIVE("no_active", null, null);
+    ACTIVE("active", "Активная", "\uD83D\uDD35", "Активных"),
+    CANCEL("cancel", "Отменена", "❌", "Отмененных"),
+    FINISHED("finished", "Завершена", "✅", "Завершенных"),
+    NO_ACTIVE("no_active", null, null, null);
 
     private final String type;
     private final String name;
     private final String icon;
+    private final String nameStats;
 
     public static TgClientRecordType findByType(String type) {
         return Arrays.stream(values()).filter(v -> Objects.equals(type, v.getType())).findFirst().orElse(FINISHED);
