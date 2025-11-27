@@ -13,6 +13,7 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,13 +64,18 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         String userBotId = params[2];
 
         List<ClientRecord> records = clientRecordService.findByPeriod(type, Long.valueOf(userBotId));
-
+        BigDecimal amount = BigDecimal.valueOf(records.stream()
+                                                      .filter(f -> Objects.equals(f.getStatus(), FINISHED.getType()))
+                                                      .map(ClientRecord::getUserItem)
+                                                      .mapToDouble(f -> f.getAmount().doubleValue())
+                                                      .sum());
         String answer = String.format("%s: %s \n\n", BOT_STATS_TITLE, type.getName()) +
+                        String.format("<b>Прибыль:</b> %s руб.\n\n", amount) +
                         "<b>Услуг:</b>\n\n" +
                         FORMAT_SERVICE.apply(ACTIVE, calcCountByType(records, ACTIVE)) +
                         FORMAT_SERVICE.apply(CANCEL, calcCountByType(records, CANCEL)) +
                         FORMAT_SERVICE.apply(FINISHED, calcCountByType(records, FINISHED)) +
-                        "\n<b>Специалисты:</b>\n\n" +
+                        "\n<b>Специалисты:</b>\n" +
                         fillRecordStaffs(records);
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId)));
@@ -95,10 +101,10 @@ public class TgBotStatsSelectedOperationService implements TgAdminBotOperationSe
         });
 
         for (Map.Entry<String, List<ClientRecord>> staff : staffMap.entrySet()) {
-            staffs.append(String.format("%s%s:\n", SPACE, staff.getKey()))
-                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
-                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
-                  .append(SPACE).append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
+            staffs.append(String.format("<b>%s:</b>\n\n", staff.getKey()))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(ACTIVE, calcCountByType(staff.getValue(), ACTIVE)))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(CANCEL, calcCountByType(staff.getValue(), CANCEL)))
+                  .append(SPACE).append(FORMAT_SERVICE.apply(FINISHED, calcCountByType(staff.getValue(), FINISHED)));
         }
 
         return staffs.toString();
