@@ -50,8 +50,8 @@ public class TgBotRecordCancelOperationService implements TgAdminBotOperationSer
         String[] params = webhookRequest.getText().split(DELIMITER);
         String month = params[1];
         String year = params[2];
-        String type = params[3];
-        String userBotId = params[4];
+        String type = params[4];
+        String userBotId = params[3];
         String recordId = params[5];
 
         String answer = BOTS_ERROR_CANCEL_RECORD_TITLE;
