@@ -10,11 +10,13 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackB
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -82,8 +84,12 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
                                               record.getUserStaff().getThird());
 
                 InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-                keyboard.addRow(new InlineKeyboardButton(BOTS_CANCEL_RECORD_TITLE).callbackData(
-                        String.format("%s;%s;%s;%s;%s;%s", BOT_RECORD_CANCEL.getType(), month, year, userBotId, type.getType(), record.getId())));
+                
+                if (Objects.equals(record.getStatus(), ACTIVE.getType())) {
+                    keyboard.addRow(new InlineKeyboardButton(BOTS_CANCEL_RECORD_TITLE).callbackData(
+                            String.format("%s;%s;%s;%s;%s;%s", BOT_RECORD_CANCEL.getType(), month, year, userBotId, type.getType(), record.getId())));
+                }
+
                 keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type.getType())));
                 sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, FALSE);
             }

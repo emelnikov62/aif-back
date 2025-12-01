@@ -51,16 +51,17 @@ public class ClientRecordService {
      * @return client record data
      */
     public ClientRecord getClientRecordById(Long id) {
-        Optional<ClientRecord> record = clientRecordRepository.findById(id);
-        if (record.isEmpty()) {
+        ClientRecord record = clientRecordRepository.findById(id).orElse(null);
+        if (Objects.isNull(record)) {
             return null;
         }
 
-        record.get().setUserItem(userItemService.findUserItemById(record.get().getAifUserItemId()).orElse(null));
-        record.get().setUserStaff(userStaffService.getUserStaffById(record.get().getAifUserStaffId()));
-        record.get().setUserCalendar(userCalendarService.findById(record.get().getAifUserCalendarId()).orElse(null));
+        record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+        record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+        record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
+        record.setClient(clientService.findById(record.getAifClientId()));
 
-        return record.get();
+        return record;
     }
 
     /**
