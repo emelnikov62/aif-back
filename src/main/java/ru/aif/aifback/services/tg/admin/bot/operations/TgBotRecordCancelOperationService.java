@@ -4,7 +4,7 @@ import static java.lang.Boolean.FALSE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_ERROR_CANCEL_RECORD_TITLE;
-import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_SUCCES_CANCEL_RECORD_TITLE;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_SUCCESS_CANCEL_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
@@ -56,7 +56,7 @@ public class TgBotRecordCancelOperationService implements TgAdminBotOperationSer
 
         String answer = BOTS_ERROR_CANCEL_RECORD_TITLE;
         if (clientRecordService.cancelRecord(Long.valueOf(recordId))) {
-            answer = BOTS_SUCCES_CANCEL_RECORD_TITLE;
+            answer = BOTS_SUCCESS_CANCEL_RECORD_TITLE;
 
             ClientRecord clientRecord = clientRecordService.getClientRecordById(Long.valueOf(recordId));
             if (Objects.nonNull(clientRecord)) {

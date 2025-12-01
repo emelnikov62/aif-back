@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_CANCEL_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORDS_EMPTY;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_CANCEL;
@@ -47,8 +48,6 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
      */
     @Override
     public void process(TgWebhookRequest webhookRequest, TelegramBot bot) {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-
         String[] params = webhookRequest.getText().split(DELIMITER);
         String day = params[1];
         String month = params[2];
@@ -61,6 +60,7 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
                                                                     Long.valueOf(userBotId),
                                                                     type.getType());
         if (records.isEmpty()) {
+            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
             keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type.getType())));
             sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), BOT_RECORDS_EMPTY, keyboard, bot, TRUE);
         } else {
@@ -80,7 +80,9 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
                                               record.getUserStaff().getSurname(),
                                               record.getUserStaff().getName(),
                                               record.getUserStaff().getThird());
-                keyboard.addRow(new InlineKeyboardButton().callbackData(
+
+                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+                keyboard.addRow(new InlineKeyboardButton(BOTS_CANCEL_RECORD_TITLE).callbackData(
                         String.format("%s;%s;%s;%s;%s;%s", BOT_RECORD_CANCEL.getType(), month, year, userBotId, type.getType(), record.getId())));
                 keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type.getType())));
                 sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, FALSE);

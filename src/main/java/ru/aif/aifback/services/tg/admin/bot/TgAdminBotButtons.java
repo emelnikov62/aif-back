@@ -37,7 +37,8 @@ public final class TgAdminBotButtons {
     public static final String BOT_RECORDS_TITLE = "\uD83D\uDCDD Мои записи";
     public static final String BOT_RECORDS_EMPTY = "❌ Записей не найдено";
     public static final String BOTS_ERROR_CANCEL_RECORD_TITLE = "⛔ Не удалось отменить запись";
-    public static final String BOTS_SUCCES_CANCEL_RECORD_TITLE = "✅ Запись отменена";
+    public static final String BOTS_SUCCESS_CANCEL_RECORD_TITLE = "✅ Запись отменена";
+    public static final String BOTS_CANCEL_RECORD_TITLE = "❌ Отменить запись";
 
     /**
      * Create main menu.
