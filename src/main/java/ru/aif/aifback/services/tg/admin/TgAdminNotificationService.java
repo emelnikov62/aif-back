@@ -57,7 +57,8 @@ public class TgAdminNotificationService {
                               fillRecordStaff(clientRecord, prevStateRecord);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
-                new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE).callbackData(String.format("%s;%s", BOT_RECORD_SHOW_ADDITIONAL.getType(), recordId)));
+                new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE).callbackData(
+                        String.format("%s;%s", BOT_RECORD_SHOW_ADDITIONAL.getType(), recordId, userBot.getId())));
 
         sendMessage(userBot.getUser().getTgId(), MESSAGE_ID_EMPTY, notification, keyboard, new TelegramBot(TG_TOKEN_ADMIN), FALSE);
     }
