@@ -3,8 +3,10 @@ package ru.aif.aifback.services.tg.client.bot.record;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.NULL_PARAM;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
+import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
@@ -90,6 +92,7 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
+        sendMessage(TG_LOG_ID, MESSAGE_ID_EMPTY, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN), FALSE);
         if (Objects.nonNull(webhookRequest.getFileId()) && !Objects.equals(webhookRequest.getFileId(), NULL_PARAM)) {
             TgClientBotOperationService aiOperation = operations.stream()
                                                                 .filter(f -> Objects.equals(f.getOperationType(), BOT_AI_RECORD_PROCESS))

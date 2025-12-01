@@ -2,10 +2,12 @@ package ru.aif.aifback.services.ai.recognize;
 
 import static ru.aif.aifback.constants.Constants.YANDEX_API_KEY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_RECOGNIZE_URL;
+import static ru.aif.aifback.constants.Constants.YANDEX_RESULT_KEY;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -66,7 +68,8 @@ public class VoiceRecognizeService {
 
             HttpEntity<byte[]> entity = new HttpEntity<>(outputStream.toByteArray(), headers);
             ResponseEntity<String> response = restTemplate.exchange(YANDEX_API_RECOGNIZE_URL, HttpMethod.POST, entity, String.class);
-            answer = String.format(successMessage, response.getBody());
+            String result = (new JSONObject(response.getBody())).getString(YANDEX_RESULT_KEY);
+            answer = String.format(successMessage, result);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             answer = emptyMessage;

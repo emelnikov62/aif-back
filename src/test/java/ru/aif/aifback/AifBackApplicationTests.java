@@ -255,7 +255,7 @@ class AifBackApplicationTests {
             ResponseEntity<String> response = restTemplate.exchange("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize", HttpMethod.POST,
                                                                     entity, String.class);
 
-            Assertions.assertNotNull(response);
+            Assertions.assertNotNull(response.getBody());
         } catch (IOException e) {
             Assertions.assertEquals(1, 0);
         }
