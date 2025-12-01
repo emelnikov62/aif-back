@@ -94,4 +94,25 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
                    "   and r.created between :start_date and now()")
     List<ClientRecord> findByPeriod(@Param("user_bot_id") Long userBotId,
                                     @Param("start_date") LocalDateTime startDate);
+
+    /**
+     * Find all for completed.
+     * @param status status
+     * @return client records
+     */
+    @Query(value = "select r.*" +
+                   "  from aif_client_records r" +
+                   "  join aif_user_calendar c on c.id = r.aif_user_calendar_id" +
+                   " where r.status = :status" +
+                   "   and (c.year || '-' || c.month || '-' || c.day || ' ' || r.hours || ':' || r.mins || ':00')::timestamp < now()")
+    List<ClientRecord> findAllForCompleted(@Param("status") String status);
+
+    /**
+     * Compete service.
+     * @param id id
+     * @param status status
+     */
+    @Query(value = "update aif_client_records set status = :status where id = :id")
+    @Modifying
+    void completeService(@Param("id") Long id, @Param("status") String status);
 }

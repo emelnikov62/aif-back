@@ -5,6 +5,7 @@ import static java.lang.Boolean.FALSE;
 import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORD_SHOW_TITLE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -93,6 +94,12 @@ public class TgAdminNotificationService {
         return date;
     }
 
+    /**
+     * Fill client record staff.
+     * @param current current client record state
+     * @param prev previous client record state
+     * @return record staff
+     */
     private String fillRecordStaff(ClientRecord current, ClientRecord prev) {
         String staff = String.format("\uD83D\uDC64 <b>%s:</b> %s %s %s",
                                      Objects.nonNull(prev) && !Objects.equals(prev.getAifUserStaffId(), current.getAifUserStaffId())
@@ -109,5 +116,18 @@ public class TgAdminNotificationService {
         }
 
         return staff;
+    }
+
+    /**
+     * Send notification complete record.
+     * @param record client record
+     */
+    public void recordCompleteNotification(ClientRecord record) {
+        String notification = String.format("%s <b>%s</b>\n\n", FINISHED.getIcon(), FINISHED.getName()) +
+                              fillRecordDate(record, null) +
+                              String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", record.getUserItem().getName()) +
+                              fillRecordStaff(record, null);
+
+        sendMessage(record.getUserBot().getUser().getTgId(), MESSAGE_ID_EMPTY, notification, new TelegramBot(TG_TOKEN_ADMIN), FALSE);
     }
 }

@@ -6,6 +6,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.MONTH;
 import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.YEAR;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
 import ru.aif.aifback.services.tg.enums.TgAdminStatsType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
+import ru.aif.aifback.services.user.UserBotService;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 import ru.aif.aifback.services.user.UserStaffService;
@@ -39,6 +41,8 @@ public class ClientRecordService {
     private final UserItemService userItemService;
     private final UserStaffService userStaffService;
     private final UserCalendarService userCalendarService;
+    private final UserBotService userBotService;
+    private final ClientService clientService;
 
     /**
      * Get client record by id.
@@ -204,6 +208,41 @@ public class ClientRecordService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Find all for completed.
+     * @param status status
+     * @return client records
+     */
+    public List<ClientRecord> findAllForCompleted(String status) {
+        List<ClientRecord> records = clientRecordRepository.findAllForCompleted(status);
+
+        records.forEach(record -> {
+            record.setUserBot(userBotService.findById(record.getAifUserBotId()));
+            record.setClient(clientService.findById(record.getAifClientId()));
+            record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+            record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+            record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
+
+        });
+
+        return records;
+    }
+
+    /**
+     * Complete service.
+     * @param id id
+     * @return true/false
+     */
+    public Boolean completeService(Long id) {
+        try {
+            clientRecordRepository.completeService(id, FINISHED.getType());
+            return TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return FALSE;
         }
     }
 

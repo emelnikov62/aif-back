@@ -7,7 +7,6 @@ server:
     enabled: true
   shutdown: graceful
 
-
 spring:
   main:
     allow-circular-references: true
@@ -51,6 +50,11 @@ spring:
   web:
     resources:
       add-mappings: true
+
+# Настройки кронов
+scheduler:
+  telegram:
+    completed-services: 0/10 * * * * *
 
 # Настройки логирования
 logging:

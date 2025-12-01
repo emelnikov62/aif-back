@@ -9,6 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserStaff;
@@ -41,6 +42,10 @@ public class ClientRecord {
     private UserCalendar userCalendar;
     @Transient
     private UserStaff userStaff;
+    @Transient
+    private UserBot userBot;
+    @Transient
+    private Client client;
 
     public ClientRecord(Long aifClientId, Long aifUserBotId, Long aifUserItemId, Long aifUserCalendarId, Long aifUserStaffId, Long hours, Long mins,
                         String status, LocalDateTime created) {

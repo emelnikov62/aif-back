@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.Client;
 import ru.aif.aifback.repository.client.ClientRepository;
-import ru.aif.aifback.repository.client.ClientStarRepository;
 
 /**
  * Client API service.
@@ -63,6 +62,15 @@ public class ClientService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Find by id.
+     * @param id id
+     * @return client
+     */
+    public Client findById(Long id) {
+        return clientRepository.findById(id).orElse(null);
     }
 
 }

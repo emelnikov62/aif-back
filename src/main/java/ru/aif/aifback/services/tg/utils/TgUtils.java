@@ -86,7 +86,7 @@ public final class TgUtils {
      * @param update update
      */
     public static void sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
-        bot.execute(new SendMessage(chatId, text));
+        bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML));
 
         if (update) {
             deleteMessage(chatId, messageId, bot);

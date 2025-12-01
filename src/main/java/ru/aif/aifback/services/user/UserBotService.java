@@ -136,4 +136,19 @@ public class UserBotService {
             return FALSE;
         }
     }
+
+    /**
+     * Find by id.
+     * @param id id
+     * @return user bot
+     */
+    public UserBot findById(Long id) {
+        UserBot userBot = userBotRepository.findById(id).orElse(null);
+
+        if (Objects.nonNull(userBot)) {
+            userBot.setUser(userService.findById(userBot.getAifUserId()).orElse(null));
+        }
+
+        return userBot;
+    }
 }
