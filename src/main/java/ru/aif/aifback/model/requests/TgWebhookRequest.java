@@ -22,6 +22,9 @@ public class TgWebhookRequest {
     @JsonProperty("message_id")
     private String messageId;
 
+    @JsonProperty("file_id")
+    private String fileId;
+
     private String text;
 
     private boolean callback;

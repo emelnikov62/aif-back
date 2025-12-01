@@ -7,6 +7,7 @@ import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_AI_RECORD_PROCESS;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
@@ -88,6 +89,17 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
+        if (Objects.nonNull(webhookRequest.getFileId())) {
+            TgClientBotOperationService aiOperation = operations.stream()
+                                                                .filter(f -> Objects.equals(f.getOperationType(), BOT_AI_RECORD_PROCESS))
+                                                                .findFirst()
+                                                                .orElse(null);
+            if (Objects.nonNull(aiOperation)) {
+                aiOperation.process(webhookRequest, userBot, new TelegramBot(userBot.getToken()));
+                return;
+            }
+        }
+
         sendMessage(webhookRequest.getChatId(),
                     Integer.parseInt(webhookRequest.getMessageId()),
                     MENU_TITLE,

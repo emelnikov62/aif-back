@@ -1,6 +1,7 @@
 package ru.aif.aifback.services.tg.client.bot.record;
 
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_AI_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_GROUP;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_RECORDS;
@@ -41,6 +42,9 @@ public final class TgClientBotRecordButtons {
     public static final String SHOW_ERROR_TITLE = "\uD83D\uDEAB Не удалось выполнить запрос. Попробуйте позже";
     public static final String SUCCESS_CANCEL_RECORD = "✅ Ваша запись отменена";
     public static final String SUCCESS_CLIENT_STAR = "✅ Ваша оценка сохранена";
+    public static final String AI_RECORD_TITLE = "\uD83C\uDF1F AI запись";
+    public static final String AI_RECORD_SUCCESS_TITLE = "✅ %s";
+    public static final String AI_RECORD_ERROR_TITLE = "❌ Не удалось распознать речь";
 
     /**
      * Create main menu.
@@ -49,6 +53,7 @@ public final class TgClientBotRecordButtons {
     public static InlineKeyboardMarkup createMainMenuKeyboard(String typeBot) {
         if (Objects.equals(typeBot, BOT_RECORD.getType())) {
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+            keyboard.addRow(new InlineKeyboardButton(AI_RECORD_TITLE).callbackData(BOT_AI_RECORD.getType()));
             keyboard.addRow(new InlineKeyboardButton(ACTIVE_TITLE)
                                     .callbackData(String.format("%s;%s", BOT_RECORDS.getType(), ACTIVE.getType())));
             keyboard.addRow(new InlineKeyboardButton(ITEMS_TITLE).callbackData(BOT_GROUP.getType()));

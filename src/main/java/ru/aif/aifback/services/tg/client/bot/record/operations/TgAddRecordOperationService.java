@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_YEAR_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_SELECT_YEAR;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons;
 import ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType;
 
 /**
@@ -55,7 +55,7 @@ public class TgAddRecordOperationService implements TgClientBotOperationService 
                                 String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), currentYear, itemId, recordId)),
                         new InlineKeyboardButton(String.valueOf(nextYear)).callbackData(
                                 String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), nextYear, itemId, recordId)));
-        keyboard.addRow(TgClientBotRecordButtons.createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL.getType(), itemId)));
+        keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEM_ADDITIONAL.getType(), itemId)));
 
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), CALENDAR_SELECT_YEAR_TITLE, keyboard, bot, TRUE);
     }

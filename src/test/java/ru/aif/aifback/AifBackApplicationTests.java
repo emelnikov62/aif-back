@@ -10,6 +10,10 @@ import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECOR
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_YEAR;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +25,18 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.client.RestTemplate;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.File;
+import com.pengrad.telegrambot.request.GetFile;
+import com.pengrad.telegrambot.response.GetFileResponse;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.client.ClientRecordTime;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
@@ -202,6 +216,49 @@ class AifBackApplicationTests {
                                                                                 ACTIVE.getType()))
                                                             .build();
         tgAdminService.process(tgWebhookRequest);
+    }
+
+    @Disabled
+    @Test
+    void testInputVoice() {
+        String token = "7978891707:AAGUSUvMhbfgQJEglSP5lKfKC1yM17lYjUw";
+        TelegramBot bot = new TelegramBot(token);
+        GetFile request = new GetFile("AwACAgIAAxkBAAISU2kts6Se_cMqq5oFhc9aD2r9RR2iAAJikwAC2TtwSXK8oHy_q05bNgQ");
+        GetFileResponse getFileResponse = bot.execute(request);
+
+        File file = getFileResponse.file();
+        file.fileId();
+        file.filePath();
+        file.fileSize();
+
+        String fullPath = bot.getFullFilePath(file);
+        Assertions.assertNotNull(fullPath);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            byte[] chunk = new byte[4096];
+            int bytesRead;
+            InputStream stream = new URL(fullPath).openStream();
+
+            while ((bytesRead = stream.read(chunk)) > 0) {
+                outputStream.write(chunk, 0, bytesRead);
+            }
+
+            Assertions.assertNotNull(outputStream.toByteArray());
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.set("Authorization", "Api-Key AQVNxPqsNFPShdMRlrYdwJUtKTufys1WCVxeI99W");
+
+            HttpEntity<byte[]> entity = new HttpEntity<>(outputStream.toByteArray(), headers);
+            ResponseEntity<String> response = restTemplate.exchange("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize", HttpMethod.POST,
+                                                                    entity, String.class);
+
+            Assertions.assertNotNull(response);
+        } catch (IOException e) {
+            Assertions.assertEquals(1, 0);
+        }
     }
 
 }
