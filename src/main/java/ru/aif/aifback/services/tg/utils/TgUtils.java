@@ -74,7 +74,11 @@ public final class TgUtils {
      * @param bot bot
      */
     public static void deleteMessage(String chatId, int messageId, TelegramBot bot) {
-        bot.execute(new DeleteMessage(chatId, messageId));
+        try {
+            bot.execute(new DeleteMessage(chatId, messageId));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**

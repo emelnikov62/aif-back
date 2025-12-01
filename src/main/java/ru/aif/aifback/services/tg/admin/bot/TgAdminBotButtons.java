@@ -34,6 +34,8 @@ public final class TgAdminBotButtons {
     public static final String CREATE_BOT_SUCCESS_ANSWER = "✅ Бот создан";
     public static final String BOTS_TO_CREATE_EMPTY_TITLE = "\uD83D\uDCAD В данный момент нельзя подключить ботов";
     public static final String BOT_RECORD_SHOW_TITLE = "\uD83D\uDCDD Подробнее";
+    public static final String BOT_RECORDS_TITLE = "\uD83D\uDCDD Мои записи";
+    public static final String BOT_RECORDS_EMPTY = "❌ Записей не найдено";
 
     /**
      * Create main menu.

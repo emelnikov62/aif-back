@@ -5,6 +5,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_CALENDAR_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_ITEMS_TITLE;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORDS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STAFF_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_STATS_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.DELETE_BOT_TITLE;
@@ -14,6 +15,7 @@ import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackB
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.getBotIconByType;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_DELETE;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_SELECT;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_STATS;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
@@ -76,6 +78,8 @@ public class TgBotSelectOperationService implements TgAdminBotOperationService {
             keyboard.addRow(new InlineKeyboardButton(LINK_TOKEN_TITLE).webApp(
                     new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot-form?id=" + userBotId)));
         } else {
+            keyboard.addRow(new InlineKeyboardButton(BOT_RECORDS_TITLE).callbackData(String.format("%s;%s", BOT_RECORDS.getType(), userBotId)));
+
             keyboard.addRow(new InlineKeyboardButton(BOT_STATS_TITLE).callbackData(String.format("%s;%s", BOT_STATS.getType(), userBotId)),
                             new InlineKeyboardButton(BOT_ITEMS_TITLE).webApp(
                                     new WebAppInfo("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + userBotId)));

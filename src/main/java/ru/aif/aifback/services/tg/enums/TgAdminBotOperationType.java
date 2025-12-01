@@ -19,7 +19,12 @@ public enum TgAdminBotOperationType {
     BOT_STATS("bot_stats"),
     BOT_CONFIRM_CREATE("bot_confirm_create"),
     BOT_STATS_SELECT("bot_show_stats"),
-    BOT_RECORD_SHOW("bot_record_show");
+    BOT_RECORD_YEAR("bot_record_year"),
+    BOT_RECORD_MONTH("bot_record_month"),
+    BOT_RECORD_DAY("bot_record_day"),
+    BOT_RECORDS("bot_records"),
+    BOT_RECORD_SHOW_BY_DAY("bot_record_show_day"),
+    BOT_RECORD_SHOW_BASE("bot_record_show_base");
 
     private final String type;
 

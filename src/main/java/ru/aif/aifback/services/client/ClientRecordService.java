@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
 import ru.aif.aifback.services.tg.enums.TgAdminStatsType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordType;
@@ -244,6 +245,63 @@ public class ClientRecordService {
             log.error(e.getMessage(), e);
             return FALSE;
         }
+    }
+
+    /**
+     * Find years records by status.
+     * @param userBotId user bot id
+     * @param status status
+     * @return list years
+     */
+    public List<NameWithCount> findYearsRecordsByStatus(Long userBotId, String status) {
+        return clientRecordRepository.findYearsRecordsByStatus(userBotId, status);
+    }
+
+    /**
+     * Find months records by status.
+     * @param userBotId user bot id
+     * @param year year
+     * @param status status
+     * @return list months
+     */
+    public List<NameWithCount> findMonthsRecordsByStatus(Long userBotId, Long year, String status) {
+        return clientRecordRepository.findMonthsRecordsByStatus(userBotId, year, status);
+    }
+
+    /**
+     * Find days records by status.
+     * @param userBotId user bot id
+     * @param year year
+     * @param month month
+     * @param status status
+     * @return list days
+     */
+    public List<NameWithCount> findDaysRecordsByStatus(Long userBotId, Long year, Long month, String status) {
+        return clientRecordRepository.findDaysRecordsByStatus(userBotId, year, month, status);
+    }
+
+    /**
+     * Get client record by date.
+     * @param day day
+     * @param month month
+     * @param year year
+     * @param userBotId user bot id
+     * @param status status
+     * @return client record data by date
+     */
+    public List<ClientRecord> findByDate(Long day, Long month, Long year, Long userBotId, String status) {
+        List<ClientRecord> records = clientRecordRepository.findByDate(day, month, year, userBotId, status);
+        if (records.isEmpty()) {
+            return null;
+        }
+
+        records.forEach(record -> {
+            record.setUserItem(userItemService.findUserItemById(record.getAifUserItemId()).orElse(null));
+            record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
+            record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
+        });
+
+        return records;
     }
 
 }

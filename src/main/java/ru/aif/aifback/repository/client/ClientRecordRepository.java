@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.model.user.NameWithCount;
 
 /**
  * Client record repository.
@@ -115,4 +116,82 @@ public interface ClientRecordRepository extends CrudRepository<ClientRecord, Lon
     @Query(value = "update aif_client_records set status = :status where id = :id")
     @Modifying
     void completeService(@Param("id") Long id, @Param("status") String status);
+
+    /**
+     * Find years records by status.
+     * @param userBotId user bot id
+     * @param status status
+     * @return years
+     */
+    @Query(value = "select c.year::text name, count(1) as count" +
+                   "  from aif_client_records r" +
+                   "  join aif_user_calendar c on c.id = r.aif_user_calendar_id" +
+                   " where r.status = :status" +
+                   "   and r.aif_user_bot_id = :user_bot_id" +
+                   " group by c.year" +
+                   " order by c.year")
+    List<NameWithCount> findYearsRecordsByStatus(@Param("user_bot_id") Long userBotId, @Param("status") String status);
+
+    /**
+     * Find months records by status and year.
+     * @param userBotId user bot id
+     * @param year year
+     * @param status status
+     * @return months
+     */
+    @Query(value = "select c.month::text name, count(1) as count" +
+                   "  from aif_client_records r" +
+                   "  join aif_user_calendar c on c.id = r.aif_user_calendar_id" +
+                   " where r.status = :status" +
+                   "   and c.year = :year" +
+                   "   and r.aif_user_bot_id = :user_bot_id" +
+                   " group by c.month" +
+                   " order by c.month")
+    List<NameWithCount> findMonthsRecordsByStatus(@Param("user_bot_id") Long userBotId, @Param("year") Long year, @Param("status") String status);
+
+    /**
+     * Find days records by status and year and month.
+     * @param userBotId user bot id
+     * @param year year
+     * @param month month
+     * @param status status
+     * @return days
+     */
+    @Query(value = "select c.day::text name, count(1) as count" +
+                   "  from aif_client_records r" +
+                   "  join aif_user_calendar c on c.id = r.aif_user_calendar_id" +
+                   " where r.status = :status" +
+                   "   and c.year = :year" +
+                   "   and c.month = :month" +
+                   "   and r.aif_user_bot_id = :user_bot_id" +
+                   " group by c.day" +
+                   " order by c.day")
+    List<NameWithCount> findDaysRecordsByStatus(@Param("user_bot_id") Long userBotId,
+                                                @Param("year") Long year,
+                                                @Param("month") Long month,
+                                                @Param("status") String status);
+
+    /**
+     * Find records by date.
+     * @param day day
+     * @param month month
+     * @param year year
+     * @param userBotId user bot id
+     * @param status status
+     * @return client records
+     */
+    @Query(value = "select r.*" +
+                   "  from aif_client_records r" +
+                   "  join aif_user_calendar c on c.id = r.aif_user_calendar_id" +
+                   " where r.status = :status" +
+                   "   and c.year = :year" +
+                   "   and c.month = :month" +
+                   "   and c.day = :day" +
+                   "   and r.aif_user_bot_id = :user_bot_id" +
+                   " order by c.year, c.month, c.day, r.hours, r.mins")
+    List<ClientRecord> findByDate(@Param("day") Long day,
+                                  @Param("month") Long month,
+                                  @Param("year") Long year,
+                                  @Param("user_bot_id") Long userBotId,
+                                  @Param("status") String status);
 }

@@ -5,6 +5,7 @@ import static java.lang.Boolean.FALSE;
 import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORD_SHOW_TITLE;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_SHOW_BASE;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
@@ -22,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.tg.enums.TgAdminBotOperationType;
 import ru.aif.aifback.services.tg.enums.TgClientRecordEventType;
 
 /**
@@ -57,8 +57,7 @@ public class TgAdminNotificationService {
                               fillRecordStaff(clientRecord, prevStateRecord);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
-                new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE)
-                        .callbackData(String.format("%s;%s", TgAdminBotOperationType.BOT_RECORD_SHOW.getType(), recordId)));
+                new InlineKeyboardButton(BOT_RECORD_SHOW_TITLE).callbackData(String.format("%s;%s", BOT_RECORD_SHOW_BASE.getType(), recordId)));
 
         sendMessage(userBot.getUser().getTgId(), MESSAGE_ID_EMPTY, notification, keyboard, new TelegramBot(TG_TOKEN_ADMIN), FALSE);
     }
