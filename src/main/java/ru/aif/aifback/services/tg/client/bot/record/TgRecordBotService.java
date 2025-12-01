@@ -92,7 +92,7 @@ public class TgRecordBotService implements TgBotService {
      */
     @Override
     public void processNoCallback(TgWebhookRequest webhookRequest, UserBot userBot) {
-        sendMessage(TG_LOG_ID, MESSAGE_ID_EMPTY, webhookRequest.getText(), new TelegramBot(TG_TOKEN_ADMIN), FALSE);
+        sendMessage(TG_LOG_ID, MESSAGE_ID_EMPTY, webhookRequest.toString(), new TelegramBot(TG_TOKEN_ADMIN), FALSE);
         if (Objects.nonNull(webhookRequest.getFileId()) && !Objects.equals(webhookRequest.getFileId(), NULL_PARAM)) {
             TgClientBotOperationService aiOperation = operations.stream()
                                                                 .filter(f -> Objects.equals(f.getOperationType(), BOT_AI_RECORD_PROCESS))
