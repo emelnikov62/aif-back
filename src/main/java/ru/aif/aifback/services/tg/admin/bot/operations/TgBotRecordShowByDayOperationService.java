@@ -7,12 +7,11 @@ import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOTS_CANCEL_RECORD_TITLE;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORDS_EMPTY;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
+import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.getClientRecordInfo;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
-import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
-import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
 import java.util.List;
@@ -67,24 +66,9 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
             sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), BOT_RECORDS_EMPTY, keyboard, bot, TRUE);
         } else {
             for (ClientRecord record : records) {
-                String answer = String.format("%s <b>%s</b>\n\n", type.getIcon(), type.getName()) +
-                                String.format("\uD83D\uDCC5 <b>Дата:</b> %s %02d %s %s <b>%02d:%02d</b>",
-                                              getDayOfWeek(record.getUserCalendar().getDay(),
-                                                           record.getUserCalendar().getMonth(),
-                                                           record.getUserCalendar().getYear()),
-                                              record.getUserCalendar().getDay(),
-                                              getMonthByNumber(record.getUserCalendar().getMonth()),
-                                              record.getUserCalendar().getYear(),
-                                              record.getHours(),
-                                              record.getMins()) +
-                                String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", record.getUserItem().getName()) +
-                                String.format("\uD83D\uDC64 <b>Специалист:</b> %s %s %s",
-                                              record.getUserStaff().getSurname(),
-                                              record.getUserStaff().getName(),
-                                              record.getUserStaff().getThird());
-
+                String answer = getClientRecordInfo(record, type);
                 InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-                
+
                 if (Objects.equals(record.getStatus(), ACTIVE.getType())) {
                     keyboard.addRow(new InlineKeyboardButton(BOTS_CANCEL_RECORD_TITLE).callbackData(
                             String.format("%s;%s;%s;%s;%s;%s", BOT_RECORD_CANCEL.getType(), month, year, userBotId, type.getType(), record.getId())));

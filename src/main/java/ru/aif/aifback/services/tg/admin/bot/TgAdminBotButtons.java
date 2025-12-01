@@ -4,11 +4,15 @@ import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_CREATE;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.enums.TgBotType.BOT_RECORD;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
+import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 
 import java.util.Objects;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import ru.aif.aifback.model.client.ClientRecord;
+import ru.aif.aifback.services.tg.enums.TgClientRecordType;
 
 /**
  * TG admin buttons.
@@ -76,5 +80,29 @@ public final class TgAdminBotButtons {
         }
 
         return icon;
+    }
+
+    /**
+     * Get client record info.
+     * @param record client record
+     * @param type client record type
+     * @return client record info
+     */
+    public static String getClientRecordInfo(ClientRecord record, TgClientRecordType type) {
+        return String.format("%s <b>%s</b>\n\n", type.getIcon(), type.getName()) +
+               String.format("\uD83D\uDCC5 <b>Дата:</b> %s %02d %s %s <b>%02d:%02d</b>",
+                             getDayOfWeek(record.getUserCalendar().getDay(),
+                                          record.getUserCalendar().getMonth(),
+                                          record.getUserCalendar().getYear()),
+                             record.getUserCalendar().getDay(),
+                             getMonthByNumber(record.getUserCalendar().getMonth()),
+                             record.getUserCalendar().getYear(),
+                             record.getHours(),
+                             record.getMins()) +
+               String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", record.getUserItem().getName()) +
+               String.format("\uD83D\uDC64 <b>Специалист:</b> %s %s %s",
+                             record.getUserStaff().getSurname(),
+                             record.getUserStaff().getName(),
+                             record.getUserStaff().getThird());
     }
 }

@@ -60,7 +60,7 @@ public class TgBotRecordYearOperationService implements TgAdminBotOperationServi
             int num = 0;
 
             for (NameWithCount year : years) {
-                InlineKeyboardButton btn = new InlineKeyboardButton(String.format("%s (\uD83D\uDCE6 %s)", year.getName(), year.getCount()))
+                InlineKeyboardButton btn = new InlineKeyboardButton(String.format("%s (\uD83D\uDCDD %s)", year.getName(), year.getCount()))
                         .callbackData(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), year.getName(), userBotId, type.getType()));
                 btns.add(btn);
 

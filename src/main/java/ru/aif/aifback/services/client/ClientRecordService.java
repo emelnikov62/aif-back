@@ -60,6 +60,7 @@ public class ClientRecordService {
         record.setUserStaff(userStaffService.getUserStaffById(record.getAifUserStaffId()));
         record.setUserCalendar(userCalendarService.findById(record.getAifUserCalendarId()).orElse(null));
         record.setClient(clientService.findById(record.getAifClientId()));
+        record.setUserBot(userBotService.findById(record.getAifUserBotId()));
 
         return record;
     }

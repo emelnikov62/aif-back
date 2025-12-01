@@ -62,7 +62,7 @@ public class TgBotRecordMonthOperationService implements TgAdminBotOperationServ
             int num = 0;
 
             for (NameWithCount month : months) {
-                InlineKeyboardButton btn = new InlineKeyboardButton(String.format("%s (\uD83D\uDCE6 %s)",
+                InlineKeyboardButton btn = new InlineKeyboardButton(String.format("%s (\uD83D\uDCDD %s)",
                                                                                   getMonthByNumber(Long.valueOf(month.getName())),
                                                                                   month.getCount()))
                         .callbackData(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month.getName(), year, userBotId, type.getType()));

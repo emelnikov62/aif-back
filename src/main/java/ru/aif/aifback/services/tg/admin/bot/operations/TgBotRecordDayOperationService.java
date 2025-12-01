@@ -68,7 +68,7 @@ public class TgBotRecordDayOperationService implements TgAdminBotOperationServic
 
             for (NameWithCount day : days) {
                 InlineKeyboardButton btn = new InlineKeyboardButton(
-                        String.format("%s %s (\uD83D\uDCE6 %s)",
+                        String.format("%s %s (\uD83D\uDCDD %s)",
                                       getDayOfWeek(Long.valueOf(day.getName()), Long.valueOf(month), Long.valueOf(year)),
                                       day.getName(),
                                       day.getCount()))
