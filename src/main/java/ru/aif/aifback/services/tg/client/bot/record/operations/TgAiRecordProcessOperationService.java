@@ -9,6 +9,8 @@ import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BO
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -43,7 +45,13 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        String answer = voiceRecognizeService.recognize(webhookRequest, AI_RECORD_SUCCESS_TITLE, AI_RECORD_ERROR_TITLE, userBot);
+        String answer = AI_RECORD_ERROR_TITLE;
+
+        String result = voiceRecognizeService.recognize(webhookRequest, userBot);
+        if (Objects.nonNull(result)) {
+            answer = String.format(AI_RECORD_SUCCESS_TITLE, result);
+        }
+
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
     }
 
