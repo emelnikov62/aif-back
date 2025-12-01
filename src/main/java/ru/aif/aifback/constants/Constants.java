@@ -18,6 +18,7 @@ public final class Constants {
     public final static String YANDEX_API_RECOGNIZE_URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize";
     public final static String TG_LOG_ID = "-1002391679452L";
     public final static String EMPTY_PARAM = "empty";
+    public final static String NULL_PARAM = "null";
     public final static int MESSAGE_ID_EMPTY = 0;
 
     private Constants() {
