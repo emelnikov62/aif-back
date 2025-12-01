@@ -4,6 +4,8 @@ import static ru.aif.aifback.constants.Constants.YANDEX_API_KEY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_RECOGNIZE_URL;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Objects;
 
 import org.apache.logging.log4j.util.Strings;
@@ -60,6 +62,18 @@ public class VoiceRecognizeService {
             }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] chunk = new byte[4096];
+            int bytesRead;
+            InputStream stream = new URL(fullPath).openStream();
+
+            while ((bytesRead = stream.read(chunk)) > 0) {
+                outputStream.write(chunk, 0, bytesRead);
+            }
+
+            if (outputStream.toByteArray().length == 0) {
+                throw new Exception(Strings.EMPTY);
+            }
+
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
