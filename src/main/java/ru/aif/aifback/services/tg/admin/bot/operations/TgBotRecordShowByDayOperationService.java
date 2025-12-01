@@ -1,10 +1,12 @@
 package ru.aif.aifback.services.tg.admin.bot.operations;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.BOT_RECORDS_EMPTY;
 import static ru.aif.aifback.services.tg.admin.bot.TgAdminBotButtons.createBackButton;
+import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
@@ -16,6 +18,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,8 +80,10 @@ public class TgBotRecordShowByDayOperationService implements TgAdminBotOperation
                                               record.getUserStaff().getSurname(),
                                               record.getUserStaff().getName(),
                                               record.getUserStaff().getThird());
+                keyboard.addRow(new InlineKeyboardButton().callbackData(
+                        String.format("%s;%s;%s;%s;%s;%s", BOT_RECORD_CANCEL.getType(), month, year, userBotId, type.getType(), record.getId())));
                 keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type.getType())));
-                sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
+                sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, FALSE);
             }
         }
     }

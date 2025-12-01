@@ -14,5 +14,6 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "scheduler.telegram")
 public class TgSchedulerProperties {
 
+    private Boolean enabled;
     private String completedServices;
 }

@@ -1,10 +1,12 @@
 package ru.aif.aifback.cron.tg.job;
 
 import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
 
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordNotificatio
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@ConditionalOnProperty(prefix = "scheduler.telegram", name = "enabled", havingValue = "true")
 public class TgJobCompleteScheduler implements TgScheduler {
 
     private final ClientRecordService clientRecordService;
@@ -46,7 +49,7 @@ public class TgJobCompleteScheduler implements TgScheduler {
 
                 if (Objects.nonNull(record.getUserBot()) && Objects.nonNull(record.getUserBot().getUser()) && Objects.nonNull(record.getClient())) {
                     tgAdminNotificationService.recordCompleteNotification(record);
-                    tgClientBotRecordNotificationService.recordCompleteNotification(record);
+                    tgClientBotRecordNotificationService.recordNotification(record, FINISHED);
                 }
             } else {
                 log.info("Error complete service: {}", record.getId());

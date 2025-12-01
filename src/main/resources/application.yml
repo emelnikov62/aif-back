@@ -54,6 +54,7 @@ spring:
 # Настройки кронов
 scheduler:
   telegram:
+    enabled: false
     completed-services: 0/10 * * * * *
 
 # Настройки логирования
