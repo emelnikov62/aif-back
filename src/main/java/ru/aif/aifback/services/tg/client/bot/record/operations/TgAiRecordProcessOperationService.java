@@ -6,6 +6,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.AI_RECORD_CONFIRM_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.AI_RECORD_ERROR_TITLE;
+import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.AI_RECORD_PROCESS_TITLE;
 import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_AI_RECORD_PROCESS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
@@ -59,6 +60,8 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
      */
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, FALSE);
+
         String result = voiceRecognizeService.recognize(webhookRequest, userBot);
         if (Objects.isNull(result)) {
             sendErrorSearchRecord(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);

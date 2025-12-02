@@ -45,6 +45,7 @@ public final class TgClientBotRecordButtons {
     public static final String AI_RECORD_TITLE = "\uD83C\uDF1F AI запись";
     public static final String AI_RECORD_CONFIRM_TITLE = "✅ Подтвердить";
     public static final String AI_RECORD_ERROR_TITLE = "❌ Не удалось распознать речь";
+    public static final String AI_RECORD_PROCESS_TITLE = "\uD83D\uDCAB Идет поиск. Ожидайте";
 
     /**
      * Create main menu.
