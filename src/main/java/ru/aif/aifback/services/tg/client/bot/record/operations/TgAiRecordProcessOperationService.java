@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.tg.client.bot.record.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
@@ -60,13 +59,13 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
      */
     @Override
     public void process(TgWebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, FALSE);
-
         String result = voiceRecognizeService.recognize(webhookRequest, userBot);
         if (Objects.isNull(result)) {
             sendErrorSearchRecord(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
+
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, TRUE);
 
         AiRecordResponse response = recordSearchService.search(result, userBot);
         if (Objects.isNull(response)) {
