@@ -133,7 +133,7 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
                               EMPTY_PARAM)));
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
-        sendMessage(chatId, messageId, answer, keyboard, bot, FALSE);
+        sendMessage(chatId, messageId, answer, keyboard, bot, TRUE);
     }
 
     /**
@@ -180,7 +180,7 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
         }
 
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
-        sendMessage(chatId, messageId, answer, keyboard, bot, FALSE);
+        sendMessage(chatId, messageId, answer, keyboard, bot, TRUE);
     }
 
     /**
