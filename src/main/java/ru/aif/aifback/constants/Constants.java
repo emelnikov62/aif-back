@@ -16,7 +16,7 @@ public final class Constants {
     public final static String TG_TOKEN_ADMIN = "7277396052:AAEIEaz200U8MXlRCy60aOsEkoFKC9Q2eds";
     public final static String YANDEX_API_KEY = "Api-Key AQVNxPqsNFPShdMRlrYdwJUtKTufys1WCVxeI99W";
     public final static String YANDEX_API_RECOGNIZE_URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize";
-    public final static String YANDEX_RESULT_KEY = "result";
+    public final static String AI_SEARCH_URL = "https://n8n-agent-emelnikov62.amvera.io/webhook/aif/ai/webhook";
     public final static String TG_LOG_ID = "-1002391679452L";
     public final static String EMPTY_PARAM = "empty";
     public final static String NULL_PARAM = "null";

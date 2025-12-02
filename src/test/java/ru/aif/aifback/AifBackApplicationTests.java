@@ -2,7 +2,10 @@ package ru.aif.aifback;
 
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.constants.Constants.AI_SEARCH_URL;
 import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
+import static ru.aif.aifback.constants.Constants.YANDEX_API_KEY;
+import static ru.aif.aifback.constants.Constants.YANDEX_API_RECOGNIZE_URL;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_MONTH;
@@ -33,13 +36,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.File;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.client.ClientRecordTime;
+import ru.aif.aifback.model.requests.AiRecordRequest;
 import ru.aif.aifback.model.requests.TgWebhookRequest;
+import ru.aif.aifback.model.response.AiRecordResponse;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.services.client.ClientRecordService;
@@ -249,16 +255,34 @@ class AifBackApplicationTests {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.set("Authorization", "Api-Key AQVNxPqsNFPShdMRlrYdwJUtKTufys1WCVxeI99W");
+            headers.set("Authorization", YANDEX_API_KEY);
 
             HttpEntity<byte[]> entity = new HttpEntity<>(outputStream.toByteArray(), headers);
-            ResponseEntity<String> response = restTemplate.exchange("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize", HttpMethod.POST,
-                                                                    entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(YANDEX_API_RECOGNIZE_URL, HttpMethod.POST, entity, String.class);
 
             Assertions.assertNotNull(response.getBody());
         } catch (IOException e) {
             Assertions.assertEquals(1, 0);
         }
+    }
+
+    @Disabled
+    @Test
+    void testAiRecord() throws Exception {
+        String message = "Запиши меня на маникюр в следующий четверг на 10 утра";
+        Long userBotId = 28L;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String json = new ObjectMapper().writeValueAsString(AiRecordRequest.builder()
+                                                                           .prompt(message)
+                                                                           .id(userBotId)
+                                                                           .build());
+        HttpEntity<String> entity = new HttpEntity<>(json, headers);
+        ResponseEntity<AiRecordResponse> response = restTemplate.exchange(AI_SEARCH_URL, HttpMethod.POST, entity, AiRecordResponse.class);
+        Assertions.assertNotNull(response);
     }
 
 }

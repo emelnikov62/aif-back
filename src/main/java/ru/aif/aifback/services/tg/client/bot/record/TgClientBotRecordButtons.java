@@ -43,7 +43,7 @@ public final class TgClientBotRecordButtons {
     public static final String SUCCESS_CANCEL_RECORD = "✅ Ваша запись отменена";
     public static final String SUCCESS_CLIENT_STAR = "✅ Ваша оценка сохранена";
     public static final String AI_RECORD_TITLE = "\uD83C\uDF1F AI запись";
-    public static final String AI_RECORD_SUCCESS_TITLE = "✅ %s";
+    public static final String AI_RECORD_CONFIRM_TITLE = "✅ Подтвердить";
     public static final String AI_RECORD_ERROR_TITLE = "❌ Не удалось распознать речь";
 
     /**
