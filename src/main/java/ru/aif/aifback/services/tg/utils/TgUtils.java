@@ -88,13 +88,16 @@ public final class TgUtils {
      * @param text text
      * @param bot bot
      * @param update update
+     * @return new message id
      */
-    public static void sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
-        bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML));
+    public static Integer sendMessage(String chatId, int messageId, String text, TelegramBot bot, Boolean update) {
+        Integer id = bot.execute(new SendMessage(chatId, text).parseMode(ParseMode.HTML)).message().messageId();
 
         if (update) {
             deleteMessage(chatId, messageId, bot);
         }
+
+        return id;
     }
 
     /**

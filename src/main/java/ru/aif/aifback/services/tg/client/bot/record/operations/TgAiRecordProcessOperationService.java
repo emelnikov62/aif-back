@@ -10,6 +10,7 @@ import static ru.aif.aifback.services.tg.client.bot.record.TgClientBotRecordButt
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_AI_RECORD_PROCESS;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_CONFIRM_SELECT_TIME;
 import static ru.aif.aifback.services.tg.enums.TgClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.tg.utils.TgUtils.deleteMessage;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
@@ -65,7 +66,8 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
             return;
         }
 
-        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, TRUE);
+        Integer waitMessageId = sendMessage(
+                webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, TRUE);
 
         AiRecordResponse response = recordSearchService.search(result, userBot);
         if (Objects.isNull(response) || response.getStaffs().isEmpty()) {
@@ -82,6 +84,15 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
         Long hours = Long.valueOf(response.getHours());
         Long mins = Long.valueOf(response.getMins());
         List<AiRecordStaffResponse> staffs = response.getStaffs().stream().filter(f -> Objects.nonNull(f.getCalendarId())).toList();
+        if (staffs.isEmpty()) {
+            sendErrorSearchRecord(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
+            return;
+        }
+
+        if (Objects.nonNull(waitMessageId)) {
+            deleteMessage(webhookRequest.getChatId(), waitMessageId, bot);
+        }
+
         if (staffs.size() == 1) {
             AiRecordStaffResponse staff = staffs.get(0);
             processOneStaff(staff, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem);
