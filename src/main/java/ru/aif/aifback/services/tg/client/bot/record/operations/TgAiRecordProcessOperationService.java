@@ -68,7 +68,7 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
         sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, TRUE);
 
         AiRecordResponse response = recordSearchService.search(result, userBot);
-        if (Objects.isNull(response)) {
+        if (Objects.isNull(response) || response.getStaffs().isEmpty()) {
             sendErrorSearchRecord(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;
         }
@@ -86,8 +86,7 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
             AiRecordStaffResponse staff = staffs.get(0);
             processOneStaff(staff, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem);
         } else {
-            processAllStaffs(staffs, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot,
-                             userItem);
+            processAllStaffs(staffs, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem);
         }
     }
 
