@@ -81,11 +81,12 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
 
         Long hours = Long.valueOf(response.getHours());
         Long mins = Long.valueOf(response.getMins());
-        if (response.getStaffs().size() == 1) {
-            AiRecordStaffResponse staff = response.getStaffs().get(0);
+        List<AiRecordStaffResponse> staffs = response.getStaffs().stream().filter(f -> Objects.nonNull(f.getCalendarId())).toList();
+        if (staffs.size() == 1) {
+            AiRecordStaffResponse staff = staffs.get(0);
             processOneStaff(staff, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem);
         } else {
-            processAllStaffs(response.getStaffs(), hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot,
+            processAllStaffs(staffs, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot,
                              userItem);
         }
     }
