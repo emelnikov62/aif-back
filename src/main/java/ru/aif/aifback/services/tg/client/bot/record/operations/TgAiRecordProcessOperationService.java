@@ -14,6 +14,7 @@ import static ru.aif.aifback.services.tg.utils.TgUtils.getDayOfWeek;
 import static ru.aif.aifback.services.tg.utils.TgUtils.getMonthByNumber;
 import static ru.aif.aifback.services.tg.utils.TgUtils.sendMessage;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -82,8 +83,8 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
             AiRecordStaffResponse staff = response.getStaffs().get(0);
             processOneStaff(staff, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem);
         } else {
-            response.getStaffs().forEach(staff -> processOneStaff(
-                    staff, hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, userItem));
+            processAllStaffs(response.getStaffs(), hours, mins, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot,
+                             userItem);
         }
     }
 
@@ -118,10 +119,64 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
                         String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", userItem.getName()) +
                         String.format("\uD83D\uDC64 <b>Специалист:</b> %s", staff.getName());
 
-        keyboard.addRow(new InlineKeyboardButton(AI_RECORD_CONFIRM_TITLE).callbackData(String.format(
-                "%s;%s;%s;%s;%s;%s;%s", BOT_CONFIRM_SELECT_TIME, calendar.getId(), hours, mins, userItem.getId(), staff.getId(), EMPTY_PARAM)));
+        keyboard.addRow(new InlineKeyboardButton(AI_RECORD_CONFIRM_TITLE).callbackData(
+                String.format("%s;%s;%s;%s;%s;%s;%s",
+                              BOT_CONFIRM_SELECT_TIME.getType(),
+                              calendar.getId(),
+                              hours,
+                              mins,
+                              userItem.getId(),
+                              staff.getId(),
+                              EMPTY_PARAM)));
         keyboard.addRow(createBackButton(BOT_MAIN.getType()));
 
+        sendMessage(chatId, messageId, answer, keyboard, bot, FALSE);
+    }
+
+    /**
+     * Process all staffs.
+     * @param staffs staffs
+     * @param hours hours
+     * @param mins mins
+     * @param chatId chat id
+     * @param messageId message id
+     * @param bot bot
+     * @param userItem user item
+     */
+    void processAllStaffs(List<AiRecordStaffResponse> staffs, Long hours, Long mins, String chatId, int messageId, TelegramBot bot,
+                          UserItem userItem) {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+
+        UserCalendar calendar = userCalendarService.findById(Long.valueOf(staffs.get(0).getCalendarId())).orElse(null);
+        if (Objects.isNull(calendar)) {
+            sendErrorSearchRecord(chatId, messageId, bot);
+            return;
+        }
+
+        String answer = "\uD83D\uDD35 <b>Новая запись</b>\n\n" +
+                        String.format("\uD83D\uDCC5 <b>Дата:</b> %s %02d %s %s <b>%02d:%02d</b>",
+                                      getDayOfWeek(calendar.getDay(), calendar.getMonth(), calendar.getYear()),
+                                      calendar.getDay(),
+                                      getMonthByNumber(calendar.getMonth()),
+                                      calendar.getYear(),
+                                      hours,
+                                      mins) +
+                        String.format("\n\n\uD83D\uDCE6 <b>Услуга:</b> %s\n\n", userItem.getName());
+
+        for (AiRecordStaffResponse staff : staffs) {
+            keyboard.addRow(new InlineKeyboardButton(String.format("\uD83D\uDC64 %s", staff.getName()))
+                                    .callbackData(String.format("%s;%s;%s;%s;%s;%s;%s",
+                                                                BOT_CONFIRM_SELECT_TIME.getType(),
+                                                                staff.getCalendarId(),
+                                                                hours,
+                                                                mins,
+                                                                userItem.getId(),
+                                                                staff.getId(),
+                                                                EMPTY_PARAM)));
+
+        }
+
+        keyboard.addRow(createBackButton(BOT_MAIN.getType()));
         sendMessage(chatId, messageId, answer, keyboard, bot, FALSE);
     }
 
