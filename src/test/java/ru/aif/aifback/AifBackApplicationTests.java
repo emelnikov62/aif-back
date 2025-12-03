@@ -271,12 +271,14 @@ class AifBackApplicationTests {
     void testAiRecord() throws Exception {
         String message = "Запиши меня на маникюр в следующий четверг на 10 утра";
         Long userBotId = 28L;
+        String tgId = "1487726317";
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         String json = new ObjectMapper().writeValueAsString(AiRecordRequest.builder()
+                                                                           .tgId(tgId)
                                                                            .prompt(message)
                                                                            .id(userBotId)
                                                                            .build());
