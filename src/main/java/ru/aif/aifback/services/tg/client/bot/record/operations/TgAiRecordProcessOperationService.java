@@ -69,7 +69,7 @@ public class TgAiRecordProcessOperationService implements TgClientBotOperationSe
         Integer waitMessageId = sendMessage(
                 webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), AI_RECORD_PROCESS_TITLE, bot, TRUE);
 
-        AiRecordResponse response = recordSearchService.search(result, userBot);
+        AiRecordResponse response = recordSearchService.search(result, userBot, webhookRequest.getChatId());
         if (Objects.isNull(response) || response.getStaffs().isEmpty()) {
             sendErrorSearchRecord(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot);
             return;

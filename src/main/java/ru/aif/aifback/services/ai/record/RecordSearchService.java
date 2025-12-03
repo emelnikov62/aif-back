@@ -2,8 +2,6 @@ package ru.aif.aifback.services.ai.record;
 
 import static ru.aif.aifback.constants.Constants.AI_SEARCH_URL;
 
-import java.util.Optional;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,15 +32,16 @@ public class RecordSearchService {
      * Ai record search voice.
      * @param prompt prompt
      * @param userBot user bot
+     * @param tgId tg id
      * @return text
      */
-    public AiRecordResponse search(String prompt, UserBot userBot) {
+    public AiRecordResponse search(String prompt, UserBot userBot, String tgId) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            String request = new ObjectMapper().writeValueAsString(AiRecordRequest.builder().prompt(prompt).id(userBot.getId()).build());
+            String request = new ObjectMapper().writeValueAsString(AiRecordRequest.builder().tgId(tgId).prompt(prompt).id(userBot.getId()).build());
             HttpEntity<String> entity = new HttpEntity<>(request, headers);
             ResponseEntity<AiRecordResponse> response = restTemplate.exchange(AI_SEARCH_URL, HttpMethod.POST, entity, AiRecordResponse.class);
 

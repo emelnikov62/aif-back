@@ -17,5 +17,6 @@ public class AiRecordRequest {
 
     private Long id;
     private String prompt;
+    private String tgId;
 
 }
