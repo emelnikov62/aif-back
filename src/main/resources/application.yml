@@ -22,7 +22,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     monitoring-query: true
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_test
+    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_aif
     username: n8n_user
     password: Mery1029384756$
     hikari:
@@ -37,7 +37,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/changelog.xml
-    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_test
+    url: jdbc:postgresql://n8n-db-emelnikov62.db-msk0.amvera.tech:5432/n8n_db?currentSchema=n8n_aif
     user: n8n_user
     password: Mery1029384756$
     contexts: prod,dev

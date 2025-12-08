@@ -27,7 +27,7 @@ public class ClientService {
      * @return client data
      */
     public Optional<Client> getClientByTgId(String tgId) {
-        return clientRepository.findByTgId(tgId);
+        return clientRepository.findBySourceId(tgId);
     }
 
     /**

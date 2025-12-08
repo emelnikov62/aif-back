@@ -3,6 +3,8 @@ package ru.aif.aifback.services.user;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.enums.BotSource.TELEGRAM;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +61,15 @@ public class UserBotService {
     }
 
     /**
-     * Get user bots by tg id.
-     * @param tgId tg id
+     * Get user bots by source.
+     * @param sourceId source id
+     * @param source source
      * @return list user bots
      */
-    public List<UserBot> getUserBotsByTgId(String tgId) {
+    public List<UserBot> getUserBotsBySource(String sourceId, String source) {
         List<UserBot> userBots = new ArrayList<>();
 
-        userService.getUserByTgIdOrCreate(tgId).ifPresent(user -> {
+        userService.getUserBySourceOrCreate(sourceId, source).ifPresent(user -> {
             userBots.addAll(userBotRepository.findAllByAifUserId(user.getId()));
 
             if (!userBots.isEmpty()) {
@@ -95,18 +98,19 @@ public class UserBotService {
 
     /**
      * Create user bot.
-     * @param tgId tg id
+     * @param sourceId source id
+     * @param source source
      * @param botId bot id
      * @return answer
      */
-    public Boolean createUserBot(String tgId, Long botId) {
+    public Boolean createUserBot(String sourceId, String source, Long botId) {
         try {
-            Optional<User> user = userService.getUserByTgIdOrCreate(tgId);
+            Optional<User> user = userService.getUserBySourceOrCreate(sourceId, source);
             if (user.isEmpty()) {
                 return FALSE;
             }
 
-            UserBot userBot = new UserBot(user.get().getId(), botId, FALSE, null, LocalDateTime.now());
+            UserBot userBot = new UserBot(user.get().getId(), botId, FALSE, null, LocalDateTime.now(), source);
             userBotRepository.save(userBot);
 
             return Objects.nonNull(userBot.getId()) ? TRUE : FALSE;
@@ -123,14 +127,22 @@ public class UserBotService {
      */
     public boolean linkBot(Long id, String token) {
         try {
+            UserBot userBot = findById(id);
+            if (Objects.isNull(userBot)) {
+                return FALSE;
+            }
+
             userBotRepository.linkBot(id, token);
 
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getForObject(String.format(
-                                              "https://api.telegram.org/bot%s/setwebhook?url=https://n8n-agent-emelnikov62.amvera.io/webhook/aif/client/webhook?id=%s",
-                                              token,
-                                              id),
-                                      String.class);
+            if (Objects.equals(userBot.getSource(), TELEGRAM.getSource())) {
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getForObject(String.format(
+                                                  "https://api.telegram.org/bot%s/setwebhook?url=https://n8n-agent-emelnikov62.amvera.io/webhook/aif/client/webhook?id=%s",
+                                                  token,
+                                                  id),
+                                          String.class);
+            }
+
             return TRUE;
         } catch (Exception e) {
             return FALSE;

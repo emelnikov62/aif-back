@@ -28,18 +28,20 @@ public class UserBot {
     private boolean active;
     private String token;
     private LocalDateTime created;
+    private String source;
     @Transient
     private Bot bot;
     @Transient
     private User user;
 
-    public UserBot(Long id, Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created) {
+    public UserBot(Long id, Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created, String source) {
         this.id = id;
         this.aifUserId = aifUserId;
         this.aifBotId = aifBotId;
         this.active = active;
         this.token = token;
         this.created = created;
+        this.source = source;
     }
 
     public UserBot(Long aifUserId, Long aifBotId) {
@@ -47,11 +49,12 @@ public class UserBot {
         this.aifBotId = aifBotId;
     }
 
-    public UserBot(Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created) {
+    public UserBot(Long aifUserId, Long aifBotId, boolean active, String token, LocalDateTime created, String source) {
         this.aifUserId = aifUserId;
         this.aifBotId = aifBotId;
         this.active = active;
         this.token = token;
         this.created = created;
+        this.source = source;
     }
 }

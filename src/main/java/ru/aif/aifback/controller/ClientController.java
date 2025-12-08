@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
-import ru.aif.aifback.model.requests.TgWebhookRequest;
-import ru.aif.aifback.services.tg.client.TgClientService;
+import ru.aif.aifback.model.requests.WebhookRequest;
+import ru.aif.aifback.services.process.tg.client.TgClientService;
 
 /**
  * Client controller.
@@ -33,7 +33,7 @@ public class ClientController {
      * @return true/false
      */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> webhook(@RequestBody TgWebhookRequest webhookRequest) {
+    public ResponseEntity<Boolean> webhook(@RequestBody WebhookRequest webhookRequest) {
         return ResponseEntity.ok(tgClientService.process(webhookRequest));
     }
 }

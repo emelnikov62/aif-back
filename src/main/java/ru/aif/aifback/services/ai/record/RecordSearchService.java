@@ -26,22 +26,24 @@ import ru.aif.aifback.model.user.UserBot;
 @Service
 public class RecordSearchService {
 
-    private final ObjectMapper mapper;
-
     /**
      * Ai record search voice.
      * @param prompt prompt
      * @param userBot user bot
-     * @param tgId tg id
+     * @param chatId chat id
      * @return text
      */
-    public AiRecordResponse search(String prompt, UserBot userBot, String tgId) {
+    public AiRecordResponse search(String prompt, UserBot userBot, String chatId) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            String request = new ObjectMapper().writeValueAsString(AiRecordRequest.builder().tgId(tgId).prompt(prompt).id(userBot.getId()).build());
+            String request = new ObjectMapper().writeValueAsString(AiRecordRequest.builder()
+                                                                                  .chatId(chatId)
+                                                                                  .prompt(prompt)
+                                                                                  .userBotId(userBot.getId())
+                                                                                  .build());
             HttpEntity<String> entity = new HttpEntity<>(request, headers);
             ResponseEntity<AiRecordResponse> response = restTemplate.exchange(AI_SEARCH_URL, HttpMethod.POST, entity, AiRecordResponse.class);
 

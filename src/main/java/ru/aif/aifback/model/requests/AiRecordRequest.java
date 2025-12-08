@@ -15,8 +15,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AiRecordRequest {
 
-    private Long id;
+    private Long userBotId;
     private String prompt;
-    private String tgId;
+    private String chatId;
 
 }

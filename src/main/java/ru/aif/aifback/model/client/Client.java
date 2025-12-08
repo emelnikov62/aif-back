@@ -21,16 +21,16 @@ public class Client {
 
     @Id
     private Long id;
-    private String tgId;
+    private String sourceId;
     private boolean active;
     private LocalDateTime created;
 
-    public Client(String tgId) {
-        this.tgId = tgId;
+    public Client(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Client(String tgId, boolean active, LocalDateTime created) {
-        this.tgId = tgId;
+    public Client(String sourceId, boolean active, LocalDateTime created) {
+        this.sourceId = sourceId;
         this.active = active;
         this.created = created;
     }

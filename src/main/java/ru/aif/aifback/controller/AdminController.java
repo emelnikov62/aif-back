@@ -1,5 +1,6 @@
 package ru.aif.aifback.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.constants.Constants;
-import ru.aif.aifback.model.requests.TgWebhookRequest;
-import ru.aif.aifback.services.tg.admin.TgAdminService;
+import ru.aif.aifback.model.requests.WebhookRequest;
+import ru.aif.aifback.services.process.ProcessService;
 
 /**
  * Admin controller.
@@ -22,11 +22,17 @@ import ru.aif.aifback.services.tg.admin.TgAdminService;
 @RestController
 @Slf4j
 @RequestMapping(Constants.MAIN_URL + Constants.ADMIN_URL)
-@RequiredArgsConstructor
 @CrossOrigin(value = "*")
 public class AdminController {
 
-    private final TgAdminService tgAdminService;
+    private final ProcessService adminProcessService;
+    private final ProcessService adminLinkProcessService;
+
+    public AdminController(@Qualifier("adminProcessService") ProcessService adminProcessService,
+                           @Qualifier("adminLinkProcessService") ProcessService adminLinkProcessService) {
+        this.adminProcessService = adminProcessService;
+        this.adminLinkProcessService = adminLinkProcessService;
+    }
 
     /**
      * Admin bot webhook.
@@ -34,8 +40,8 @@ public class AdminController {
      * @return true/false
      */
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> webhook(@RequestBody TgWebhookRequest webhookAdminRequest) {
-        return ResponseEntity.ok(tgAdminService.process(webhookAdminRequest));
+    public ResponseEntity<Boolean> webhook(@RequestBody WebhookRequest webhookAdminRequest) {
+        return ResponseEntity.ok(adminProcessService.process(webhookAdminRequest));
     }
 
     /**
@@ -46,6 +52,6 @@ public class AdminController {
      */
     @GetMapping(value = "/link-bot")
     public ResponseEntity<Boolean> linkBot(String id, String token) {
-        return ResponseEntity.ok(tgAdminService.linkBot(id, token));
+        return ResponseEntity.ok(adminLinkProcessService.process(WebhookRequest.builder().token(token).id(id).build()));
     }
 }

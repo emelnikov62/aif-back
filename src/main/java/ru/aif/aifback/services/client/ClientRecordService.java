@@ -3,10 +3,10 @@ package ru.aif.aifback.services.client;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.MONTH;
-import static ru.aif.aifback.services.tg.enums.TgAdminStatsType.YEAR;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordType.CANCEL;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordType.FINISHED;
+import static ru.aif.aifback.services.process.admin.enums.AdminStatsType.MONTH;
+import static ru.aif.aifback.services.process.admin.enums.AdminStatsType.YEAR;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordType.CANCEL;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordType.FINISHED;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
-import ru.aif.aifback.services.tg.enums.TgAdminStatsType;
-import ru.aif.aifback.services.tg.enums.TgClientRecordType;
+import ru.aif.aifback.services.process.admin.enums.AdminStatsType;
+import ru.aif.aifback.services.process.client.enums.ClientRecordType;
 import ru.aif.aifback.services.user.UserBotService;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
@@ -93,7 +93,7 @@ public class ClientRecordService {
                 clientRecord.setMins(mins);
                 clientRecord.setAifUserCalendarId(userCalendarId);
                 clientRecord.setAifUserStaffId(userStaffId);
-                clientRecord.setStatus(TgClientRecordType.ACTIVE.getType());
+                clientRecord.setStatus(ClientRecordType.ACTIVE.getType());
                 clientRecord.setCreated(LocalDateTime.now());
             } else {
                 clientRecord = new ClientRecord(clientId,
@@ -103,7 +103,7 @@ public class ClientRecordService {
                                                 userStaffId,
                                                 hours,
                                                 mins,
-                                                TgClientRecordType.ACTIVE.getType(),
+                                                ClientRecordType.ACTIVE.getType(),
                                                 LocalDateTime.now());
             }
 
@@ -185,7 +185,7 @@ public class ClientRecordService {
      * @param userBotId user bot id
      * @return client records
      */
-    public List<ClientRecord> findByPeriod(TgAdminStatsType period, Long userBotId) {
+    public List<ClientRecord> findByPeriod(AdminStatsType period, Long userBotId) {
         try {
             LocalDateTime startDate = LocalDateTime.of(1900, 1, 1, 0, 0);
             if (Objects.equals(period, MONTH)) {

@@ -1,0 +1,115 @@
+package ru.aif.aifback.services.process.tg.client.bot.record.operations;
+
+import static java.lang.Boolean.TRUE;
+
+import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_EMPTY_TIME_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.CALENDAR_SELECT_DAY_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_SELECT_DAY;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_SELECT_MONTH;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_SELECT_YEAR;
+import static ru.aif.aifback.services.utils.CommonUtils.getDayOfWeek;
+import static ru.aif.aifback.services.utils.CommonUtils.getMonthByNumber;
+import static ru.aif.aifback.services.utils.CommonUtils.sendMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.model.requests.WebhookRequest;
+import ru.aif.aifback.model.user.UserBot;
+import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
+import ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType;
+import ru.aif.aifback.services.user.UserCalendarService;
+
+/**
+ * TG Select month operation API service.
+ * @author emelnikov
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class TgSelectMonthOperationService implements TgClientBotOperationService {
+
+    private final UserCalendarService userCalendarService;
+
+    /**
+     * Main processing.
+     * @param webhookRequest webhookRequest
+     * @param userBot user bot
+     * @param bot telegram bot
+     */
+    @Override
+    public void process(WebhookRequest webhookRequest, UserBot userBot, TelegramBot bot) {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+
+        String[] params = webhookRequest.getText().split(DELIMITER);
+        String month = params[1];
+        String year = params[2];
+        String itemId = params[3];
+        String recordId = params[4];
+        String answer = processBotCalendarDays(Long.valueOf(itemId),
+                                               Long.valueOf(webhookRequest.getId()),
+                                               Long.valueOf(year),
+                                               Long.valueOf(month),
+                                               recordId,
+                                               keyboard);
+
+        keyboard.addRow(createBackButton(String.format("%s;%s;%s;%s", BOT_SELECT_YEAR.getType(), year, itemId, recordId)));
+        sendMessage(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), answer, keyboard, bot, TRUE);
+    }
+
+    /**
+     * Process select days.
+     * @param userItemId user item id
+     * @param id id
+     * @param year year
+     * @param month month
+     * @param recordId record id
+     * @param keyboard keyboard
+     */
+    private String processBotCalendarDays(Long userItemId, Long id, Long year, Long month, String recordId, InlineKeyboardMarkup keyboard) {
+        List<Long> days = userCalendarService.findAllDaysByMonthAndYear(year, month, id);
+        if (days.isEmpty()) {
+            return CALENDAR_EMPTY_TIME_TITLE;
+        }
+
+        List<InlineKeyboardButton> btns = new ArrayList<>();
+        int num = 0;
+        while (num < days.size()) {
+            String title = String.format("%02d (%s)", days.get(num), getDayOfWeek(days.get(num), month, year));
+            InlineKeyboardButton btn = new InlineKeyboardButton(title).callbackData(
+                    String.format("%s;%s;%s;%s;%s;%s", BOT_SELECT_DAY.getType(), days.get(num), month, year, userItemId, recordId));
+            btns.add(btn);
+
+            num++;
+
+            if (num % 5 == 0) {
+                keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+                btns.clear();
+            }
+        }
+
+        if (!btns.isEmpty()) {
+            keyboard.addRow(btns.toArray(new InlineKeyboardButton[0]));
+        }
+
+        return String.format(CALENDAR_SELECT_DAY_TITLE, getMonthByNumber(month), year);
+    }
+
+    /**
+     * Get bot operation type.
+     * @return bot operation type
+     */
+    @Override
+    public ClientRecordBotOperationType getOperationType() {
+        return BOT_SELECT_MONTH;
+    }
+}

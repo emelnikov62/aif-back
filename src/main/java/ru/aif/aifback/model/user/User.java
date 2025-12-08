@@ -21,17 +21,20 @@ public class User {
 
     @Id
     private Long id;
-    private String tgId;
+    private String sourceId;
     private boolean active;
     private LocalDateTime created;
+    private String source;
 
-    public User(String tgId) {
-        this.tgId = tgId;
+    public User(String sourceId, String source) {
+        this.sourceId = sourceId;
+        this.source = source;
     }
 
-    public User(String tgId, boolean active, LocalDateTime created) {
-        this.tgId = tgId;
+    public User(String sourceId, boolean active, LocalDateTime created, String source) {
+        this.sourceId = sourceId;
         this.active = active;
         this.created = created;
+        this.source = source;
     }
 }

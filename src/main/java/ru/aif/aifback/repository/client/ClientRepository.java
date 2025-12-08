@@ -15,10 +15,10 @@ import ru.aif.aifback.model.client.Client;
 public interface ClientRepository extends CrudRepository<Client, Long> {
 
     /**
-     * Get client by tg id.
-     * @param tgId tg id
+     * Get client by source id.
+     * @param sourceId source id
      * @return client data
      */
-    Optional<Client> findByTgId(String tgId);
+    Optional<Client> findBySourceId(String sourceId);
 
 }

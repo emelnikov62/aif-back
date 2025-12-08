@@ -26,6 +26,10 @@
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_items.sql" stripComments="true"/>
     </changeSet>
 
+    <changeSet author="emelnikov" id="create_table_aif_user_staffs" context="prod" dbms="postgresql" runOnChange="true">
+        <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_staffs.sql" stripComments="true"/>
+    </changeSet>
+
     <changeSet author="emelnikov" id="create_table_aif_user_calendar" context="prod" dbms="postgresql" runOnChange="true">
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_calendar.sql" stripComments="true"/>
     </changeSet>
@@ -36,10 +40,6 @@
 
     <changeSet author="emelnikov" id="create_table_aif_client_records" context="prod" dbms="postgresql" runOnChange="true">
         <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_client_records.sql" stripComments="true"/>
-    </changeSet>
-
-    <changeSet author="emelnikov" id="create_table_aif_user_staffs" context="prod" dbms="postgresql" runOnChange="true">
-        <sqlFile endDelimiter="//" path="classpath:db/changelog/aif_user_staffs.sql" stripComments="true"/>
     </changeSet>
 
     <changeSet author="emelnikov" id="create_table_aif_user_staff_items" context="prod" dbms="postgresql" runOnChange="true">

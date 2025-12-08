@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- * Calendaar request.
+ * Calendar request.
  * @author emelnikov
  */
 @Builder
@@ -18,23 +18,14 @@ import lombok.ToString;
 public class UserCalendarRequest {
 
     private Long id;
-
     private Long hoursStart;
-
     private Long minsStart;
-
     private Long hoursEnd;
-
     private Long minsEnd;
-
     private List<Long> days;
-
     private List<Long> ids;
-
     private Long month;
-
     private Long year;
-
     private Long staffId;
 
 }

@@ -6,12 +6,12 @@ import static ru.aif.aifback.constants.Constants.AI_SEARCH_URL;
 import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_KEY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_RECOGNIZE_URL;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORDS;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_DAY;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_MONTH;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
-import static ru.aif.aifback.services.tg.enums.TgAdminBotOperationType.BOT_RECORD_YEAR;
-import static ru.aif.aifback.services.tg.enums.TgClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORDS;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_DAY;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,15 +44,15 @@ import com.pengrad.telegrambot.response.GetFileResponse;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.client.ClientRecordTime;
 import ru.aif.aifback.model.requests.AiRecordRequest;
-import ru.aif.aifback.model.requests.TgWebhookRequest;
+import ru.aif.aifback.model.requests.WebhookRequest;
 import ru.aif.aifback.model.response.AiRecordResponse;
 import ru.aif.aifback.model.user.UserCalendar;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
-import ru.aif.aifback.services.tg.admin.TgAdminService;
-import ru.aif.aifback.services.tg.enums.TgClientRecordType;
-import ru.aif.aifback.services.tg.utils.TgUtils;
+import ru.aif.aifback.services.process.admin.AdminProcessService;
+import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.utils.CommonUtils;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 
@@ -68,7 +68,7 @@ class AifBackApplicationTests {
     @Autowired
     private ClientRecordService clientRecordService;
     @Autowired
-    private TgAdminService tgAdminService;
+    private AdminProcessService tgAdminService;
 
     @Test
     @Disabled
@@ -103,12 +103,12 @@ class AifBackApplicationTests {
         Map<String, List<ClientRecordTime>> times = new HashMap<>();
         for (UserCalendar userCalendar : userCalendars) {
             List<ClientRecord> records = clientRecordService.findAllRecordsByStaffAndDayAndStatus(
-                    userCalendar.getAifUserStaffId(), userCalendar.getId(), idUserBot, TgClientRecordType.ACTIVE.getType());
+                    userCalendar.getAifUserStaffId(), userCalendar.getId(), idUserBot, ClientRecordType.ACTIVE.getType());
 
-            List<ClientRecordTime> timesValue = TgUtils.formatTimeCalendar(userCalendar,
-                                                                           userItem.get(),
-                                                                           userItemService.getMinUserItem(idUserBot),
-                                                                           records);
+            List<ClientRecordTime> timesValue = CommonUtils.formatTimeCalendar(userCalendar,
+                                                                               userItem.get(),
+                                                                               userItemService.getMinUserItem(idUserBot),
+                                                                               records);
             if (timesValue.isEmpty()) {
                 continue;
             }
@@ -134,13 +134,13 @@ class AifBackApplicationTests {
         String chatId = "1487726317";
         String messageId = String.valueOf(MESSAGE_ID_EMPTY);
 
-        TgWebhookRequest tgWebhookRequest = TgWebhookRequest.builder()
-                                                            .id(id)
-                                                            .callback(TRUE)
-                                                            .chatId(chatId)
-                                                            .messageId(messageId)
-                                                            .text(String.format("%s;%s", BOT_RECORDS.getType(), id))
-                                                            .build();
+        WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
+                                                        .callback(TRUE)
+                                                        .chatId(chatId)
+                                                        .messageId(messageId)
+                                                        .text(String.format("%s;%s", BOT_RECORDS.getType(), id))
+                                                        .build();
         tgAdminService.process(tgWebhookRequest);
     }
 
@@ -151,13 +151,13 @@ class AifBackApplicationTests {
         String chatId = "1487726317";
         String messageId = String.valueOf(MESSAGE_ID_EMPTY);
 
-        TgWebhookRequest tgWebhookRequest = TgWebhookRequest.builder()
-                                                            .id(id)
-                                                            .callback(TRUE)
-                                                            .chatId(chatId)
-                                                            .messageId(messageId)
-                                                            .text(String.format("%s;%s;%s", BOT_RECORD_YEAR.getType(), ACTIVE.getType(), id))
-                                                            .build();
+        WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
+                                                        .callback(TRUE)
+                                                        .chatId(chatId)
+                                                        .messageId(messageId)
+                                                        .text(String.format("%s;%s;%s", BOT_RECORD_YEAR.getType(), ACTIVE.getType(), id))
+                                                        .build();
         tgAdminService.process(tgWebhookRequest);
     }
 
@@ -168,14 +168,14 @@ class AifBackApplicationTests {
         String chatId = "1487726317";
         String messageId = String.valueOf(MESSAGE_ID_EMPTY);
 
-        TgWebhookRequest tgWebhookRequest = TgWebhookRequest.builder()
-                                                            .id(id)
-                                                            .callback(TRUE)
-                                                            .chatId(chatId)
-                                                            .messageId(messageId)
-                                                            .text(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), 2025, id,
+        WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
+                                                        .callback(TRUE)
+                                                        .chatId(chatId)
+                                                        .messageId(messageId)
+                                                        .text(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), 2025, id,
                                                                                 ACTIVE.getType()))
-                                                            .build();
+                                                        .build();
         tgAdminService.process(tgWebhookRequest);
     }
 
@@ -186,18 +186,18 @@ class AifBackApplicationTests {
         String chatId = "1487726317";
         String messageId = String.valueOf(MESSAGE_ID_EMPTY);
 
-        TgWebhookRequest tgWebhookRequest = TgWebhookRequest.builder()
-                                                            .id(id)
-                                                            .callback(TRUE)
-                                                            .chatId(chatId)
-                                                            .messageId(messageId)
-                                                            .text(String.format("%s;%s;%s;%s;%s",
+        WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
+                                                        .callback(TRUE)
+                                                        .chatId(chatId)
+                                                        .messageId(messageId)
+                                                        .text(String.format("%s;%s;%s;%s;%s",
                                                                                 BOT_RECORD_DAY.getType(),
                                                                                 12,
                                                                                 2025,
                                                                                 id,
                                                                                 ACTIVE.getType()))
-                                                            .build();
+                                                        .build();
         tgAdminService.process(tgWebhookRequest);
     }
 
@@ -208,19 +208,19 @@ class AifBackApplicationTests {
         String chatId = "1487726317";
         String messageId = String.valueOf(MESSAGE_ID_EMPTY);
 
-        TgWebhookRequest tgWebhookRequest = TgWebhookRequest.builder()
-                                                            .id(id)
-                                                            .callback(TRUE)
-                                                            .chatId(chatId)
-                                                            .messageId(messageId)
-                                                            .text(String.format("%s;%s;%s;%s;%s;%s",
+        WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
+                                                        .callback(TRUE)
+                                                        .chatId(chatId)
+                                                        .messageId(messageId)
+                                                        .text(String.format("%s;%s;%s;%s;%s;%s",
                                                                                 BOT_RECORD_SHOW_BY_DAY.getType(),
                                                                                 12,
                                                                                 12,
                                                                                 2025,
                                                                                 id,
                                                                                 ACTIVE.getType()))
-                                                            .build();
+                                                        .build();
         tgAdminService.process(tgWebhookRequest);
     }
 
@@ -278,9 +278,9 @@ class AifBackApplicationTests {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         String json = new ObjectMapper().writeValueAsString(AiRecordRequest.builder()
-                                                                           .tgId(tgId)
+                                                                           .chatId(tgId)
                                                                            .prompt(message)
-                                                                           .id(userBotId)
+                                                                           .userBotId(userBotId)
                                                                            .build());
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
         ResponseEntity<AiRecordResponse> response = restTemplate.exchange(AI_SEARCH_URL, HttpMethod.POST, entity, AiRecordResponse.class);
