@@ -93,9 +93,10 @@ public class TgSenderService implements SenderService {
         }
 
         if (!backButtons.isEmpty()) {
-            keyboardMarkup.addRow((InlineKeyboardButton[]) backButtons.stream()
-                                                                      .map(m -> new InlineKeyboardButton(m.getTitle()).callbackData(m.getCallback()))
-                                                                      .toArray());
+            keyboardMarkup.addRow(backButtons.stream()
+                                             .map(m -> new InlineKeyboardButton(m.getTitle()).callbackData(m.getCallback()))
+                                             .toList()
+                                             .toArray(new InlineKeyboardButton[0]));
         }
 
         return keyboardMarkup;
