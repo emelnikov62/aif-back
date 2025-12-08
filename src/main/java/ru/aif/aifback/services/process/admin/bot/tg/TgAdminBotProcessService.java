@@ -53,7 +53,6 @@ public class TgAdminBotProcessService extends AdminBotProcessService {
                                         .updated(FALSE)
                                         .source(findByType(webhookRequest.getSource()))
                                         .chatId(TG_LOG_ID)
-                                        .telegramBot(new TelegramBot(TG_TOKEN_ADMIN))
                                         .build(),
                              ChatMessage.builder()
                                         .text(MENU_TITLE)
@@ -61,7 +60,6 @@ public class TgAdminBotProcessService extends AdminBotProcessService {
                                         .source(source)
                                         .chatId(webhookRequest.getChatId())
                                         .messageId(webhookRequest.getMessageId())
-                                        .telegramBot(new TelegramBot(webhookRequest.getToken()))
                                         .buttons(createMainMenuKeyboard())
                                         .build()));
     }
@@ -78,7 +76,6 @@ public class TgAdminBotProcessService extends AdminBotProcessService {
                                         .updated(TRUE)
                                         .chatId(webhookRequest.getChatId())
                                         .messageId(webhookRequest.getMessageId())
-                                        .telegramBot(new TelegramBot(TG_TOKEN_ADMIN))
                                         .buttons(createMainMenuKeyboard())
                                         .build()));
     }
@@ -98,7 +95,10 @@ public class TgAdminBotProcessService extends AdminBotProcessService {
      */
     @Override
     public void sendMessages(List<ChatMessage> messages) {
-        messages.forEach(senderService::sendMessage);
+        messages.forEach(message -> {
+            message.setTelegramBot(new TelegramBot(TG_TOKEN_ADMIN));
+            senderService.sendMessage(message);
+        });
     }
 
 }
