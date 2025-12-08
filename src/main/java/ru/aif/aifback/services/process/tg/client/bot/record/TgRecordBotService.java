@@ -5,7 +5,10 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.NULL_PARAM;
 import static ru.aif.aifback.constants.Constants.TG_LOG_ID;
-import static ru.aif.aifback.services.utils.CommonUtils.sendMessage;
+import static ru.aif.aifback.enums.BotType.BOT_RECORD;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_AI_RECORD_PROCESS;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.MENU_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createMainMenuKeyboard;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,13 +18,12 @@ import org.springframework.stereotype.Service;
 import com.pengrad.telegrambot.TelegramBot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.aif.aifback.enums.BotType;
 import ru.aif.aifback.model.requests.WebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
-import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
-import ru.aif.aifback.enums.BotType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType;
-import ru.aif.aifback.services.utils.CommonUtils;
 import ru.aif.aifback.services.process.BotProcessService;
+import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
+import ru.aif.aifback.services.utils.CommonUtils;
 
 /**
  * TG Client API service.
@@ -67,8 +69,8 @@ public class TgRecordBotService implements BotProcessService {
             if (Objects.isNull(operation)) {
                 CommonUtils.sendMessage(webhookRequest.getChatId(),
                                         Integer.parseInt(webhookRequest.getMessageId()),
-                                        TgClientBotRecordButtons.MENU_TITLE,
-                                        TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()),
+                                        MENU_TITLE,
+                                        createMainMenuKeyboard(userBot.getBot().getType()),
                                         bot,
                                         TRUE);
                 return;
@@ -90,7 +92,7 @@ public class TgRecordBotService implements BotProcessService {
     public void processNoCallback(WebhookRequest webhookRequest, UserBot userBot) {
         if (Objects.nonNull(webhookRequest.getFileId()) && !Objects.equals(webhookRequest.getFileId(), NULL_PARAM)) {
             TgClientBotOperationService aiOperation = operations.stream()
-                                                                .filter(f -> Objects.equals(f.getOperationType(), ClientRecordBotOperationType.BOT_AI_RECORD_PROCESS))
+                                                                .filter(f -> Objects.equals(f.getOperationType(), BOT_AI_RECORD_PROCESS))
                                                                 .findFirst()
                                                                 .orElse(null);
             if (Objects.nonNull(aiOperation)) {
@@ -101,8 +103,8 @@ public class TgRecordBotService implements BotProcessService {
 
         CommonUtils.sendMessage(webhookRequest.getChatId(),
                                 Integer.parseInt(webhookRequest.getMessageId()),
-                                TgClientBotRecordButtons.MENU_TITLE,
-                                TgClientBotRecordButtons.createMainMenuKeyboard(userBot.getBot().getType()),
+                                MENU_TITLE,
+                                createMainMenuKeyboard(userBot.getBot().getType()),
                                 new TelegramBot(userBot.getToken()),
                                 TRUE);
     }
@@ -113,7 +115,7 @@ public class TgRecordBotService implements BotProcessService {
      */
     @Override
     public BotType getBotType() {
-        return BotType.BOT_RECORD;
+        return BOT_RECORD;
     }
 
 }

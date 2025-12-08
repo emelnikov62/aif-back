@@ -1,15 +1,19 @@
 package ru.aif.aifback.services.utils;
 
 import static ru.aif.aifback.constants.Constants.DAY_OF_WEEK;
+import static ru.aif.aifback.constants.Constants.EMPTY_FILE_PATH;
 import static ru.aif.aifback.constants.Constants.MONTHS;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.apache.commons.io.IOUtils;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -222,6 +226,28 @@ public final class CommonUtils {
      */
     public static String getDayOfWeek(Long day, Long month, Long year) {
         return DAY_OF_WEEK.get(LocalDate.of(year.intValue(), month.intValue(), day.intValue()).getDayOfWeek().getValue());
+    }
+
+    /**
+     * Get file data or empty.
+     * @param userItemFileData user item file data
+     * @return file data
+     */
+    public static byte[] getFileDataImage(String userItemFileData) {
+        try {
+            byte[] fileData;
+
+            if (Objects.isNull(userItemFileData)) {
+                fileData = IOUtils.toByteArray(Objects.requireNonNull(CommonUtils.class.getResourceAsStream(EMPTY_FILE_PATH)));
+            } else {
+                fileData = Base64.getDecoder().decode(userItemFileData);
+            }
+
+            return fileData;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
 }

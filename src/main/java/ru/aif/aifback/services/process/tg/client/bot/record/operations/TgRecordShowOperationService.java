@@ -4,8 +4,6 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
-import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
-import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_CLIENT_STAR;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_RECORDS;
@@ -13,12 +11,14 @@ import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperat
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_RECORD_SHOW;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordType.findByType;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.utils.CommonUtils.getDayOfWeek;
+import static ru.aif.aifback.services.utils.CommonUtils.getFileDataImage;
 import static ru.aif.aifback.services.utils.CommonUtils.getMonthByNumber;
 import static ru.aif.aifback.services.utils.CommonUtils.sendMessage;
 import static ru.aif.aifback.services.utils.CommonUtils.sendPhoto;
 
-import java.util.Base64;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -36,9 +36,9 @@ import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientStarService;
-import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType;
 import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -132,8 +132,14 @@ public class TgRecordShowOperationService implements TgClientBotOperationService
         }
 
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), status)));
-        sendPhoto(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), Base64.getDecoder().decode(userItem.getFileData()),
-                  answer, keyboard, bot);
+
+        byte[] fileData = getFileDataImage(userItem.getFileData());
+        if (Objects.isNull(fileData)) {
+            sendErrorMessage(keyboard, webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), bot, status);
+            return;
+        }
+
+        sendPhoto(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), fileData, answer, keyboard, bot);
     }
 
     /**
