@@ -68,7 +68,13 @@ public class TgSenderService implements SenderService {
         List<ChatMessage.Button> workButtons = buttons.stream().filter(f -> !f.isBack()).toList();
 
         if (Objects.isNull(columns)) {
-            workButtons.forEach(button -> keyboardMarkup.addRow(new InlineKeyboardButton(button.getTitle()).callbackData(button.getCallback())));
+            workButtons.forEach(button -> {
+                if (Objects.isNull(button.getUrl())) {
+                    keyboardMarkup.addRow(new InlineKeyboardButton(button.getTitle()).callbackData(button.getCallback()));
+                } else {
+                    keyboardMarkup.addRow(new InlineKeyboardButton(button.getTitle()).webApp(new WebAppInfo(button.getUrl())));
+                }
+            });
         } else {
             List<InlineKeyboardButton> btns = new ArrayList<>();
             int num = 0;
@@ -81,7 +87,7 @@ public class TgSenderService implements SenderService {
 
                 num++;
 
-                if (num % 4 == 0) {
+                if (num % columns == 0) {
                     keyboardMarkup.addRow(btns.toArray(new InlineKeyboardButton[0]));
                     btns.clear();
                 }

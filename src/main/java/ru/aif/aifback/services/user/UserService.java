@@ -1,5 +1,8 @@
 package ru.aif.aifback.services.user;
 
+import static java.lang.Boolean.TRUE;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -44,7 +47,7 @@ public class UserService {
      */
     public Optional<Long> createUser(String sourceId, String source) {
         try {
-            User user = new User(sourceId, source);
+            User user = new User(sourceId, TRUE, LocalDateTime.now(), source);
             userRepository.save(user);
 
             return Optional.of(user.getId());

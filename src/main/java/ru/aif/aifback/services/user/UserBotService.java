@@ -115,6 +115,7 @@ public class UserBotService {
 
             return Objects.nonNull(userBot.getId()) ? TRUE : FALSE;
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return FALSE;
         }
     }

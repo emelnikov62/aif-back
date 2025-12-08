@@ -33,7 +33,7 @@ import ru.aif.aifback.services.user.UserBotService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public abstract class BotConfirmCreateOperationService implements AdminBotOperationService {
+public class BotConfirmCreateOperationService implements AdminBotOperationService {
 
     private final UserBotService userBotService;
 

@@ -95,8 +95,10 @@ public class TgAdminBotProcessService extends AdminBotProcessService {
      */
     @Override
     public void sendMessages(List<ChatMessage> messages) {
+        TelegramBot bot = new TelegramBot(TG_TOKEN_ADMIN);
+
         messages.forEach(message -> {
-            message.setTelegramBot(new TelegramBot(TG_TOKEN_ADMIN));
+            message.setTelegramBot(bot);
             senderService.sendMessage(message);
         });
     }
