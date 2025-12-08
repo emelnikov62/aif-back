@@ -12,7 +12,7 @@ import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
-import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_SELECT;
+import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
 
 import java.io.ByteArrayOutputStream;
@@ -55,6 +55,7 @@ import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.process.admin.AdminProcessService;
 import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.tg.client.TgClientService;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 import ru.aif.aifback.services.utils.CommonUtils;
@@ -72,6 +73,8 @@ class AifBackApplicationTests {
     private ClientRecordService clientRecordService;
     @Autowired
     private AdminProcessService tgAdminService;
+    @Autowired
+    private TgClientService tgClientService;
 
     @Test
     @Disabled
@@ -307,18 +310,22 @@ class AifBackApplicationTests {
     }
 
     @Test
-    void selectUserBotTest() {
+    @Disabled
+    void showUserItem() {
         String chatId = "1487726317";
+        String id = "1";
 
         WebhookRequest tgWebhookRequest = WebhookRequest.builder()
+                                                        .id(id)
                                                         .callback(TRUE)
                                                         .chatId(chatId)
+                                                        .messageId(String.valueOf(MESSAGE_ID_EMPTY))
                                                         .source(BotSource.TELEGRAM.getSource())
                                                         .text(String.format("%s;%s",
-                                                                            BOT_SELECT.getType(),
+                                                                            BOT_ITEM_ADDITIONAL.getType(),
                                                                             1))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        tgClientService.process(tgWebhookRequest);
     }
 
 }

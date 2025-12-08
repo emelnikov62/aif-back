@@ -3,20 +3,22 @@ package ru.aif.aifback.services.process.tg.client.bot.record.operations;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
+import static ru.aif.aifback.constants.Constants.EMPTY_FILE_PATH;
 import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
-import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.ADD_RECORD_TITLE;
-import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
-import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ADD_RECORD;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ITEMS;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
 import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_MAIN;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.ADD_RECORD_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.SHOW_ERROR_TITLE;
+import static ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordButtons.createBackButton;
 import static ru.aif.aifback.services.utils.CommonUtils.sendMessage;
 import static ru.aif.aifback.services.utils.CommonUtils.sendPhoto;
 
 import java.util.Base64;
 import java.util.Objects;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -28,8 +30,8 @@ import ru.aif.aifback.model.requests.WebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
-import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType;
+import ru.aif.aifback.services.process.tg.client.TgClientBotOperationService;
 import ru.aif.aifback.services.user.UserItemService;
 
 /**
@@ -76,8 +78,19 @@ public class TgItemAdditionalOperationService implements TgClientBotOperationSer
                         String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItem.getId(), EMPTY_PARAM)));
         keyboard.addRow(createBackButton(String.format("%s;%s", BOT_ITEMS.getType(), group.getId())));
 
-        sendPhoto(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()),
-                  Base64.getDecoder().decode(userItem.getFileData()), answer, keyboard, bot);
+        try {
+            byte[] fileData;
+
+            if (Objects.isNull(userItem.getFileData())) {
+                fileData = IOUtils.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream(EMPTY_FILE_PATH)));
+            } else {
+                fileData = Base64.getDecoder().decode(userItem.getFileData());
+            }
+
+            sendPhoto(webhookRequest.getChatId(), Integer.parseInt(webhookRequest.getMessageId()), fileData, answer, keyboard, bot);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**

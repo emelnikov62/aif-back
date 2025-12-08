@@ -25,6 +25,7 @@ public final class Constants {
     public final static int MESSAGE_ID_EMPTY = 0;
     public final static Integer COLUMNS_DAYS = 3;
     public final static Integer COLUMNS_STATS = 3;
+    public final static String EMPTY_FILE_PATH = "/static/images/empty.jpg";
 
     public static final Map<Long, String> MONTHS = Map.ofEntries(
             Map.entry(1L, "Январь"),
