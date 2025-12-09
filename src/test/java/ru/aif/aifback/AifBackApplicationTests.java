@@ -3,6 +3,7 @@ package ru.aif.aifback;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.AI_SEARCH_URL;
+import static ru.aif.aifback.constants.Constants.EMPTY_PARAM;
 import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_KEY;
 import static ru.aif.aifback.constants.Constants.YANDEX_API_RECOGNIZE_URL;
@@ -12,7 +13,7 @@ import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
-import static ru.aif.aifback.services.process.client.bot.record.enums.ClientBotRecordOperationType.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientBotRecordOperationType.BOT_SELECT_MONTH;
 import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.ACTIVE;
 
 import java.io.ByteArrayOutputStream;
@@ -311,7 +312,7 @@ class AifBackApplicationTests {
 
     @Test
     @Disabled
-    void showUserItem() {
+    void showRecordDays() {
         String chatId = "1487726317";
         String id = "1";
 
@@ -321,9 +322,12 @@ class AifBackApplicationTests {
                                                         .chatId(chatId)
                                                         .messageId(String.valueOf(MESSAGE_ID_EMPTY))
                                                         .source(BotSource.TELEGRAM.getSource())
-                                                        .text(String.format("%s;%s",
-                                                                            BOT_ITEM_ADDITIONAL.getType(),
-                                                                            1))
+                                                        .text(String.format("%s;%s;%s;%s;%s",
+                                                                            BOT_SELECT_MONTH.getType(),
+                                                                            12,
+                                                                            2025,
+                                                                            1,
+                                                                            EMPTY_PARAM))
                                                         .build();
         clientProcessService.process(tgWebhookRequest);
     }

@@ -69,13 +69,14 @@ public class BotRecordYearOperationService implements AdminBotOperationService {
 
                 num++;
                 if (num % COLUMNS_YEARS == 0) {
-                    buttons.add(row);
+                    buttons.add(new ArrayList<>(row));
                     row.clear();
                 }
             }
 
             if (!row.isEmpty()) {
-                buttons.add(row);
+                buttons.add(new ArrayList<>(row));
+                row.clear();
             }
         }
 

@@ -100,13 +100,14 @@ public class SelectYearOperationService implements ClientBotOperationService {
 
             num++;
             if (num % 4 == 0) {
-                buttons.add(row);
+                buttons.add(new ArrayList<>(row));
                 row.clear();
             }
         }
 
         if (!row.isEmpty()) {
-            buttons.add(row);
+            buttons.add(new ArrayList<>(row));
+            row.clear();
         }
 
         buttons.add(createBackButton(String.format("%s;%s;%s", BOT_ADD_RECORD.getType(), userItemId, recordId)));

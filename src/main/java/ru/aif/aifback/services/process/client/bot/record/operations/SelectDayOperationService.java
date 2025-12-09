@@ -169,13 +169,14 @@ public class SelectDayOperationService implements ClientBotOperationService {
             }
 
             if (++num % COLUMNS_TIMES == 0) {
-                buttons.add(row);
+                buttons.add(new ArrayList<>(row));
                 row.clear();
             }
         }
 
         if (!row.isEmpty()) {
-            buttons.add(row);
+            buttons.add(new ArrayList<>(row));
+            row.clear();
         }
 
         buttons.add(createBackButton(String.format("%s;%s;%s;%s;%s",
