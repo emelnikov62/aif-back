@@ -50,10 +50,13 @@ public class TgSenderService implements SenderService {
             return;
         }
 
-        chatMessage.getTelegramBot().execute(new SendMessage(chatMessage.getChatId(),
-                                                             chatMessage.getText())
-                                                     .parseMode(ParseMode.HTML)
-                                                     .replyMarkup(fillKeyboard(chatMessage.getButtons())));
+        if (Objects.isNull(chatMessage.getButtons()) || chatMessage.getButtons().isEmpty()) {
+            chatMessage.getTelegramBot().execute(new SendMessage(chatMessage.getChatId(), chatMessage.getText()).parseMode(ParseMode.HTML));
+        } else {
+            chatMessage.getTelegramBot().execute(new SendMessage(chatMessage.getChatId(), chatMessage.getText())
+                                                         .parseMode(ParseMode.HTML)
+                                                         .replyMarkup(fillKeyboard(chatMessage.getButtons())));
+        }
 
         if (chatMessage.getUpdated()) {
             deleteMessage(chatMessage);

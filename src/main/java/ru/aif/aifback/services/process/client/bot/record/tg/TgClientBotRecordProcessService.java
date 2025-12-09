@@ -84,7 +84,7 @@ public class TgClientBotRecordProcessService extends ClientBotProcessService {
                                                                    .findFirst()
                                                                    .orElse(null);
             if (Objects.nonNull(aiOperation)) {
-                aiOperation.process(webhookRequest, userBot);
+                sendMessages(aiOperation.process(webhookRequest, userBot), userBot);
                 return;
             }
         }

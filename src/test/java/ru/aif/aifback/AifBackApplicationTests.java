@@ -1,7 +1,9 @@
 package ru.aif.aifback;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_CONFIRM_CREATE;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import ru.aif.aifback.services.ai.record.RecordSearchService;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.process.admin.AdminProcessService;
+import ru.aif.aifback.services.process.client.ClientProcessService;
 import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 import ru.aif.aifback.services.user.UserBotService;
 import ru.aif.aifback.services.user.UserCalendarService;
@@ -55,6 +58,8 @@ class AifBackApplicationTests {
     private RecordSearchService recordSearchService;
     @Autowired
     private UserBotService userBotService;
+    @Autowired
+    private ClientProcessService clientProcessService;
 
     @Test
     @Disabled
@@ -128,7 +133,7 @@ class AifBackApplicationTests {
 
     @Test
     @Disabled
-    void testAiRecord() throws Exception {
+    void testAiRecord() {
         String message = "Запиши меня на маникюр в следующий четверг на 10 утра";
         Long userBotId = 1L;
         String chatId = "1487726317";
@@ -154,6 +159,25 @@ class AifBackApplicationTests {
                                                                             1))
                                                         .build();
         adminProcessService.process(tgWebhookRequest);
+    }
+
+    @Disabled
+    @Test
+    void testAiRecordProcess() {
+        String userBotId = "1";
+        String chatId = "1487726317";
+        String fileId = "AwACAgIAAxkBAAISU2kts6Se_cMqq5oFhc9aD2r9RR2iAAJikwAC2TtwSXK8oHy_q05bNgQ";
+
+        WebhookRequest webhookRequest = WebhookRequest.builder()
+                                                      .callback(FALSE)
+                                                      .fileId(fileId)
+                                                      .chatId(chatId)
+                                                      .id(userBotId)
+                                                      .messageId(String.valueOf(MESSAGE_ID_EMPTY))
+                                                      .source(BotSource.TELEGRAM.getSource())
+                                                      .build();
+
+        clientProcessService.process(webhookRequest);
     }
 
 }

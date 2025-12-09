@@ -75,19 +75,22 @@ public class AiRecordProcessOperationService implements ClientBotOperationServic
 
         AiRecordResponse response = recordSearchService.search(result, userBot, webhookRequest.getChatId());
         if (Objects.isNull(response) || response.getStaffs().isEmpty()) {
-            return fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource());
+            messages.addAll(fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource()));
+            return messages;
         }
 
         UserItem userItem = userItemService.findUserItemById(Long.valueOf(response.getItemId())).orElse(null);
         if (Objects.isNull(userItem)) {
-            return fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource());
+            messages.addAll(fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource()));
+            return messages;
         }
 
         Long hours = Long.valueOf(response.getHours());
         Long mins = Long.valueOf(response.getMins());
         List<AiRecordStaffResponse> staffs = response.getStaffs().stream().filter(f -> Objects.nonNull(f.getCalendarId())).toList();
         if (staffs.isEmpty()) {
-            return fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource());
+            messages.addAll(fillErrorSearchRecord(webhookRequest.getChatId(), webhookRequest.getMessageId(), userBot.getSource()));
+            return messages;
         }
 
         if (staffs.size() == 1) {
