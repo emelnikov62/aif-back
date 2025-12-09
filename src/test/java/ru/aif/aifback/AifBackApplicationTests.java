@@ -12,8 +12,8 @@ import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordBotOperationType.BOT_ITEM_ADDITIONAL;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientBotRecordOperationType.BOT_ITEM_ADDITIONAL;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.ACTIVE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,8 +54,8 @@ import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.client.ClientService;
 import ru.aif.aifback.services.process.admin.AdminProcessService;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
-import ru.aif.aifback.services.process.tg.client.TgClientService;
+import ru.aif.aifback.services.process.client.ClientProcessService;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;
 import ru.aif.aifback.services.utils.CommonUtils;
@@ -72,9 +72,9 @@ class AifBackApplicationTests {
     @Autowired
     private ClientRecordService clientRecordService;
     @Autowired
-    private AdminProcessService tgAdminService;
+    private AdminProcessService adminProcessService;
     @Autowired
-    private TgClientService tgClientService;
+    private ClientProcessService clientProcessService;
 
     @Test
     @Disabled
@@ -147,7 +147,7 @@ class AifBackApplicationTests {
                                                         .messageId(messageId)
                                                         .text(String.format("%s;%s", BOT_RECORDS.getType(), id))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Disabled
@@ -164,7 +164,7 @@ class AifBackApplicationTests {
                                                         .messageId(messageId)
                                                         .text(String.format("%s;%s;%s", BOT_RECORD_YEAR.getType(), ACTIVE.getType(), id))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Disabled
@@ -182,7 +182,7 @@ class AifBackApplicationTests {
                                                         .text(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), 2025, id,
                                                                             ACTIVE.getType()))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Disabled
@@ -204,7 +204,7 @@ class AifBackApplicationTests {
                                                                             id,
                                                                             ACTIVE.getType()))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Disabled
@@ -227,7 +227,7 @@ class AifBackApplicationTests {
                                                                             id,
                                                                             ACTIVE.getType()))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Disabled
@@ -306,7 +306,7 @@ class AifBackApplicationTests {
                                                                             BOT_CONFIRM_CREATE.getType(),
                                                                             1))
                                                         .build();
-        tgAdminService.process(tgWebhookRequest);
+        adminProcessService.process(tgWebhookRequest);
     }
 
     @Test
@@ -325,7 +325,7 @@ class AifBackApplicationTests {
                                                                             BOT_ITEM_ADDITIONAL.getType(),
                                                                             1))
                                                         .build();
-        tgClientService.process(tgWebhookRequest);
+        clientProcessService.process(tgWebhookRequest);
     }
 
 }

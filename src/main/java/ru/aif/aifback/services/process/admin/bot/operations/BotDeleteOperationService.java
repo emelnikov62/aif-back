@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
@@ -40,23 +39,23 @@ public class BotDeleteOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
         Long botId = Long.valueOf(webhookRequest.getText().split(DELIMITER)[1]);
 
         String answer = DELETE_BOT_ERROR_ANSWER;
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         if (userBotService.deleteUserBot(botId)) {
             answer = DELETE_BOT_SUCCESS_ANSWER;
-            buttons.add(ChatMessage.Button.builder()
-                                          .title(MY_BOTS_TITLE)
-                                          .callback(BOT_BOTS.getType())
-                                          .isBack(FALSE)
-                                          .build());
+            buttons.add(List.of(ChatMessage.Button.builder()
+                                                  .title(MY_BOTS_TITLE)
+                                                  .callback(BOT_BOTS.getType())
+                                                  .build()));
         } else {
-            buttons.addAll(createBackButton(BOT_MAIN.getType()));
+            buttons.add(createBackButton(BOT_MAIN.getType()));
         }
 
         return List.of(ChatMessage.builder()

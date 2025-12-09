@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
@@ -52,12 +51,13 @@ public class BotSelectOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
         Long userBotId = Long.valueOf(webhookRequest.getText().split(DELIMITER)[1]);
         String answer = MENU_TITLE;
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         Optional<UserBot> userBot = userBotService.getUserBot(userBotId);
         if (userBot.isPresent()) {
@@ -67,52 +67,46 @@ public class BotSelectOperationService implements AdminBotOperationService {
                                    userBot.get().getId());
 
             if (Objects.isNull(userBot.get().getToken())) {
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(LINK_TOKEN_TITLE)
-                                              .url("https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot-form?id=" + userBotId)
-                                              .isBack(FALSE)
-                                              .build());
+                buttons.add(List.of(ChatMessage.Button.builder()
+                                                      .title(LINK_TOKEN_TITLE)
+                                                      .url("https://aif-back-emelnikov62.amvera.io/aif/admin/link-bot-form?id=" + userBotId)
+                                                      .build()));
             } else {
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(BOT_RECORDS_TITLE)
-                                              .callback(String.format("%s;%s", BOT_RECORDS.getType(), userBotId))
-                                              .isBack(FALSE)
-                                              .build());
+                buttons.add(List.of(ChatMessage.Button.builder()
+                                                      .title(BOT_RECORDS_TITLE)
+                                                      .callback(String.format("%s;%s", BOT_RECORDS.getType(), userBotId))
+                                                      .build()));
 
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(BOT_STATS_TITLE)
-                                              .callback(String.format("%s;%s", BOT_STATS.getType(), userBotId))
-                                              .isBack(FALSE)
-                                              .build());
-
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(BOT_ITEMS_TITLE)
-                                              .url("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + userBotId)
-                                              .isBack(FALSE)
-                                              .build());
+                buttons.add(List.of(
+                        ChatMessage.Button.builder()
+                                          .title(BOT_STATS_TITLE)
+                                          .callback(String.format("%s;%s", BOT_STATS.getType(), userBotId))
+                                          .build(),
+                        ChatMessage.Button.builder()
+                                          .title(BOT_ITEMS_TITLE)
+                                          .url("https://aif-back-emelnikov62.amvera.io/aif/admin/items-bot-form?id=" + userBotId)
+                                          .build()));
 
                 if (Objects.equals(userBot.get().getBot().getType(), BOT_RECORD.getType())) {
-                    buttons.add(ChatMessage.Button.builder()
-                                                  .title(BOT_STAFF_TITLE)
-                                                  .url("https://aif-back-emelnikov62.amvera.io/aif/admin/staff-bot-form?id=" + userBotId)
-                                                  .isBack(FALSE)
-                                                  .build());
-                    buttons.add(ChatMessage.Button.builder()
-                                                  .title(BOT_CALENDAR_TITLE)
-                                                  .url("https://aif-back-emelnikov62.amvera.io/aif/admin/calendar-bot-form?id=" + userBotId)
-                                                  .isBack(FALSE)
-                                                  .build());
+                    buttons.add(List.of(
+                            ChatMessage.Button.builder()
+                                              .title(BOT_STAFF_TITLE)
+                                              .url("https://aif-back-emelnikov62.amvera.io/aif/admin/staff-bot-form?id=" + userBotId)
+                                              .build(),
+                            ChatMessage.Button.builder()
+                                              .title(BOT_CALENDAR_TITLE)
+                                              .url("https://aif-back-emelnikov62.amvera.io/aif/admin/calendar-bot-form?id=" + userBotId)
+                                              .build()));
                 }
             }
 
-            buttons.add(ChatMessage.Button.builder()
-                                          .title(DELETE_BOT_TITLE)
-                                          .callback(String.format("%s;%s", BOT_DELETE.getType(), userBotId))
-                                          .isBack(FALSE)
-                                          .build());
+            buttons.add(List.of(ChatMessage.Button.builder()
+                                                  .title(DELETE_BOT_TITLE)
+                                                  .callback(String.format("%s;%s", BOT_DELETE.getType(), userBotId))
+                                                  .build()));
         }
 
-        buttons.addAll(createBackButton(BOT_MAIN.getType()));
+        buttons.add(createBackButton(BOT_MAIN.getType()));
 
         return List.of(ChatMessage.builder()
                                   .text(answer)

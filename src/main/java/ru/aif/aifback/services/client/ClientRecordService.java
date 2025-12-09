@@ -5,8 +5,8 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.services.process.admin.enums.AdminStatsType.MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminStatsType.YEAR;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.CANCEL;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.FINISHED;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.CANCEL;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.FINISHED;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.repository.client.ClientRecordRepository;
 import ru.aif.aifback.services.process.admin.enums.AdminStatsType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 import ru.aif.aifback.services.user.UserBotService;
 import ru.aif.aifback.services.user.UserCalendarService;
 import ru.aif.aifback.services.user.UserItemService;

@@ -1,8 +1,5 @@
 package ru.aif.aifback.services.process.admin.utils;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 import static ru.aif.aifback.enums.BotType.BOT_RECORD;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BACK_BUTTON_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.CONNECT_BOT_TITLE;
@@ -19,7 +16,7 @@ import java.util.Objects;
 
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.message.ChatMessage;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 
 /**
  * Admin bot utils.
@@ -32,8 +29,8 @@ public final class AdminBotUtils {
      * @return main menu
      */
     public static List<ChatMessage.Button> createMainMenuKeyboard() {
-        return List.of(ChatMessage.Button.builder().title(CONNECT_BOT_TITLE).callback(BOT_CREATE.getType()).isBack(FALSE).build(),
-                       ChatMessage.Button.builder().title(MY_BOTS_TITLE).callback(BOT_BOTS.getType()).isBack(FALSE).build());
+        return List.of(ChatMessage.Button.builder().title(CONNECT_BOT_TITLE).callback(BOT_CREATE.getType()).build(),
+                       ChatMessage.Button.builder().title(MY_BOTS_TITLE).callback(BOT_BOTS.getType()).build());
     }
 
     /**
@@ -42,8 +39,8 @@ public final class AdminBotUtils {
      * @return back button
      */
     public static List<ChatMessage.Button> createBackButton(String backCallback) {
-        return List.of(ChatMessage.Button.builder().title(BACK_BUTTON_TITLE).callback(backCallback).isBack(TRUE).build(),
-                       ChatMessage.Button.builder().title(MENU_TITLE).callback(BOT_MAIN.getType()).isBack(TRUE).build());
+        return List.of(ChatMessage.Button.builder().title(BACK_BUTTON_TITLE).callback(backCallback).build(),
+                       ChatMessage.Button.builder().title(MENU_TITLE).callback(BOT_MAIN.getType()).build());
     }
 
     /**

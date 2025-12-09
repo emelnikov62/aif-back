@@ -23,8 +23,10 @@ public final class Constants {
     public final static String EMPTY_PARAM = "empty";
     public final static String NULL_PARAM = "null";
     public final static int MESSAGE_ID_EMPTY = 0;
-    public final static Integer COLUMNS_DAYS = 3;
-    public final static Integer COLUMNS_STATS = 3;
+    public final static Integer COLUMNS_DAYS = 4;
+    public final static Integer COLUMNS_MONTHS = 3;
+    public final static Integer COLUMNS_YEARS = 3;
+    public final static Integer COLUMNS_TIMES = 5;
     public final static String EMPTY_FILE_PATH = "/static/images/empty.jpg";
 
     public static final Map<Long, String> MONTHS = Map.ofEntries(

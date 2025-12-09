@@ -9,7 +9,7 @@ import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BO
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_CANCEL;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.CANCEL;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.CANCEL;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +24,7 @@ import ru.aif.aifback.model.requests.WebhookRequest;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
-import ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordNotificationService;
+import ru.aif.aifback.services.process.client.bot.record.notification.ClientBotRecordNotificationService;
 
 /**
  * Admin Bot record cancel operation API service.
@@ -36,11 +36,12 @@ import ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordNot
 public class BotRecordCancelOperationService implements AdminBotOperationService {
 
     private final ClientRecordService clientRecordService;
-    private final TgClientBotRecordNotificationService tgClientBotRecordNotificationService;
+    private final ClientBotRecordNotificationService tgClientBotRecordNotificationService;
 
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
@@ -68,7 +69,8 @@ public class BotRecordCancelOperationService implements AdminBotOperationService
                                   .source(findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .buttons(createBackButton(String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type)))
+                                  .buttons(List.of(createBackButton(
+                                          String.format("%s;%s;%s;%s;%s", BOT_RECORD_DAY.getType(), month, year, userBotId, type))))
                                   .build());
     }
 

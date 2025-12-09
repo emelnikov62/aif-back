@@ -6,7 +6,7 @@ import static ru.aif.aifback.constants.Constants.MESSAGE_ID_EMPTY;
 import static ru.aif.aifback.constants.Constants.TG_TOKEN_ADMIN;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_RECORD_SHOW_TITLE;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_ADDITIONAL;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.FINISHED;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.FINISHED;
 import static ru.aif.aifback.services.utils.CommonUtils.getDayOfWeek;
 import static ru.aif.aifback.services.utils.CommonUtils.getMonthByNumber;
 import static ru.aif.aifback.services.utils.CommonUtils.sendMessage;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.services.client.ClientRecordService;
-import ru.aif.aifback.services.process.client.enums.ClientRecordEventType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordEventType;
 
 /**
  * Admin notification service.

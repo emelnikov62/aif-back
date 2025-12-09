@@ -22,25 +22,25 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     /**
-     * Get client by tg id.
-     * @param tgId tg id
+     * Get client by source id.
+     * @param sourceId source id
      * @return client data
      */
-    public Optional<Client> getClientByTgId(String tgId) {
-        return clientRepository.findBySourceId(tgId);
+    public Optional<Client> getClientBySourceId(String sourceId) {
+        return clientRepository.findBySourceId(sourceId);
     }
 
     /**
      * Get client id or create new.
-     * @param tgId tg id
+     * @param sourceId source id
      * @return id
      */
-    public Long getClientIdOrCreate(String tgId) {
+    public Long getClientIdOrCreate(String sourceId) {
         Long id;
 
-        Optional<Client> client = getClientByTgId(tgId);
+        Optional<Client> client = getClientBySourceId(sourceId);
         if (client.isEmpty()) {
-            id = createClient(tgId);
+            id = createClient(sourceId);
         } else {
             id = client.get().getId();
         }
@@ -50,12 +50,12 @@ public class ClientService {
 
     /**
      * Create client.
-     * @param tgId tg id
+     * @param sourceId source id
      * @return client data
      */
-    public Long createClient(String tgId) {
+    public Long createClient(String sourceId) {
         try {
-            Client client = new Client(tgId, Boolean.TRUE, LocalDateTime.now());
+            Client client = new Client(sourceId, Boolean.TRUE, LocalDateTime.now());
             clientRepository.save(client);
 
             return client.getId();

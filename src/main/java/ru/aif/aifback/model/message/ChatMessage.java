@@ -27,7 +27,6 @@ public class ChatMessage {
         private String title;
         private String callback;
         private String url;
-        private boolean isBack;
 
     }
 
@@ -36,7 +35,7 @@ public class ChatMessage {
     private String text;
     private BotSource source;
     private Boolean updated;
-    private List<Button> buttons;
-    private Integer columns;
+    private List<List<Button>> buttons;
     private TelegramBot telegramBot;
+    private byte[] fileData;
 }

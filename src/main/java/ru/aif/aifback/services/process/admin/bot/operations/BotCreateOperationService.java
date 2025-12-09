@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.enums.BotSource.findByType;
@@ -40,24 +39,24 @@ public class BotCreateOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
         String answer = SELECT_BOT_TITLE;
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         List<Bot> bots = botService.getBots();
         if (bots.isEmpty()) {
             answer = BOTS_TO_CREATE_EMPTY_TITLE;
         } else {
-            bots.forEach(b -> buttons.add(ChatMessage.Button.builder()
-                                                            .title(String.format("%s %s", getBotIconByType(b.getType()), b.getDescription()))
-                                                            .callback(String.format("%s;%s", BOT_CONFIRM_CREATE.getType(), b.getId()))
-                                                            .isBack(FALSE)
-                                                            .build()));
+            bots.forEach(b -> buttons.add(List.of(ChatMessage.Button.builder()
+                                                                    .title(String.format("%s %s", getBotIconByType(b.getType()), b.getDescription()))
+                                                                    .callback(String.format("%s;%s", BOT_CONFIRM_CREATE.getType(), b.getId()))
+                                                                    .build())));
         }
 
-        buttons.addAll(createBackButton(BOT_MAIN.getType()));
+        buttons.add(createBackButton(BOT_MAIN.getType()));
         return List.of(ChatMessage.builder()
                                   .text(answer)
                                   .updated(TRUE)

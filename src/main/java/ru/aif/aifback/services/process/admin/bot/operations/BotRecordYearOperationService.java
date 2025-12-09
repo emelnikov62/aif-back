@@ -1,16 +1,15 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-import static ru.aif.aifback.constants.Constants.COLUMNS_DAYS;
+import static ru.aif.aifback.constants.Constants.COLUMNS_YEARS;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_RECORDS_EMPTY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.findByType;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.findByType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 
 /**
  * Admin Bot record year operation API service.
@@ -42,6 +41,7 @@ public class BotRecordYearOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
@@ -49,26 +49,37 @@ public class BotRecordYearOperationService implements AdminBotOperationService {
         ClientRecordType type = findByType(params[1]);
         String userBotId = params[2];
         String answer = String.format("%s %s", type.getIcon(), type.getNames());
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         List<NameWithCount> years = clientRecordService.findYearsRecordsByStatus(Long.valueOf(userBotId), type.getType());
         if (years.isEmpty()) {
             answer = BOT_RECORDS_EMPTY;
         } else {
+            List<ChatMessage.Button> row = new ArrayList<>();
+            int num = 0;
             for (NameWithCount year : years) {
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(String.format("%s (\uD83D\uDCDD %s)", year.getName(), year.getCount()))
-                                              .callback(String.format("%s;%s;%s;%s",
-                                                                      BOT_RECORD_MONTH.getType(),
-                                                                      year.getName(),
-                                                                      userBotId,
-                                                                      type.getType()))
-                                              .isBack(FALSE)
-                                              .build());
+                row.add(ChatMessage.Button.builder()
+                                          .title(String.format("%s (\uD83D\uDCDD %s)", year.getName(), year.getCount()))
+                                          .callback(String.format("%s;%s;%s;%s",
+                                                                  BOT_RECORD_MONTH.getType(),
+                                                                  year.getName(),
+                                                                  userBotId,
+                                                                  type.getType()))
+                                          .build());
+
+                num++;
+                if (num % COLUMNS_YEARS == 0) {
+                    buttons.add(row);
+                    row.clear();
+                }
+            }
+
+            if (!row.isEmpty()) {
+                buttons.add(row);
             }
         }
 
-        buttons.addAll(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), userBotId)));
+        buttons.add(createBackButton(String.format("%s;%s", BOT_RECORDS.getType(), userBotId)));
 
         return List.of(ChatMessage.builder()
                                   .text(answer)
@@ -76,7 +87,6 @@ public class BotRecordYearOperationService implements AdminBotOperationService {
                                   .source(BotSource.findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .columns(COLUMNS_DAYS)
                                   .buttons(buttons)
                                   .build());
     }

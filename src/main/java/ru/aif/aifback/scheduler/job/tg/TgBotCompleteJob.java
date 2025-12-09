@@ -1,7 +1,7 @@
 package ru.aif.aifback.scheduler.job.tg;
 
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.FINISHED;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.FINISHED;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +16,7 @@ import ru.aif.aifback.model.client.ClientRecord;
 import ru.aif.aifback.scheduler.BotJob;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.notification.TgAdminNotificationService;
-import ru.aif.aifback.services.process.tg.client.bot.record.TgClientBotRecordNotificationService;
+import ru.aif.aifback.services.process.client.bot.record.notification.ClientBotRecordNotificationService;
 
 /**
  * TG job service for complete services by date.
@@ -30,7 +30,7 @@ public class TgBotCompleteJob implements BotJob {
 
     private final ClientRecordService clientRecordService;
     private final TgAdminNotificationService tgAdminNotificationService;
-    private final TgClientBotRecordNotificationService tgClientBotRecordNotificationService;
+    private final ClientBotRecordNotificationService tgClientBotRecordNotificationService;
 
     /**
      * Completed services by date.

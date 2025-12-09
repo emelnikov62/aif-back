@@ -8,9 +8,9 @@ import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_STATS_SELECT;
 import static ru.aif.aifback.services.process.admin.enums.AdminStatsType.findByType;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.ACTIVE;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.CANCEL;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.FINISHED;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.ACTIVE;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.CANCEL;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.FINISHED;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
 import ru.aif.aifback.services.process.admin.enums.AdminStatsType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 
 /**
  * Admin Bot stats selected operation API service.
@@ -49,13 +49,13 @@ public class BotStatsSelectedOperationService implements AdminBotOperationServic
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
         String[] params = webhookRequest.getText().split(DELIMITER);
         AdminStatsType type = findByType(params[1]);
         String userBotId = params[2];
-        List<ChatMessage.Button> buttons = new ArrayList<>();
 
         List<ClientRecord> records = clientRecordService.findByPeriod(type, Long.valueOf(userBotId));
         BigDecimal amount = BigDecimal.valueOf(records.stream()
@@ -72,15 +72,13 @@ public class BotStatsSelectedOperationService implements AdminBotOperationServic
                         "<b>Специалисты:</b>\n" +
                         fillRecordStaffs(records);
 
-        buttons.addAll(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId)));
-
         return List.of(ChatMessage.builder()
                                   .text(answer)
                                   .updated(TRUE)
                                   .source(BotSource.findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .buttons(buttons)
+                                  .buttons(List.of(createBackButton(String.format("%s;%s", BOT_STATS.getType(), userBotId))))
                                   .build());
     }
 

@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.COLUMNS_DAYS;
@@ -10,7 +9,7 @@ import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_SHOW_BY_DAY;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.findByType;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.findByType;
 import static ru.aif.aifback.services.utils.CommonUtils.getDayOfWeek;
 import static ru.aif.aifback.services.utils.CommonUtils.getMonthByNumber;
 
@@ -28,7 +27,7 @@ import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 
 /**
  * Admin Bot record day operation API service.
@@ -44,6 +43,7 @@ public class BotRecordDayOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
@@ -53,7 +53,7 @@ public class BotRecordDayOperationService implements AdminBotOperationService {
         String userBotId = params[3];
         ClientRecordType type = findByType(params[4]);
         String answer = String.format("\uD83D\uDCC5 %s", getMonthByNumber(Long.valueOf(month)));
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         List<NameWithCount> days = clientRecordService.findDaysRecordsByStatus(Long.valueOf(userBotId),
                                                                                Long.valueOf(year),
@@ -62,34 +62,44 @@ public class BotRecordDayOperationService implements AdminBotOperationService {
         if (days.isEmpty()) {
             answer = BOT_RECORDS_EMPTY;
         } else {
+            List<ChatMessage.Button> row = new ArrayList<>();
+            int num = 0;
             for (NameWithCount day : days) {
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(String.format("%s %s (\uD83D\uDCDD %s)",
-                                                                   getDayOfWeek(Long.valueOf(day.getName()),
-                                                                                Long.valueOf(month),
-                                                                                Long.valueOf(year)),
-                                                                   day.getName(),
-                                                                   day.getCount()))
-                                              .callback(String.format("%s;%s;%s;%s;%s;%s",
-                                                                      BOT_RECORD_SHOW_BY_DAY.getType(),
-                                                                      day.getName(),
-                                                                      month,
-                                                                      year,
-                                                                      userBotId,
-                                                                      type.getType()))
-                                              .isBack(FALSE)
-                                              .build());
+                row.add(ChatMessage.Button.builder()
+                                          .title(String.format("%s %s (\uD83D\uDCDD %s)",
+                                                               getDayOfWeek(Long.valueOf(day.getName()),
+                                                                            Long.valueOf(month),
+                                                                            Long.valueOf(year)),
+                                                               day.getName(),
+                                                               day.getCount()))
+                                          .callback(String.format("%s;%s;%s;%s;%s;%s",
+                                                                  BOT_RECORD_SHOW_BY_DAY.getType(),
+                                                                  day.getName(),
+                                                                  month,
+                                                                  year,
+                                                                  userBotId,
+                                                                  type.getType()))
+                                          .build());
+
+                num++;
+                if (num % COLUMNS_DAYS == 0) {
+                    buttons.add(row);
+                    row.clear();
+                }
+            }
+
+            if (!row.isEmpty()) {
+                buttons.add(row);
             }
         }
 
-        buttons.addAll(createBackButton(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), year, userBotId, type.getType())));
+        buttons.add(createBackButton(String.format("%s;%s;%s;%s", BOT_RECORD_MONTH.getType(), year, userBotId, type.getType())));
         return List.of(ChatMessage.builder()
                                   .text(answer)
                                   .updated(TRUE)
                                   .source(BotSource.findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .columns(COLUMNS_DAYS)
                                   .buttons(buttons)
                                   .build());
     }

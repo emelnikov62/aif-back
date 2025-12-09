@@ -19,4 +19,5 @@ public interface SenderService {
      * @param message chat message
      */
     void deleteMessage(ChatMessage message);
+
 }

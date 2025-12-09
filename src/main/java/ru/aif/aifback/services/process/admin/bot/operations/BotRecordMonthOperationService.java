@@ -1,16 +1,15 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-import static ru.aif.aifback.constants.Constants.COLUMNS_DAYS;
+import static ru.aif.aifback.constants.Constants.COLUMNS_MONTHS;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_RECORDS_EMPTY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_DAY;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_MONTH;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORD_YEAR;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
-import static ru.aif.aifback.services.process.client.enums.ClientRecordType.findByType;
+import static ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType.findByType;
 import static ru.aif.aifback.services.utils.CommonUtils.getMonthByNumber;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import ru.aif.aifback.model.user.NameWithCount;
 import ru.aif.aifback.services.client.ClientRecordService;
 import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
-import ru.aif.aifback.services.process.client.enums.ClientRecordType;
+import ru.aif.aifback.services.process.client.bot.record.enums.ClientRecordType;
 
 /**
  * Admin Bot record month operation API service.
@@ -43,6 +42,7 @@ public class BotRecordMonthOperationService implements AdminBotOperationService 
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
@@ -51,29 +51,40 @@ public class BotRecordMonthOperationService implements AdminBotOperationService 
         String userBotId = params[2];
         ClientRecordType type = findByType(params[3]);
         String answer = String.format("\uD83D\uDCC5 %s", year);
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         List<NameWithCount> months = clientRecordService.findMonthsRecordsByStatus(Long.valueOf(userBotId), Long.valueOf(year), type.getType());
         if (months.isEmpty()) {
             answer = BOT_RECORDS_EMPTY;
         } else {
+            List<ChatMessage.Button> row = new ArrayList<>();
+            int num = 0;
             for (NameWithCount month : months) {
-                buttons.add(ChatMessage.Button.builder()
-                                              .title(String.format("%s (\uD83D\uDCDD %s)",
-                                                                   getMonthByNumber(Long.valueOf(month.getName())),
-                                                                   month.getCount()))
-                                              .callback(String.format("%s;%s;%s;%s;%s",
-                                                                      BOT_RECORD_DAY.getType(),
-                                                                      month.getName(),
-                                                                      year,
-                                                                      userBotId,
-                                                                      type.getType()))
-                                              .isBack(FALSE)
-                                              .build());
+                row.add(ChatMessage.Button.builder()
+                                          .title(String.format("%s (\uD83D\uDCDD %s)",
+                                                               getMonthByNumber(Long.valueOf(month.getName())),
+                                                               month.getCount()))
+                                          .callback(String.format("%s;%s;%s;%s;%s",
+                                                                  BOT_RECORD_DAY.getType(),
+                                                                  month.getName(),
+                                                                  year,
+                                                                  userBotId,
+                                                                  type.getType()))
+                                          .build());
+
+                num++;
+                if (num % COLUMNS_MONTHS == 0) {
+                    buttons.add(row);
+                    row.clear();
+                }
+            }
+
+            if (!row.isEmpty()) {
+                buttons.add(row);
             }
         }
 
-        buttons.addAll(createBackButton(String.format("%s;%s;%s", BOT_RECORD_YEAR.getType(), type.getType(), userBotId)));
+        buttons.add(createBackButton(String.format("%s;%s;%s", BOT_RECORD_YEAR.getType(), type.getType(), userBotId)));
 
         return List.of(ChatMessage.builder()
                                   .text(answer)
@@ -81,7 +92,6 @@ public class BotRecordMonthOperationService implements AdminBotOperationService 
                                   .source(BotSource.findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .columns(COLUMNS_DAYS)
                                   .buttons(buttons)
                                   .build());
     }

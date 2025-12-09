@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.sender.tg;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +11,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.aif.aifback.model.message.ChatMessage;
@@ -45,10 +45,15 @@ public class TgSenderService implements SenderService {
      */
     @Override
     public void sendMessage(ChatMessage chatMessage) {
+        if (Objects.nonNull(chatMessage.getFileData())) {
+            sendMessageWithFile(chatMessage);
+            return;
+        }
+
         chatMessage.getTelegramBot().execute(new SendMessage(chatMessage.getChatId(),
                                                              chatMessage.getText())
                                                      .parseMode(ParseMode.HTML)
-                                                     .replyMarkup(fillKeyboard(chatMessage.getButtons(), chatMessage.getColumns())));
+                                                     .replyMarkup(fillKeyboard(chatMessage.getButtons())));
 
         if (chatMessage.getUpdated()) {
             deleteMessage(chatMessage);
@@ -58,53 +63,38 @@ public class TgSenderService implements SenderService {
     /**
      * Fill keyboard.
      * @param buttons buttons
-     * @param columns columns
      * @return keyboard
      */
-    private InlineKeyboardMarkup fillKeyboard(List<ChatMessage.Button> buttons, Integer columns) {
+    private InlineKeyboardMarkup fillKeyboard(List<List<ChatMessage.Button>> buttons) {
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
 
-        List<ChatMessage.Button> backButtons = buttons.stream().filter(ChatMessage.Button::isBack).toList();
-        List<ChatMessage.Button> workButtons = buttons.stream().filter(f -> !f.isBack()).toList();
-
-        if (Objects.isNull(columns)) {
-            workButtons.forEach(button -> {
-                if (Objects.isNull(button.getUrl())) {
-                    keyboardMarkup.addRow(new InlineKeyboardButton(button.getTitle()).callbackData(button.getCallback()));
-                } else {
-                    keyboardMarkup.addRow(new InlineKeyboardButton(button.getTitle()).webApp(new WebAppInfo(button.getUrl())));
-                }
-            });
-        } else {
-            List<InlineKeyboardButton> btns = new ArrayList<>();
-            int num = 0;
-            for (ChatMessage.Button button : workButtons) {
-                if (Objects.isNull(button.getUrl())) {
-                    btns.add(new InlineKeyboardButton(button.getTitle()).callbackData(button.getCallback()));
-                } else {
-                    btns.add(new InlineKeyboardButton(button.getTitle()).webApp(new WebAppInfo(button.getUrl())));
-                }
-
-                num++;
-
-                if (num % columns == 0) {
-                    keyboardMarkup.addRow(btns.toArray(new InlineKeyboardButton[0]));
-                    btns.clear();
-                }
-            }
-
-            if (!btns.isEmpty()) {
-                keyboardMarkup.addRow(btns.toArray(new InlineKeyboardButton[0]));
-            }
-        }
-
-        if (!backButtons.isEmpty()) {
-            keyboardMarkup.addRow(backButtons.stream()
-                                             .map(m -> new InlineKeyboardButton(m.getTitle()).callbackData(m.getCallback()))
-                                             .toList()
-                                             .toArray(new InlineKeyboardButton[0]));
-        }
+        buttons.forEach(
+                row -> keyboardMarkup.addRow(
+                        row.stream()
+                           .map(r -> {
+                               if (Objects.isNull(r.getUrl())) {
+                                   return new InlineKeyboardButton(r.getTitle()).callbackData(r.getCallback());
+                               } else {
+                                   return new InlineKeyboardButton(r.getTitle()).webApp(new WebAppInfo(r.getUrl()));
+                               }
+                           })
+                           .toList()
+                           .toArray(new InlineKeyboardButton[0])));
 
         return keyboardMarkup;
+    }
+
+    /**
+     * Send message with file.
+     * @param chatMessage chat message
+     */
+    private void sendMessageWithFile(ChatMessage chatMessage) {
+        chatMessage.getTelegramBot().execute(new SendPhoto(chatMessage.getChatId(), chatMessage.getFileData())
+                                                     .parseMode(ParseMode.HTML)
+                                                     .caption(chatMessage.getText())
+                                                     .replyMarkup(fillKeyboard(chatMessage.getButtons())));
+        if (chatMessage.getUpdated()) {
+            deleteMessage(chatMessage);
+        }
     }
 }

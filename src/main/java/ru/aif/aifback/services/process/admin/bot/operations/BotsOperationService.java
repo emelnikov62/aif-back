@@ -1,6 +1,5 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.enums.BotSource.findByType;
@@ -41,25 +40,25 @@ public class BotsOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         List<UserBot> userBots = userBotService.getUserBotsBySource(webhookRequest.getChatId(), webhookRequest.getSource());
         userBots.forEach(userBot -> {
-            buttons.add(ChatMessage.Button.builder()
-                                          .title(String.format("%s %s (ID: %s) %s",
-                                                               getBotIconByType(userBot.getBot().getType()),
-                                                               userBot.getBot().getDescription(),
-                                                               userBot.getId(),
-                                                               (userBot.isActive() && Objects.nonNull(userBot.getToken()) ? "✅" : "❌")))
-                                          .callback(String.format("%s;%s", BOT_SELECT.getType(), userBot.getId()))
-                                          .isBack(FALSE)
-                                          .build());
+            buttons.add(List.of(ChatMessage.Button.builder()
+                                                  .title(String.format("%s %s (ID: %s) %s",
+                                                                       getBotIconByType(userBot.getBot().getType()),
+                                                                       userBot.getBot().getDescription(),
+                                                                       userBot.getId(),
+                                                                       (userBot.isActive() && Objects.nonNull(userBot.getToken()) ? "✅" : "❌")))
+                                                  .callback(String.format("%s;%s", BOT_SELECT.getType(), userBot.getId()))
+                                                  .build()));
         });
 
-        buttons.addAll(createBackButton(BOT_MAIN.getType()));
+        buttons.add(createBackButton(BOT_MAIN.getType()));
 
         return List.of(ChatMessage.builder()
                                   .text(userBots.isEmpty() ? BOTS_EMPTY_TITLE : MY_BOTS_TITLE)

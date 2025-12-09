@@ -1,9 +1,7 @@
 package ru.aif.aifback.services.process.admin.bot.operations;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-import static ru.aif.aifback.constants.Constants.COLUMNS_STATS;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.enums.BotSource.findByType;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_STATS_TITLE;
@@ -42,32 +40,31 @@ public class BotStatsOperationService implements AdminBotOperationService {
     /**
      * Main processing.
      * @param webhookRequest webhookRequest
+     * @return messages
      */
     @Override
     public List<ChatMessage> process(WebhookRequest webhookRequest) {
         String userBotId = webhookRequest.getText().split(DELIMITER)[1];
-        List<ChatMessage.Button> buttons = new ArrayList<>();
+        List<List<ChatMessage.Button>> buttons = new ArrayList<>();
 
         Function<AdminStatsType, String> statsName = (type) -> String.format("%s %s", type.getIcon(), type.getName());
         BiFunction<AdminStatsType, String, String> callbackData = (type, id) -> String.format("%s;%s;%s", BOT_STATS_SELECT.getType(), type.getType(),
                                                                                               id);
 
-        buttons.add(ChatMessage.Button.builder()
-                                      .title(statsName.apply(MONTH))
-                                      .callback(callbackData.apply(MONTH, userBotId))
-                                      .isBack(FALSE)
-                                      .build());
-        buttons.add(ChatMessage.Button.builder()
-                                      .title(statsName.apply(YEAR))
-                                      .callback(callbackData.apply(YEAR, userBotId))
-                                      .isBack(FALSE)
-                                      .build());
-        buttons.add(ChatMessage.Button.builder()
-                                      .title(statsName.apply(ALL))
-                                      .callback(callbackData.apply(ALL, userBotId))
-                                      .isBack(FALSE)
-                                      .build());
-        buttons.addAll(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
+        buttons.add(List.of(ChatMessage.Button.builder()
+                                              .title(statsName.apply(MONTH))
+                                              .callback(callbackData.apply(MONTH, userBotId))
+                                              .build(),
+                            ChatMessage.Button.builder()
+                                              .title(statsName.apply(YEAR))
+                                              .callback(callbackData.apply(YEAR, userBotId))
+                                              .build(),
+                            ChatMessage.Button.builder()
+                                              .title(statsName.apply(ALL))
+                                              .callback(callbackData.apply(ALL, userBotId))
+                                              .build()));
+
+        buttons.add(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
 
         return List.of(ChatMessage.builder()
                                   .text(BOT_STATS_TITLE)
@@ -75,7 +72,6 @@ public class BotStatsOperationService implements AdminBotOperationService {
                                   .source(findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
                                   .messageId(webhookRequest.getMessageId())
-                                  .columns(COLUMNS_STATS)
                                   .buttons(buttons)
                                   .build());
     }
