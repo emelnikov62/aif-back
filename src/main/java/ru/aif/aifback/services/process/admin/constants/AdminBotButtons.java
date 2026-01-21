@@ -29,5 +29,6 @@ public final class AdminBotButtons {
     public static final String BOTS_ERROR_CANCEL_RECORD_TITLE = "⛔ Не удалось отменить запись";
     public static final String BOTS_SUCCESS_CANCEL_RECORD_TITLE = "✅ Запись отменена";
     public static final String BOTS_CANCEL_RECORD_TITLE = "❌ Отменить запись";
+    public static final String BOT_TAX_TITLE = "\uD83D\uDCB0 Подписки";
 
 }

@@ -10,14 +10,16 @@ import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BO
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_RECORDS_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_STAFF_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_STATS_TITLE;
+import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_TAX_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.DELETE_BOT_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.LINK_TOKEN_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.MENU_TITLE;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_DELETE;
-import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_MAIN;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORDS;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_SELECT;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_STATS;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_TAX;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.getBotIconByType;
 
@@ -98,6 +100,11 @@ public class BotSelectOperationService implements AdminBotOperationService {
                                               .url("https://aif-back-emelnikov62.amvera.io/aif/admin/calendar-bot-form?id=" + userBotId)
                                               .build()));
                 }
+
+                buttons.add(List.of(ChatMessage.Button.builder()
+                                                      .title(BOT_TAX_TITLE)
+                                                      .callback(String.format("%s;%s", BOT_TAX.getType(), userBotId))
+                                                      .build()));
             }
 
             buttons.add(List.of(ChatMessage.Button.builder()
@@ -106,7 +113,7 @@ public class BotSelectOperationService implements AdminBotOperationService {
                                                   .build()));
         }
 
-        buttons.add(createBackButton(BOT_MAIN.getType()));
+        buttons.add(createBackButton(BOT_BOTS.getType()));
 
         return List.of(ChatMessage.builder()
                                   .text(answer)

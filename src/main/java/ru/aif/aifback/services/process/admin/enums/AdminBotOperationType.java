@@ -25,7 +25,8 @@ public enum AdminBotOperationType {
     BOT_RECORDS("bot_records"),
     BOT_RECORD_SHOW_BY_DAY("bot_record_show_day"),
     BOT_RECORD_SHOW_ADDITIONAL("bot_record_show_additional"),
-    BOT_RECORD_CANCEL("bot_record_cancel");
+    BOT_RECORD_CANCEL("bot_record_cancel"),
+    BOT_TAX("bot_tax");
 
     private final String type;
 
