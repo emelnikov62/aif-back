@@ -41,12 +41,30 @@ public class BotTaxAdditionalOperationService implements AdminBotOperationServic
         String taxType = webhookRequest.getText().split(DELIMITER)[1];
         AdminTaxType adminTaxType = AdminTaxType.findByType(taxType);
 
+        String answer = String.format("%s %s\n\n", adminTaxType.getIcon(), adminTaxType.getName()) +
+                        " ↪ Запись\n" +
+                        " ↪ Просмотр\n" +
+                        " ↪ Статистика\n" +
+                        " ↪ Система оценки";
+
         List<List<ChatMessage.Button>> buttons = new ArrayList<>();
+        buttons.add(List.of(ChatMessage.Button.builder()
+                                              .title(adminTaxType.getOnePrice())
+                                              .url("https://aif-back-emelnikov62.amvera.io")
+                                              .build()));
+        buttons.add(List.of(ChatMessage.Button.builder()
+                                              .title(adminTaxType.getThreePrice())
+                                              .url("https://aif-back-emelnikov62.amvera.io")
+                                              .build()));
+        buttons.add(List.of(ChatMessage.Button.builder()
+                                              .title(adminTaxType.getTwelvePrice())
+                                              .url("https://aif-back-emelnikov62.amvera.io")
+                                              .build()));
 
         buttons.add(createBackButton(String.format("%s;%s", BOT_TAX.getType(), userBotId)));
 
         return List.of(ChatMessage.builder()
-                                  .text(String.format("%s %s", adminTaxType.getIcon(), adminTaxType.getName()))
+                                  .text(answer)
                                   .updated(TRUE)
                                   .source(findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
