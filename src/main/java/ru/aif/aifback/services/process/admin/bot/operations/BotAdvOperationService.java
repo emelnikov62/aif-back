@@ -4,13 +4,9 @@ import static java.lang.Boolean.TRUE;
 
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.enums.BotSource.findByType;
-import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_TAX_TITLE;
+import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_ADV_TITLE;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_ADV;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_SELECT;
-import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_TAX;
-import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_TAX_ADDITIONAL;
-import static ru.aif.aifback.services.process.admin.enums.AdminTaxType.ADDITIONAL;
-import static ru.aif.aifback.services.process.admin.enums.AdminTaxType.BASE;
-import static ru.aif.aifback.services.process.admin.enums.AdminTaxType.PREMIUM;
 import static ru.aif.aifback.services.process.admin.utils.AdminBotUtils.createBackButton;
 
 import java.util.ArrayList;
@@ -26,13 +22,13 @@ import ru.aif.aifback.services.process.admin.AdminBotOperationService;
 import ru.aif.aifback.services.process.admin.enums.AdminBotOperationType;
 
 /**
- * Admin Tax operation API service.
+ * Admin Advertise operation API service.
  * @author emelnikov
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BotTaxOperationService implements AdminBotOperationService {
+public class BotAdvOperationService implements AdminBotOperationService {
 
     /**
      * Main processing.
@@ -44,24 +40,10 @@ public class BotTaxOperationService implements AdminBotOperationService {
         Long userBotId = Long.valueOf(webhookRequest.getText().split(DELIMITER)[1]);
 
         List<List<ChatMessage.Button>> buttons = new ArrayList<>();
-
-        buttons.add(List.of(ChatMessage.Button.builder()
-                                              .title(String.format("%s %s", BASE.getIcon(), BASE.getName()))
-                                              .callback(String.format("%s;%s;%s", BOT_TAX_ADDITIONAL.getType(), BASE.getType(), userBotId))
-                                              .build()));
-        buttons.add(List.of(ChatMessage.Button.builder()
-                                              .title(String.format("%s %s", ADDITIONAL.getIcon(), ADDITIONAL.getName()))
-                                              .callback(String.format("%s;%s;%s", BOT_TAX_ADDITIONAL.getType(), ADDITIONAL.getType(), userBotId))
-                                              .build()));
-        buttons.add(List.of(ChatMessage.Button.builder()
-                                              .title(String.format("%s %s", PREMIUM.getIcon(), PREMIUM.getName()))
-                                              .callback(String.format("%s;%s;%s", BOT_TAX_ADDITIONAL.getType(), PREMIUM.getType(), userBotId))
-                                              .build()));
-
         buttons.add(createBackButton(String.format("%s;%s", BOT_SELECT.getType(), userBotId)));
 
         return List.of(ChatMessage.builder()
-                                  .text(BOT_TAX_TITLE)
+                                  .text(BOT_ADV_TITLE)
                                   .updated(TRUE)
                                   .source(findByType(webhookRequest.getSource()))
                                   .chatId(webhookRequest.getChatId())
@@ -76,6 +58,6 @@ public class BotTaxOperationService implements AdminBotOperationService {
      */
     @Override
     public AdminBotOperationType getOperationType() {
-        return BOT_TAX;
+        return BOT_ADV;
     }
 }

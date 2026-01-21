@@ -5,6 +5,7 @@ import static java.lang.Boolean.TRUE;
 import static ru.aif.aifback.constants.Constants.DELIMITER;
 import static ru.aif.aifback.enums.BotSource.findByType;
 import static ru.aif.aifback.enums.BotType.BOT_RECORD;
+import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_ADV_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_CALENDAR_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_ITEMS_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BOT_RECORDS_TITLE;
@@ -14,6 +15,7 @@ import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.BO
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.DELETE_BOT_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.LINK_TOKEN_TITLE;
 import static ru.aif.aifback.services.process.admin.constants.AdminBotButtons.MENU_TITLE;
+import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_ADV;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_BOTS;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_DELETE;
 import static ru.aif.aifback.services.process.admin.enums.AdminBotOperationType.BOT_RECORDS;
@@ -104,6 +106,10 @@ public class BotSelectOperationService implements AdminBotOperationService {
                 buttons.add(List.of(ChatMessage.Button.builder()
                                                       .title(BOT_TAX_TITLE)
                                                       .callback(String.format("%s;%s", BOT_TAX.getType(), userBotId))
+                                                      .build(),
+                                    ChatMessage.Button.builder()
+                                                      .title(BOT_ADV_TITLE)
+                                                      .callback(String.format("%s;%s", BOT_ADV.getType(), userBotId))
                                                       .build()));
             }
 
