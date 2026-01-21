@@ -123,6 +123,7 @@ public final class CommonUtils {
         long userItemTime = userItem.getHours() * 60 + userItem.getMins();
 
         if (records.isEmpty()) {
+            //TODO divide by min user item
             long allTime = (((userCalendar.getHoursEnd() - userItem.getHours()) - userCalendar.getHoursStart()) * 60) - userItem.getMins();
             int repeated = (int) Math.ceil((double) (allTime / userItemTime)) + 1;
             fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, null, null)
@@ -143,6 +144,7 @@ public final class CommonUtils {
 
                 long diff = ChronoUnit.MINUTES.between(startDate, nextDate);
                 if (diff >= userItemTime) {
+                    //TODO divide by min user item
                     int repeated = (int) (diff / userItemTime);
                     fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, userCalendar.getHoursStart(),
                               userCalendar.getMinsStart()).ifPresent(times::addAll);
@@ -160,6 +162,7 @@ public final class CommonUtils {
                                                      Math.toIntExact(userCalendar.getMinsEnd()));
             long diff = ChronoUnit.MINUTES.between(startDate, endDate);
             if (diff >= userItemTime) {
+                //TODO divide by min user item
                 int repeated = (int) (diff / userItemTime);
                 fillTimes(repeated, minUserItem.getHours(), minUserItem.getMins(), userItem.getId(), userCalendar, (long) startDate.getHour(),
                           (long) startDate.getMinute()).ifPresent(times::addAll);

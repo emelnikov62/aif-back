@@ -27,6 +27,7 @@ import ru.aif.aifback.model.requests.WebhookRequest;
 import ru.aif.aifback.model.user.UserBot;
 import ru.aif.aifback.model.user.UserItem;
 import ru.aif.aifback.model.user.UserItemGroup;
+import ru.aif.aifback.services.client.ClientStarService;
 import ru.aif.aifback.services.process.client.ClientBotOperationService;
 import ru.aif.aifback.services.process.client.bot.record.enums.ClientBotRecordOperationType;
 import ru.aif.aifback.services.user.UserItemService;
@@ -41,6 +42,7 @@ import ru.aif.aifback.services.user.UserItemService;
 public class ItemAdditionalOperationService implements ClientBotOperationService {
 
     private final UserItemService userItemService;
+    private final ClientStarService clientStarService;
 
     /**
      * Main processing.
@@ -61,10 +63,12 @@ public class ItemAdditionalOperationService implements ClientBotOperationService
             return fillErrorMessages(webhookRequest.getSource(), webhookRequest.getChatId(), webhookRequest.getMessageId());
         }
 
+        Float calcStar = clientStarService.calcByUserItem(Long.valueOf(webhookRequest.getId()), Long.valueOf(itemId));
         String answer = String.format("\uD83D\uDD38 <b>Группа:</b> %s \n\n", group.getName())
                         + String.format("\uD83D\uDCC3 <b>Наименование:</b> %s \n\n", userItem.getName())
                         + String.format("\uD83D\uDD5B <b>Продолжительность:</b> %02d:%02d \n\n", userItem.getHours(), userItem.getMins())
-                        + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.getAmount()));
+                        + String.format("\uD83D\uDCB5 <b>Стоимость:</b> %s \n\n", String.format("%s руб.", userItem.getAmount()))
+                        + String.format("⭐ <b>Оценка:</b> %.2f", calcStar);
 
         List<List<ChatMessage.Button>> buttons = new ArrayList<>();
         buttons.add(List.of(ChatMessage.Button.builder()

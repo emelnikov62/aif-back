@@ -71,4 +71,17 @@ public class ClientStarService {
                : Math.round((float) stars.stream().mapToInt(Integer::intValue).sum() / stars.size());
     }
 
+    /**
+     * Calc star by user item.
+     * @param userBotId user bot id
+     * @param userItemId user item id
+     * @return calc star
+     */
+    public Float calcByUserItem(Long userBotId, Long userItemId) {
+        List<Integer> stars = clientStarRepository.calcByUserItem(userBotId, userItemId);
+        return stars.isEmpty()
+               ? 5f
+               : Math.round((float) stars.stream().mapToInt(Integer::intValue).sum() / stars.size());
+    }
+
 }

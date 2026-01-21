@@ -48,4 +48,17 @@ public interface ClientStarRepository extends CrudRepository<ClientStar, Long> {
     List<Integer> calcByStaffAndUserItem(@Param("user_bot_id") Long userBotId,
                                          @Param("staff_id") Long staffId,
                                          @Param("user_item_id") Long userItemId);
+
+    /**
+     * Stars by user item.
+     * @param userBotId user bot id
+     * @param userItemId user item id
+     * @return stars
+     */
+    @Query(value = "select s.value" +
+                   "  from aif_client_stars s" +
+                   " where s.aif_user_bot_id = :user_bot_id" +
+                   "   and s.aif_user_item_id = :user_item_id")
+    List<Integer> calcByUserItem(@Param("user_bot_id") Long userBotId,
+                                 @Param("user_item_id") Long userItemId);
 }
