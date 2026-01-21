@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AdminTaxType {
 
-    BASE("base", "Базовая", "\uD83D\uDD36", "30 дней: <b>999</b>₽", "90 дней: <b>2 699</b>₽", "365 дней: <b>9 999</b>₽"),
-    ADDITIONAL("additional", "Расширенная", "\uD83D\uDD37", "30 дней: <b>1 999</b>₽", "90 дней: <b>5 399</b>₽", "365 дней: <b>19 999</b>₽"),
-    PREMIUM("premium", "Премиум", "⭐", "30 дней: <b>3 999</b>₽", "90 дней: <b>10 999</b>₽", "365 дней: <b>40 999</b>₽");
+    BASE("base", "Базовая", "\uD83D\uDD36", "\uD83D\uDCC5 30 дней: \uD83D\uDCB0 999₽", "\uD83D\uDCC5 90 дней: \uD83D\uDCB0 2 699₽", "\uD83D\uDCC5 365 дней: \uD83D\uDCB0 9 999₽"),
+    ADDITIONAL("additional", "Расширенная", "\uD83D\uDD37", "\uD83D\uDCC5 30 дней: \uD83D\uDCB0 1 999₽", "\uD83D\uDCC5 90 дней: \uD83D\uDCB0 5 399₽", "\uD83D\uDCC5 365 дней: \uD83D\uDCB0 19 999₽"),
+    PREMIUM("premium", "Премиум", "⭐", "\uD83D\uDCC5 30 дней: \uD83D\uDCB0 3 999₽", "\uD83D\uDCC5 90 дней: \uD83D\uDCB0 10 999₽", "\uD83D\uDCC5 365 дней: \uD83D\uDCB0 40 999₽");
 
     private final String type;
     private final String name;
